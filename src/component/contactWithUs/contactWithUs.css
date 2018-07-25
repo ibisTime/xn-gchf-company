@@ -1,0 +1,112 @@
+.modal-out {
+    width: 100%;
+    /*height: 600px;*/
+    margin-right: 0;
+    text-align: center;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #373737;
+    background-color: rgba(0, 0, 0, 0.65);
+    height: 100%;
+    z-index: 1000;
+}
+.my-modal {
+    width: 70%;
+    height: 600px;
+    margin: 100px auto !important;
+    background: url("./background.png") no-repeat;
+    background-size: 100% 100%
+    /*background: url("../img/con-bg.png");*/
+}
+.tab {
+    text-align: left;
+    padding-left: 2%;
+}
+.tab-item {
+    display: inline-block;
+    width: 8%;
+    height: 2rem;
+    margin-right: 1%;
+    background: url("./unchoosed.png") no-repeat;
+    background-size: 100% 100%
+}
+.tab-item:hover {
+    cursor: pointer;
+}
+.tab-item span {
+    position: relative;
+    left: 10px;
+    top: -10px;
+    font-size: 14px;
+    color: #ffffff;
+}
+.choose {
+    background: url("./choosed.png") no-repeat;
+}
+.close {
+    display: inline-block;
+    float: right;
+    margin-right: 50px;
+}
+.close:hover {
+    cursor: pointer;
+}
+.contact {
+    width: 378px;
+    background: #3b56a2;
+    margin: 0 auto;
+    border: 2px solid #5589ff;
+    border-radius: 10px;
+    height: 490px;
+}
+.contact-top {
+    height: 25%;
+    border-bottom: 2px solid #5589ff;
+    padding: 24px;
+    text-align: left;
+}
+.contact-top p {
+    line-height: 14px;
+    color: #fff;
+    font-size: 14px;
+}
+.contact-content {
+    padding-top: 30px;
+    width: 100%;
+    height: 70%;
+}
+.contact-content img {
+    width: 300px;
+    height: 300px;
+}
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    color: #fff;
+}
+.ant-collapse-content {
+    background: transparent;
+}
+.ant-collapse-content-box {
+    overflow: auto;
+    height: 350px;
+}
+.home-collapse1 {
+    width: 80%;
+    margin: 0 auto;
+    text-align: left;
+    background: transparent;
+    border-radius: 0;
+    border: none;
+}
+.home-collapse1 img{
+    width: 100%;
+}
+.home-collapse1 p{
+    color: white;
+}
+.home-panel1 {
+    background: transparent;
+}

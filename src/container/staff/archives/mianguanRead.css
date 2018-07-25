@@ -1,0 +1,180 @@
+html, body {
+    padding: 0;
+    margin: 0;
+}
+*, :after, :before {
+    box-sizing: border-box;
+}
+.comparison-mains .clearfix3 {
+    zoom: 1;
+}
+.comparison-mains .clearfix3:after, .clearfix3:before {
+    content: " ";
+    display: table;
+}
+
+
+.comparison-mains .ant-btn {
+    display: inline-block;
+    margin-bottom: 0;
+    text-align: center;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    line-height: 1.5;
+    padding: 4px 15px;
+    font-size: 12px;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: all .3s cubic-bezier(.645,.045,.355,1);
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    position: relative;
+    color: rgba(0,0,0,.65);
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+.comparison-mains .ant-btn, .ant-btn:active, .ant-btn:focus {
+    outline: 0;
+}
+.comparison-mains .ant-btn-lg {
+    padding: 4px 15px 5px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+.comparison-mains .ant-btn-primary {
+    background-color: #fff;
+    color: #031b3f;
+}
+[type=reset], [type=submit], button, html [type=button] {
+    -webkit-appearance: button;
+}
+
+.SectionContainer3 {
+    height: 950px;
+    width: 100%;
+    position: relative;
+    /* z-index: 0; */
+}
+.section3 {
+    width: 100%;
+    display: table;
+    height: 100vh;
+    overflow: auto;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.comparison-mains3 .comparison-main3 {
+    margin: auto auto;
+    padding: 0 60px;
+    width: 904px;
+    height: 700px;
+    border: 2px solid rgba(85, 134, 193, 0.6);
+}
+.comparison-mains3 .head-wrap3 {
+    width: 100%;
+    position: relative;
+    padding-left: 19px;
+    height: 33px;
+    line-height: 31px;
+    border-bottom: 2px solid rgba(85, 134, 193, 0.6);
+    font-size: 13px;
+    color: #fff;
+    background: rgba(16, 42, 123, 0.7);
+}
+.comparison-mains3 .head-wrap3 i {
+    position: absolute;
+    left: 9px;
+    top: 9px;
+    width: 3px;
+    height: 16px;
+    border-radius: 2px;
+    background: #3db0f2;
+}
+.comparison-mains3 .inner-box3 {
+    margin-top: 60px;
+    height: 285px;
+    font-size: 0;
+}
+.comparison-mains3 .img-wrap3 {
+    display: inline-block;
+    vertical-align: middle;
+    width: 512px;
+    height: 384px;
+    text-align: center;
+}
+.comparison-mains3 .video3 {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+.comparison-mains3 .btn-wrap {
+    display: inline-block;
+    vertical-align: middle;
+    width: 210px;
+    height: 100%;
+    text-align: center;
+}
+.comparison-mains3 .btn-inner {
+    padding-top: 82px;
+}
+.comparison-mains3 .btn-inner .btn-item3+.btn-item3 {
+    margin-top: 50px;
+}
+.comparison-mains3 .btn-wrap .ant-btn {
+    width: 120px;
+}
+[disabled] {
+    cursor: not-allowed !important;
+}
+
+.comparison-mains3 .right-img3 {
+    position: relative;
+    background: rgb(216,219,229);
+}
+.comparison-mains3 .canvas {
+    display: none;
+    margin: 0 auto;
+}
+.comparison-mains3 .userImg3 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 63px;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+.comparison-mains3 .haveUserImg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+.video-box {
+    position: relative;
+    text-align: center;
+}
+.img-box {
+    position: relative;
+}
+.border {
+    width: 200px;
+    height: 200px;
+    border: 2px solid #5589ff;
+    position: absolute;
+    top:30%;
+    left: 30%
+}

@@ -1,0 +1,108 @@
+.home-wrapper {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  background: #24364b;
+  padding: 20px 40px;
+}
+.home-table {
+  width: 100%;
+  height: 100%;
+  table-layout: fixed;
+}
+.home-map-wrapper {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #8faffe;
+  border-radius: 4px;
+}
+.home-wrapper .home-search {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  height: 40px;
+  width: 312px;
+  font-size: 16px;
+}
+.home-wrapper .home-search .ant-input, .home-wrapper .home-search .ant-btn {
+  height: 40px;
+}
+.home-wrapper .ant-select-dropdown {
+  top: 82px;
+  left: 40px;
+}
+.home-wrapper .home-collapse {
+  background: rgba(42, 71, 104);
+  border-radius: 0;
+  border: none;
+}
+.home-collapse.ant-collapse > .ant-collapse-item {
+  border-bottom: 1px solid #326390;
+}
+.home-collapse.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  padding: 10px 0 10px 40px;
+}
+.home-collapse.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  color: #fff;
+}
+.box-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  border: 2px solid #8faffe;
+  border-radius: 4px;
+}
+.other-box.box-wrapper {
+  background: rgba(42, 71, 104);
+}
+.person-box.box-wrapper {
+  background: rgba(49, 86, 126);
+}
+.ljry-box .box-content {
+  padding-left: 20px;
+}
+.box-wrapper .box-title {
+  position: relative;
+  padding-left: 28px;
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 2px solid #8faffe;
+  font-size: 16px;
+  color: #fff;
+  background-image: linear-gradient(top, rgb(56, 99, 147), rgb(38, 66, 117));
+}
+.box-wrapper .box-title .box-tip {
+  position: absolute;
+  left: 14px;
+  top: 11px;
+  height: 18px;
+  width: 4px;
+  border-radius: 2px;
+  background: #8faffe;
+}
+.box-wrapper .box-content {
+  flex: 1;
+}
+.box-wrapper .box-content.center-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pt18 {
+  padding-top: 18px;
+}
+.pr18 {
+  padding-right: 18px;
+}
+.pl18 {
+  padding-left: 18px;
+}
+.pb18 {
+  padding-bottom: 18px;
+}
+.w274 {
+  width: 274px;
+}

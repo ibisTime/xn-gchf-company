@@ -1,0 +1,107 @@
+.login-form {
+	width: 486px;
+	height : 358px;
+	margin : 0 0 0 0;
+	padding: 50px 80px;
+	background : url('../../img/denglu.png');
+	float: right;
+	position: absolute;
+	top : 170px;
+	right : 112px;
+	background-size : contain;
+	background-repeat: no-repeat
+  /* margin: 100px auto;
+  margin: 50px 20px; */
+  /*background: transparent;*/
+}
+
+.big-img {
+	width: 100%;
+	height: 100vh
+}
+.big-circle {
+	width: 746px;
+	height : 565px;
+	position: absolute;
+	top : 50px;
+	left : 142px;
+}
+
+.big-title {
+	width: 280px;
+	height: 50px;
+	position: absolute;
+	top : 80px;
+	left : 382px;
+	
+}
+span.big-title {
+	color : #fff;
+	font-size: 24px;
+	padding: 5px 30px
+}
+.login-form-item {
+
+}
+/* .login-form-item :last-child { */
+	/* background: url('../../img/shurukuang.png'); */
+	/* border : 3px solid blue */
+	/* margin-top: 50px */
+/* } */
+.login-form-item .input-border {
+	border : 3px solid #59f2fc;
+	border-radius: 10px 0 10px 0;
+}
+.login-form-item input {
+	background-color: rgba(13,69, 131, 0.8);
+	width: 100%;
+	height : 40px;
+	padding-left: 100px !important;
+	border-radius: 10px 0 10px 0;
+	color: #b0d1f6
+}
+/* .login-card {
+	width: 400px;
+	height: 400px;
+	margin: 100px auto;
+	/*background: transparent;*/
+/* } */
+.login-form-button {
+	width: 100%;
+	background: #59f2fc;
+	height: 40px;
+	border-radius: 10px 0 10px 0;
+	/* background: url('../../img/anniu.png') */
+}
+/* .big-div {
+	background: url('../../img/setting.png')
+} */
+.role {
+	background : transparent;
+	border-radius: 10px 0 10px 0;
+	border : 3px solid #28f2ff;
+	position: absolute;
+	bottom : 8%;
+	left : 32%;
+	padding: 5px 15px
+}
+.role span {
+	color: #28f2ff;
+	font-size: 20px;
+	padding: 5px
+}
+
+.rem-pwd {
+	margin-bottom: 0;
+}
+
+.remember-pwd {
+	color: #5d9eff;
+	float: right;
+	
+}
+
+.remember-pwd span {
+	font-size: 4px;
+	
+}
