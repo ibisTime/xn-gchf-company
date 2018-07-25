@@ -94,6 +94,8 @@ import { newIdCompanyConstruct1 } from './redux/newId/companyConstruct1';
 import { projectStaff } from './redux/projectStaff/projectStaff';
 import { projectStaffAddEdit } from './redux/projectStaff/projectStaff-addedit';
 import { projectStaffAddBankCard } from './redux/projectStaff/projectStaff-addBankCard';
+import { waitListAlreadyQuest } from './redux/waitList/alreadyQuest';
+import { waitListAlreadyQuestAddedit } from './redux/waitList/alreadyQuest-addedit';
 
 export default combineReducers({
   user,
@@ -189,5 +191,7 @@ export default combineReducers({
   newIdCompanyConstruct1,
   projectStaff,
   projectStaffAddEdit,
-  projectStaffAddBankCard
+  projectStaffAddBankCard,
+  waitListAlreadyQuest,
+  waitListAlreadyQuestAddedit
 });

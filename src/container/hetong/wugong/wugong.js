@@ -32,11 +32,9 @@ class Wugong extends React.Component {
     };
   }
   componentDidMount() {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ projectCode: data.projectCode, projectCodeList: data.projectCodeList });
-      });
-    }
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({ projectCode: data.projectCode, projectCodeList: data.projectCodeList });
+    });
   }
   render() {
     const fields = [{

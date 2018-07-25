@@ -455,6 +455,14 @@ const ROUTES = [
   {
     path: '/projectStaff/projectStaff/addBankCard',
     component: asyncComponent(() => import('container/projectStaff/projectStaff-addBankCard/projectStaff-addBankCard'))
+  },
+  {
+    path: '/waitList/alreadyQuest',
+    component: asyncComponent(() => import('container/waitList/alreadyQuest/alreadyQuest'))
+  },
+  {
+    path: '/waitList/alreadyQuest/addedit',
+    component: asyncComponent(() => import('container/waitList/alreadyQuest-addedit/alreadyQuest-addedit'))
   }
 ];
 

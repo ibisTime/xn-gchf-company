@@ -34,16 +34,15 @@ class Salary extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      companyCode: '',
+      projectCode: '',
       projectCodeList: '',
       salaryStatus: []
     };
-    this.projectCode = getQueryString('projectCode', this.props.location.search);
   }
   componentDidMount() {
     getUserDetail(getUserId()).then((data) => {
       this.setState({
-        companyCode: data.companyCode,
+        projectCode: data.projectCode,
         projectCodeList: data.projectCodeList
       });
     });
@@ -120,7 +119,7 @@ class Salary extends React.Component {
           fetch(631443, param).then(() => {
             showSucMsg('操作成功');
             this.props.cancelFetching();
-            this.setState({ visible: false });
+            this.setState({visible: false});
             this.props.getPageData();
           }).catch(this.props.cancelFetching);
         }
@@ -134,7 +133,7 @@ class Salary extends React.Component {
           fetch(631443, param).then(() => {
             showSucMsg('操作成功');
             this.props.cancelFetching();
-            this.setState({ visible: false });
+            this.setState({visible: false});
             this.props.getPageData();
           }).catch(this.props.cancelFetching);
         }
@@ -181,8 +180,8 @@ class Salary extends React.Component {
         }
       }]
     };
-    if (getUserKind() === 'O') {
-      return this.state.companyCode ? (
+
+    return this.state.projectCode ? (
         <div>
           {
             this.props.buildList({
@@ -192,9 +191,9 @@ class Salary extends React.Component {
                 code: 'makeSalary',
                 name: '生成工资条',
                 handler: (selectedRowKeys, selectedRows) => {
-                    this.setState({
-                      showMakeSalary: true
-                    });
+                  this.setState({
+                    showMakeSalary: true
+                  });
                 }
               }, {
                 code: 'edit',
@@ -206,7 +205,7 @@ class Salary extends React.Component {
                     showWarnMsg('请选择一条记录');
                   } else {
                     if (selectedRows[0].status === '0') {
-                      this.props.history.push(`/projectManage/project/salary/edit?code=${selectedRowKeys[0]}&projectCode=${this.projectCode}`);
+                      this.props.history.push(`/projectManage/project/salary/edit?code=${selectedRowKeys[0]}&projectCode=${this.state.projectCode}`);
                     } else {
                       showWarnMsg('该状态的工资条不可调整');
                     }
@@ -272,66 +271,24 @@ class Salary extends React.Component {
                 }
               }],
               searchParams: {
-                projectCode: this.projectCode,
-                companyCode: this.state.companyCode,
+                projectCode: this.state.projectCode,
                 kind: 'O'
               },
               pageCode: 631445
             })
           }
           <ModalDetail
-            title='审核'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
+              title='审核'
+              visible={this.state.visible}
+              hideModal={() => this.setState({ visible: false })}
+              options={options} />
           <ModalDetail
               title='生成工资月份'
               visible={this.state.showMakeSalary}
               hideModal={() => this.setState({ showMakeSalary: false })}
               options={makeSalaryOptions} />
         </div>
-      ) : null;
-    } else {
-      return (
-        <div>
-          {
-            this.state.projectCodeList ? this.props.buildList({
-              fields,
-              singleSelect: false,
-              buttons: [{
-                code: 'export',
-                name: '导出',
-                handler: (selectedRowKeys, selectedRows) => {
-                  fetch(631446, {
-                    projectCodeList: this.state.projectCodeList,
-                    companyCode: this.state.companyCode
-                  }).then((data) => {
-                    let payroll1 = [
-                      ['员工姓名', '所属月份', '正常考勤天数', '请假天数', '迟到小时数', '早退小时数', '扣款金额', '发放奖金', '应发工资', '实发工资', '状态', '备注']
-                    ];
-                    let payroll2 = data.map((d, i) => {
-                      return [d.staffName, d.month, d.attendanceDays, d.leavingDays, d.delayHours, d.earlyHours, moneyFormat(d.cutAmount), moneyFormat(d.awardAmount), moneyFormat(d.factAmount), moneyFormat(d.factAmount), this.state.salaryStatus[d.status], d.factAmountRemark];
-                    });
-                    payroll1 = payroll1.concat(payroll2);
-                    const ws = XLSX.utils.aoa_to_sheet(payroll1);
-                    const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
-                    XLSX.writeFile(wb, 'sheetjs.xlsx');
-                  }, () => { });
-                }
-              }],
-              searchParams: { projectCode: this.projectCode },
-              pageCode: 631445
-            }) : null
-          }
-          <ModalDetail
-            title='审核'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
-        </div>
-      );
-    }
+    ) : null;
   }
 }
 

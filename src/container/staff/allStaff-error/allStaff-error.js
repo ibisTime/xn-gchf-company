@@ -29,22 +29,16 @@ class AllStaffError extends React.Component {
     super(props);
     this.state = {
       projectCodeList: '',
-      companyCode: ''
+      projectCode: ''
     };
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
     this.staffCode = getQueryString('staffCode', this.props.location.search);
   }
   componentDidMount() {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'companyCode': data.companyCode });
-      });
-    } else if (getUserKind() === 'S') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'projectCodeList': data.projectCodeList });
-      });
-    }
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({ 'projectCode': data.projectCode });
+    });
   }
   render() {
     const fields = [{
@@ -106,50 +100,21 @@ class AllStaffError extends React.Component {
         }
       }
     };
-    if (getUserKind() === 'O') {
-      return this.state.companyCode ? this.props.buildList({
-        fields,
-        btnEvent,
-        searchParams: {
-          staffCode: this.staffCode,
-          type: '1',
-          companyCode: this.state.companyCode,
-          kind: 'O',
-          statusList: ['4', '6', '7']
-        },
-        buttons: [{
-          code: 'detail',
-          name: '详情'
-        }],
-        pageCode: 631445
-      }) : null;
-    } else if (getUserKind() === 'S') {
-      return this.state.projectCodeList ? this.props.buildList({
-        fields,
-        btnEvent,
-        searchParams: {
-          projectCodeList: this.state.projectCodeList,
-          kind: 'S',
-          statusList: ['4', '6', '7']
-        },
-        buttons: [{
-          code: 'detail',
-          name: '详情'
-        }],
-        pageCode: 631445
-      }) : null;
-    } else {
-      return this.props.buildList({
-        fields,
-        btnEvent,
-        searchParams: { staffCode: this.staffCode, type: 'P', statusList: ['4', '6', '7'] },
-        buttons: [{
-          code: 'detail',
-          name: '详情'
-        }],
-        pageCode: 631445
-      });
-    }
+    return this.state.projectCode ? this.props.buildList({
+      fields,
+      btnEvent,
+      searchParams: {
+        staffCode: this.staffCode,
+        type: '1',
+        projectCode: this.state.projectCode,
+        statusList: ['4', '6', '7']
+      },
+      buttons: [{
+        code: 'detail',
+        name: '详情'
+      }],
+      pageCode: 631445
+    }) : null;
   }
 }
 

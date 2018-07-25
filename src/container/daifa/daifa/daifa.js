@@ -31,18 +31,11 @@ class Daifa extends React.Component {
     this.state = {
       visible: false,
       code: '',
-      companyCode: ''
+      projectCode: ''
     };
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'companyCode': data.companyCode });
-      });
-    }
-    if (getUserKind() === 'S') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'companyCodeList': data.companyCodeList });
-      });
-    }
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({ 'projectCode': data.projectCode });
+    });
   }
   render() {
     const fieldso = [{
@@ -102,6 +95,7 @@ class Daifa extends React.Component {
         }
       }
     };
+    // 发送消息
     const options = {
       fields: [{
         field: 'code',
@@ -122,15 +116,14 @@ class Daifa extends React.Component {
         this.props.getPageData();
       }
     };
-    if (getUserKind() === 'O') {
-      return this.state.companyCode ? (
+    return this.state.projectCode ? (
         <div>
           {this.props.buildList({
             fields: fieldso,
             btnEvent,
             searchParams: {
               updater: '',
-              companyCode: this.state.companyCode,
+              projectCode: this.state.projectCode,
               kind: 'O',
               status: 0
             },
@@ -138,33 +131,12 @@ class Daifa extends React.Component {
             rowKey: 'code'
           })}
           <ModalDetail
-            title='发送消息'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
+              title='发送消息'
+              visible={this.state.visible}
+              hideModal={() => this.setState({ visible: false })}
+              options={options} />
         </div>
-      ) : null;
-    } else {
-      return (
-        <div>
-          {this.props.buildList({
-            fields: fieldso,
-            btnEvent,
-            searchParams: {
-              updater: '',
-              status: 0
-            },
-            pageCode: 631435,
-            rowKey: 'code'
-          })}
-          <ModalDetail
-            title='发送消息'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
-        </div>
-      );
-    }
+    ) : null;
   }
 }
 

@@ -51,8 +51,7 @@ class Kaoqin extends React.Component {
   render() {
     const fields = [{
       field: 'projectName',
-      title: '工程名称',
-      search: true
+      title: '工程名称'
     }, {
       field: 'staffName',
       title: '员工姓名'
@@ -68,7 +67,8 @@ class Kaoqin extends React.Component {
       field: 'status',
       title: '出工状态',
       type: 'select',
-      key: 'attendance_status'
+      key: 'attendance_status',
+      search: true
     }, {
       field: 'settleDatetime',
       title: '结算时间',

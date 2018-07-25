@@ -1,0 +1,17 @@
+.haha {
+    color: #a9a9a9;
+    background: #fff;
+}
+/*.haha {*/
+    /*background: #f5f7fa;*/
+/*}*/
+.tableClass {
+    border: 2px solid #59afe9;
+    box-shadow: 0px 0px 30px rgba(153,212,255,0.6) inset;
+}
+.tableClass .ant-table .ant-table-thead > tr > th {
+    background: #ecf2f9;
+}
+.tableClass .ant-table-tbody > tr:hover {
+    background: #f5f7fa;
+}

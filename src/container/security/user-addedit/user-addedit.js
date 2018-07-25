@@ -9,6 +9,8 @@ import {
 } from '@redux/security/user-addedit';
 import { getQueryString } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
+import {getUserDetail} from '../../../api/user';
+import {getUserId} from '../../../common/js/util';
 @DetailWrapper(
   state => state.securityUserAddEdit,
   { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
@@ -16,11 +18,30 @@ import { DetailWrapper } from 'common/js/build-detail';
 class UserAddEdit extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      projectCode: ''
+    };
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
   }
+  componentDidMount() {
+    getUserDetail(getUserId()).then((res) => {
+      this.setState({ projectCode: res.projectCode });
+    });
+  }
   render() {
     const fields = [{
+      title: '角色',
+      field: 'roleCode',
+      type: 'select',
+      listCode: '631046',
+      params: {
+        updater: getUserId()
+      },
+      keyName: 'code',
+      valueName: 'name',
+      required: true
+    }, {
       title: '用户名',
       field: 'loginName',
       required: true
@@ -36,7 +57,7 @@ class UserAddEdit extends React.Component {
     }, {
       title: '用户类型',
       field: 'type',
-      value: 'P',
+      value: 'O',
       hidden: true,
       required: true
     }, {
@@ -45,10 +66,14 @@ class UserAddEdit extends React.Component {
       mobile: true,
       required: true
     }];
-    return this.props.buildDetail({
+    return this.state.projectCode ? this.props.buildDetail({
       fields,
-      addCode: 631070
-    });
+      addCode: 631070,
+      beforeSubmit: (params) => {
+        params.projectCode = this.state.projectCode;
+        return params;
+      }
+    }) : null;
   }
 }
 
