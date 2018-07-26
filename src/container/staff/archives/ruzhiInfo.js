@@ -38,7 +38,7 @@ class RuzhiInfo extends React.Component {
       previewImage: '',
       previewVisible: false,
       staffCode: '',
-      companyCode: '',
+      projectCode: '',
       defaultProject: '',
       departmentList: [],
       zhihang: [],
@@ -54,18 +54,22 @@ class RuzhiInfo extends React.Component {
   }
   componentDidMount() {
     getUserDetail(getUserId()).then((res) => {
-      this.companyCode = res.companyCode;
-      getProjectListForO({companyCode: res.companyCode, status: '3'}).then((data) => {
-        this.projectList = data.map((item) => ({
-          code: item.code,
-          name: item.name
-        }));
-        this.setState({
-          projectList: this.projectList,
-          selectProj: this.projectList[0].code,
-          companyCode: res.companyCode
-        });
+      this.setState({ projectCode: res.projectCode });
+      this.props.form.setFieldsValue({
+        projectCode: res.projectName
       });
+      // this.companyCode = res.companyCode;
+      // getProjectListForO({companyCode: res.companyCode, status: '2'}).then((data) => {
+      //   this.projectList = data.map((item) => ({
+      //     code: item.code,
+      //     name: item.name
+      //   }));
+      //   this.setState({
+      //     projectList: this.projectList,
+      //     selectProj: this.projectList[0].code,
+      //     companyCode: res.companyCode
+      //   });
+      // });
     });
     getZhiHang().then((res) => {
       this.setState({
@@ -84,6 +88,9 @@ class RuzhiInfo extends React.Component {
     getQiniuToken().then(data => {
       this.setState({ token: data.uploadToken });
     }).catch(() => {});
+    getBumen({ projectCode: this.state.projectCode }).then((data) => {
+      this.getTree(data);
+    });
     if(this.idNo) {
       getStaffDetail(this.idNo).then((res) => {
         this.setState({
@@ -106,17 +113,14 @@ class RuzhiInfo extends React.Component {
           bankcardNumber: data.bankCard ? data.bankCard.bankcardNumber : ''
           // type: data.type
         });
-        this.state.projectList.map((item) => {
-          if(data.projectName === item.name) {
-            getBumen({ projectCode: item.code }).then((data) => {
-              this.setState({ departmentList: data });
-              this.getTree(data);
-            });
-          }
-        });
-      });
-      this.setState({
-        defaultProject: <Option>123</Option>
+        // this.state.projectList.map((item) => {
+        //   if(data.projectName === item.name) {
+        //     getBumen({ projectCode: item.code }).then((data) => {
+        //       this.setState({ departmentList: data });
+        //       this.getTree(data);
+        //     });
+        //   }
+        // });
       });
     }
   }
@@ -170,7 +174,7 @@ class RuzhiInfo extends React.Component {
           });
         } else {
           params.staffCode = this.code || this.state.staffCode;
-          params.companyCode = this.state.companyCode;
+          params.projectCode = this.state.projectCode;
           ruzhi(params).then((res) => {
             if(res.code) {
               showSucMsg('入职成功！');
@@ -306,7 +310,7 @@ class RuzhiInfo extends React.Component {
                                   {getFieldDecorator('projectCode', {
                                     rules: [rule0]
                                   })(
-                                      <Select placeholder="请选择项目" onChange={this.handleProjectChange} defaultValue={this.defaultProject}>
+                                      <Select placeholder="请选择项目" onChange={this.handleProjectChange} disabled >
                                         {this.state.projectList.map((item) => <Option key={item.code} value={item.code}>{item.name}</Option>)}
                                       </Select>
                                   )}

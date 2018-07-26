@@ -24,23 +24,17 @@ class ProjectAddedit extends React.Component {
     this.state = {
       departmentCode: '',
       bankCode: '',
-      companyCode: '',
+      projectCode: '',
       projectCodeList: ''
     };
     this.code = getQueryString('projectCode', this.props.location.search);
-    this.projectCode = getQueryString('projectCode', this.props.location.search);
+    // this.projectCode = getQueryString('projectCode', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
   }
   componentDidMount() {
-    if (getUserKind() === 'S') {
-      getUserDetail(getUserId()).then(data => {
-        this.setState({ 'projectCodeList': data.projectCodeList });
-      });
-    } else {
-      getUserDetail(getUserId()).then(data => {
-        this.setState({ 'companyCode': data.companyCode });
-      });
-    }
+    getUserDetail(getUserId()).then(data => {
+      this.setState({ 'projectCode': data.projectCode });
+    });
   }
   render() {
     // 新增
@@ -102,7 +96,6 @@ class ProjectAddedit extends React.Component {
       listCode: '631106',
       keyName: 'code',
       valueName: 'bankSubbranchName',
-      // _keys: ['companyCard', 'bankName'],
       required: true
     }, {
       field: 'companyCode',
@@ -110,26 +103,6 @@ class ProjectAddedit extends React.Component {
         return this.state.companyCode;
       },
       hidden: true
-    // }, {
-    //   field: 'subbranch',
-    //   title: '开户行',
-    //   listCode: '631106',
-    //   keyName: 'bankCode',
-    //   valueName: 'subbranchName',
-    //   // _keys: ['companyCard', 'bankName'],
-    //   required: true,
-    //   onChange: (val) => {
-    //     console.log(val);
-    //     this.setState({
-    //       bankCode: val
-    //     });
-    //     // this.props.setPageData({
-    //     //   ...this.props.pageData,
-    //     //   loginName: val + this.props.form.getFieldValue('subbranch')
-    //     // });
-    //   }
-    //   // _keys: ['companyCard', 'subbranch'],
-    //   required: true
     }, {
       field: 'accountName',
       title: '户名',
@@ -207,19 +180,12 @@ class ProjectAddedit extends React.Component {
     }, {
       field: 'code1',
       title: '开户行',
-      // type: this.view ? null : 'select',
       type: this.view ? null : 'select',
       listCode: '631106',
       keyName: 'code',
       valueName: 'bankSubbranchName',
       _keys: ['companyCard', 'bankSubbranch'],
       required: true
-    // }, {
-    //   field: 'companyCode',
-    //   formatter: (v, d) => {
-    //     return this.state.companyCode;
-    //   },
-    //   hidden: true
     }, {
       field: 'accountName',
       title: '户名',
@@ -358,101 +324,63 @@ class ProjectAddedit extends React.Component {
         return moneyFormat(v.report.nextMonthSalary);
       }
     }];
-    if (getUserKind() === 'O') {
-      return this.state.companyCode ? this.props.buildDetail({
-        fields: this.view ? fieldos : this.code ? fieldsedit : fields,
-        code: this.projectCode,
-        view: this.view,
-        buttons: !this.view ? [{
-          title: '保存',
-          handler: (param) => {
-            console.log(param);
-            console.log(this.props.selectData.code1);
-            for (let i = 0; i < this.props.selectData.code1.length; i++) {
-              if(this.code) {
-                // 修改的时候匹配文字
-                if (param.code1 === this.props.selectData.code1[i].code || param.code1 === this.props.selectData.code1[i].bankSubbranchName) {
-                  param.bankName = this.props.selectData.code1[i].bankName;
-                  param.bankCode = this.props.selectData.code1[i].bankCode;
-                  param.subbranch = this.props.selectData.code1[i].subbranchName;
-                }
-              } else {
-                // 详情的时候匹配code
-                if (param.code1 === this.props.selectData.code1[i].code) {
-                  param.bankName = this.props.selectData.code1[i].bankName;
-                  param.bankCode = this.props.selectData.code1[i].bankCode;
-                  param.subbranch = this.props.selectData.code1[i].subbranchName;
-                }
+    return this.state.projectCode ? this.props.buildDetail({
+      fields: this.view ? fieldos : this.code ? fieldsedit : fields,
+      code: this.state.projectCode,
+      view: this.view,
+      buttons: !this.view ? [{
+        title: '保存',
+        handler: (param) => {
+          console.log(param);
+          console.log(this.props.selectData.code1);
+          for (let i = 0; i < this.props.selectData.code1.length; i++) {
+            if(this.code) {
+              // 修改的时候匹配文字
+              if (param.code1 === this.props.selectData.code1[i].code || param.code1 === this.props.selectData.code1[i].bankSubbranchName) {
+                param.bankName = this.props.selectData.code1[i].bankName;
+                param.bankCode = this.props.selectData.code1[i].bankCode;
+                param.subbranch = this.props.selectData.code1[i].subbranchName;
+              }
+            } else {
+              // 详情的时候匹配code
+              if (param.code1 === this.props.selectData.code1[i].code) {
+                param.bankName = this.props.selectData.code1[i].bankName;
+                param.bankCode = this.props.selectData.code1[i].bankCode;
+                param.subbranch = this.props.selectData.code1[i].subbranchName;
               }
             }
-            this.props.doFetching();
-            fetch(this.code ? 631352 : 631350, param).then((res) => {
-              console.log(res);
-              showSucMsg('操作成功');
-              this.props.cancelFetching();
-              setTimeout(() => {
-                if(this.code) {
-                  this.props.history.go(-1);
-                } else {
-                  this.props.history.push(`/projectManage/project/addBumen?code=${res.code}`);
-                }
-              }, 1000);
-            }).catch(this.props.cancelFetching);
-          },
-          check: true,
-          type: 'primary'
-        }, {
-          title: '返回',
-          handler: (param) => {
-            this.props.history.go(-1);
           }
-        }] : [ {
-          title: '返回',
-          handler: (param) => {
-            this.props.history.go(-1);
-          }
-        }],
-        editCode: 631352,
-        detailCode: 631358,
-        addCode: 631350
-      }) : null;
-    } else if (getUserKind() === 'S') {
-      return this.state.projectCodeList ? this.props.buildDetail({
-        fields: this.view ? fieldos : fields,
-        key: 'code',
-        code: this.projectCode,
-        view: this.view,
-        beforeSubmit: (params) => {
-          for (let i = 0; i < this.props.selectData.code1.length; i++) {
-            if (params.code1 === this.props.selectData.bankCode[i].code) {
-              params.bankName = this.props.selectData.bankCode[i].bankName;
-            }
-          }
-          return params;
+          this.props.doFetching();
+          fetch(this.code ? 631352 : 631350, param).then((res) => {
+            console.log(res);
+            showSucMsg('操作成功');
+            this.props.cancelFetching();
+            setTimeout(() => {
+              if(this.code) {
+                this.props.history.go(-1);
+              } else {
+                this.props.history.push(`/projectManage/project/addBumen?code=${res.code}`);
+              }
+            }, 1000);
+          }).catch(this.props.cancelFetching);
         },
-        editCode: 631352,
-        detailCode: 631358,
-        addCode: 631350
-      }) : null;
-    } else {
-      return this.props.buildDetail({
-        fields: this.view ? fieldos : fields,
-        key: 'code',
-        code: this.projectCode,
-        view: this.view,
-        beforeSubmit: (params) => {
-          for (let i = 0; i < this.props.selectData.code1.length; i++) {
-            if (params.code1 === this.props.selectData.bankCode[i].code) {
-              params.bankName = this.props.selectData.bankCode[i].bankName;
-            }
-          }
-          return params;
-        },
-        editCode: 631352,
-        detailCode: 631358,
-        addCode: 631350
-      });
-    }
+        check: true,
+        type: 'primary'
+      }, {
+        title: '返回',
+        handler: (param) => {
+          this.props.history.go(-1);
+        }
+      }] : [ {
+        title: '返回',
+        handler: (param) => {
+          this.props.history.go(-1);
+        }
+      }],
+      editCode: 631352,
+      detailCode: 631358,
+      addCode: 631350
+    }) : null;
   }
 }
 

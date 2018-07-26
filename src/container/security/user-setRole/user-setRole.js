@@ -10,6 +10,7 @@ import {
 } from '@redux/security/user-addedit';
 import { getQueryString } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
+import { getUserId } from '../../../common/js/util';
 
 @DetailWrapper(
   state => state.securityUserAddEdit,
@@ -32,8 +33,7 @@ class UserAddEdit extends React.Component {
       type: 'select',
       listCode: '631046',
       params: {
-        updater: '',
-        type: cookies.get('loginKind') === 'P' ? '' : cookies.get('loginKind')
+        updater: getUserId()
       },
       keyName: 'code',
       valueName: 'name',

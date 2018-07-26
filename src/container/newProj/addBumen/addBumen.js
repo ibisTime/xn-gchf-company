@@ -23,7 +23,7 @@ class AddBumen extends React.Component {
       bumenStructure: [],
       companyCode: ''
     };
-    this.projectCode = getQueryString('projectCode', this.props.location.search);
+    // this.projectCode = getQueryString('projectCode', this.props.location.search);
     this.bumenCode = getQueryString('bumenCode', this.props.location.search);
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
@@ -32,13 +32,9 @@ class AddBumen extends React.Component {
   componentDidMount() {
     getUserDetail(getUserId()).then((res) => {
       this.setState({
-        companyCode: res.companyCode
+        projectCode: res.projectCode
       });
     });
-    // getBumen(this.companyCode).then(data => {
-    //   console.log(data);
-    //   this.setState({ bumenStructure: data });
-    // });
   }
   render() {
     const fields = [{
@@ -60,14 +56,14 @@ class AddBumen extends React.Component {
       type: 'select',
       listCode: '631036',
       params: {
-        projectCode: this.projectCode
+        projectCode: this.state.projectCode
       },
       keyName: 'code',
       valueName: 'name',
       value: this.upperBumen
     }];
 
-    return this.state.companyCode ? this.props.buildDetail({
+    return this.state.projectCode ? this.props.buildDetail({
       fields,
       key: 'code',
       code: this.code,
@@ -76,7 +72,7 @@ class AddBumen extends React.Component {
       editCode: 631032,
       detailCode: 631037,
       beforeSubmit: (param) => {
-        param.projectCode = this.projectCode;
+        param.projectCode = this.state.projectCode;
         return param;
       }
     }) : null;

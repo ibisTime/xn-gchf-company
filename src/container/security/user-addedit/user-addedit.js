@@ -71,6 +71,7 @@ class UserAddEdit extends React.Component {
       addCode: 631070,
       beforeSubmit: (params) => {
         params.projectCode = this.state.projectCode;
+        params.userRefree = getUserId();
         return params;
       }
     }) : null;

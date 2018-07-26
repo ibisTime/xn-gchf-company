@@ -101,7 +101,12 @@ class User extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/security/user/setRole?userId=${selectedRowKeys[0]}&loginName=${selectedRows[0].loginName}`);
+          // 通过roleCode前两位判断用户角色是否为管理员，若为管理员则不能设置角色
+          if(selectedRows[0].roleCode.slice(0, 2) !== 'RO') {
+            this.props.history.push(`/security/user/setRole?userId=${selectedRowKeys[0]}&loginName=${selectedRows[0].loginName}`);
+          } else {
+            showWarnMsg('该用户为管理员，无法设置角色');
+          }
         }
       },
       changeMobile: (selectedRowKeys, selectedRows) => {

@@ -1,7 +1,5 @@
 import React from 'react';
-import cookies from 'browser-cookies';
-// import AddBumen from 'container/newProj/project-addBumen/project-addBumen';
-import { Form, Spin, Button, Tree, Modal } from 'antd';
+import { Form, Spin, Tree, Modal } from 'antd';
 import { getCompany, getBumen, deleteCompany1, deleteBumen1, getCompanyDetail } from 'api/company';
 import { setRoleMenus, getUserDetail } from 'api/user';
 import { getBumen1, getProject } from 'api/project';
@@ -38,8 +36,9 @@ class ProjectAddBumen extends React.Component {
       this.setState({
         projectName: data1.name,
         projectCode: this.code,
-        companyName: data2.companyName,
-        companyCode: data2.companyCode,
+        // companyName: data2.companyName,
+        // companyCode: data2.companyCode,
+        projecCode: data2.projecCode,
         fetching: false
       }, () => {
         this.getTree0(data3);
@@ -63,29 +62,19 @@ class ProjectAddBumen extends React.Component {
     'key': 'company'
   }
   reSetData() {
-    if (getUserKind() === 'S') {
-      getUserDetail(getUserId()).then((data) => {
-        getCompany(data.projectCodeList, 'S').then((companyData) => {
-          console.log(companyData[0]);
-          this.getTree(companyData[0]);
-          this.setState({
-            fetching: false
-          });
-        }).catch(() => this.setState({ fetching: false }));
-      });
-    } else {
-      getUserDetail(getUserId()).then((data) => {
-        getCompanyDetail(data.companyCode).then((data) => {
-          this.getTree(data);
-          this.setState({
-            fetching: false
-          });
-        }).catch(() => this.setState({ fetching: false }));
-      });
-    }
+    // getUserDetail(getUserId()).then((data) => {
+    //   getCompanyDetail(data.companyCode).then((data) => {
+    //     this.getTree(data);
+    //     this.setState({
+    //       fetching: false
+    //     });
+    //   }).catch(() => this.setState({ fetching: false }));
+    // });
+    this.getTree();
   }
-  getTree(data) {
-    getBumen1({projectCode: this.code}).then((data) => {
+  getTree() {
+    console.log(this.state);
+    getBumen1({projectCode: this.state.projectCode}).then((data) => {
       this.getTree0(data);
     });
   }
@@ -105,19 +94,13 @@ class ProjectAddBumen extends React.Component {
     });
     this.companyCodeObj = companyCodeObj;
     this.result = result;
-    // let tree = [];
-    console.log(this.state.companyName);
     let tree = [
       {
-        title: this.state.companyName,
-        key: this.state.companyCode,
-        children: [{
-          title: this.state.projectName,
-          key: this.state.projectCode,
-          children: []
-        }]
+        title: this.state.projectName,
+        key: this.state.projectCode,
+        children: []
       }];
-    this.getTreeNode(result['ROOT'], tree[0].children[0].children);
+    this.getTreeNode(result['ROOT'], tree[0].children);
     this.setState({ treeData: tree, fetching: false });
   }
   getTreeNode(arr, children) {
@@ -132,7 +115,6 @@ class ProjectAddBumen extends React.Component {
         }
       });
     }
-    // console.log(children);
   }
   onSelect = (checkedKeys, event) => {
     console.log(checkedKeys);
@@ -170,7 +152,7 @@ class ProjectAddBumen extends React.Component {
       }
       return <TreeNode {...item} />;
     });
-  }
+  };
   addBumen = () => {
     console.log();
     if(this.state.selectKey[0] === 'D') {
@@ -178,7 +160,7 @@ class ProjectAddBumen extends React.Component {
     } else {
       this.props.history.push(`/newProj/companyConstruct/addBumen?projectCode=${this.code}`);
     }
-  }
+  };
   editBumen = () => {
     console.log(this.state.selectKey[0]);
     if (this.state.selectKey !== '' && this.state.selectKey[0] === 'D') {
@@ -186,7 +168,7 @@ class ProjectAddBumen extends React.Component {
     } else {
       showWarnMsg('请选择一个部门');
     }
-  }
+  };
   deleteBumen = () => {
     if (this.state.selectKey !== '' && this.state.selectKey[0] === 'D') {
       Modal.confirm({
@@ -210,21 +192,19 @@ class ProjectAddBumen extends React.Component {
     } else {
       showWarnMsg('请选择一家公司');
     }
-  }
+  };
   goBack = () => {
     this.props.history.go(-1);
-  }
+  };
   render() {
-    return this.state.companyName && this.state.projectName ? (
+    return this.state.projectName ? (
       <Spin spinning={this.state.fetching}>
-        {cookies.get('loginKind') === 'S' ? null
-          : <div className="tools-wrapper" style={{ marginTop: 8 }}>
-            <button type="button" className="ant-btn" onClick={this.addBumen}><span>新增部门</span></button>
-            <button type="button" className="ant-btn" onClick={this.editBumen}><span>修改部门</span></button>
-            <button type="button" className="ant-btn" onClick={this.deleteBumen}><span>删除部门</span></button>
-            <button type="button" className="ant-btn" onClick={this.goBack}><span>返回</span></button>
-          </div>
-        }
+        <div className="tools-wrapper" style={{ marginTop: 8 }}>
+          <button type="button" className="ant-btn" onClick={this.addBumen}><span>新增部门</span></button>
+          <button type="button" className="ant-btn" onClick={this.editBumen}><span>修改部门</span></button>
+          <button type="button" className="ant-btn" onClick={this.deleteBumen}><span>删除部门</span></button>
+          <button type="button" className="ant-btn" onClick={this.goBack}><span>返回</span></button>
+        </div>
         <Form className="detail-form-wrapper" onSubmit={this.handleSubmit}>
           <FormItem key='treeMenu' {...formItemLayout} >
             {this.state.treeData.length ? (

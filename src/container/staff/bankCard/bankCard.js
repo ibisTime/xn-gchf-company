@@ -46,9 +46,6 @@ class BankCard extends React.Component {
       field: 'staffName',
       title: '真实姓名'
     }, {
-      field: 'companyName',
-      title: '公司名称'
-    }, {
       field: 'projectName',
       title: '项目名称'
     }, {

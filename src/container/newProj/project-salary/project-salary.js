@@ -143,18 +143,8 @@ class Salary extends React.Component {
       fields: [{
         field: 'projectCode',
         title: '项目',
-        type: 'select',
-        search: true,
-        listCode: '631357',
-        params: {
-          updater: '',
-          kind: 'O',
-          companyCode: this.state.companyCode,
-          status: '3'
-        },
-        keyName: 'code',
-        valueName: 'name',
-        required: true
+        hidden: true,
+        value: this.state.projectCode
       }, {
         field: 'month',
         title: '生成工资月份',
@@ -165,6 +155,7 @@ class Salary extends React.Component {
       buttons: [{
         title: '确认',
         check: true,
+        type: 'primary',
         handler: (params, doFetching, cancelFetching, handleCancelModal) => {
           doFetching();
           fetch(631440, params).then((res) => {

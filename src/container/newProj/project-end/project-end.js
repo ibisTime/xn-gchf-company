@@ -33,7 +33,7 @@ class ProjectEnd extends React.Component {
     const fields = [{
         field: 'endDatetime',
         title: '项目结束时间',
-        type: 'datetime',
+        type: 'date',
         required: true
       }, {
         field: 'remark',
@@ -44,6 +44,7 @@ class ProjectEnd extends React.Component {
       buttons: [{
         title: '保存',
         check: true,
+        type: 'primary',
         handler: (param) => {
           param.code = this.code;
           param.updater = getUserId();

@@ -58,6 +58,7 @@ class ProjectStop extends React.Component {
       buttons: [{
         title: '保存',
         check: true,
+        type: 'primary',
         handler: (param) => {
           param.code = this.projectCode;
           param.updater = getUserId();
