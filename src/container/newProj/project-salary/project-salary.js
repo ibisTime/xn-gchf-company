@@ -94,7 +94,8 @@ class Salary extends React.Component {
       title: '状态',
       field: 'status',
       type: 'select',
-      key: 'salary_status'
+      key: 'salary_status',
+      search: true
     }, {
       title: '备注',
       field: 'factAmountRemark'
@@ -253,12 +254,6 @@ class Salary extends React.Component {
                     XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
                     XLSX.writeFile(wb, 'sheetjs.xlsx');
                   }, () => { });
-                }
-              }, {
-                code: 'goback',
-                name: '返回',
-                handler: (selectedRowKeys, selectedRows) => {
-                  this.props.history.go(-1);
                 }
               }],
               searchParams: {

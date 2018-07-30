@@ -59,9 +59,6 @@ class BankCardAddEdit extends React.Component {
       title: '真实姓名',
       readonly: true
     }, {
-      field: 'companyName',
-      title: '公司名称'
-    }, {
       field: 'projectName',
       title: '项目名称'
     }, {

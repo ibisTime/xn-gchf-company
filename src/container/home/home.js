@@ -144,11 +144,13 @@ class Home extends React.Component {
       options: [],
       activeKey: [],
       seclectProjcode: '',
-      moneyLine: []
+      moneyLine: [],
+      projectCode: ''
     };
   }
   componentDidMount() {
     this.initMap();
+    // this.getProject();
     this.getProjectList();
   }
   camera() {
@@ -207,13 +209,33 @@ class Home extends React.Component {
       center: [112.868904, 39.923423]
     });
   }
+  getProject() {
+    this.points = {};
+    getUserDetail(getUserId()).then((res) => {
+      getProject(res.projectCode).then((data) => {
+        let point = [data.longitude, data.latitude];
+        let marker = new AMap.Marker({
+          position: point,
+          map: this.map,
+          zIndex: 99,
+          content: `<div class="map-marker-point"></div>`
+        });
+        marker.content = { index: '0', code: data.code };
+        marker.on('click', this.markerClick);
+        this.points[data.code] = point;
+      });
+    });
+  }
   // 获取项目列表
   getProjectList() {
     this.points = {};
+    this.data = [];
     getUserDetail(getUserId()).then((data) => {
-      getProjectList(getUserKind(), data.projectCodeList, data.companyCode).then(data => {
-        this.data = data;
-        data.forEach((item, i) => {
+      this.setState({ projectCode: data.projectCode });
+      getProject(data.projectCode).then((res) => {
+        this.data.push(res);
+        console.log(this.data);
+        this.data.forEach((item, i) => {
           let point = [item.longitude, item.latitude];
           let marker = new AMap.Marker({
             position: point,
@@ -226,6 +248,22 @@ class Home extends React.Component {
           this.points[item.code] = point;
         });
       });
+
+      // getProjectList(getUserKind(), data.projectCodeList, data.companyCode).then(data => {
+      //   this.data = data;
+      //   data.forEach((item, i) => {
+      //     let point = [item.longitude, item.latitude];
+      //     let marker = new AMap.Marker({
+      //       position: point,
+      //       map: this.map,
+      //       zIndex: 99,
+      //       content: `<div class="map-marker-point">${i + 1}</div>`
+      //     });
+      //     marker.content = { index: i, code: item.code };
+      //     marker.on('click', this.markerClick);
+      //     this.points[item.code] = point;
+      //   });
+      // });
     });
   }
   // marker点击事件
@@ -250,6 +288,29 @@ class Home extends React.Component {
     }
     let item = this.data[e.target.content.index];
     this.createMarker(item, [point.lng, point.lat]);
+  }
+  // 不用点击，页面初始化就调用
+  markerClick1 = () => {
+    this.state.projectCode ? this.code = this.state.projectCode : this.markerClick1();
+    this.setState({
+      seclectProjcode: this.code
+    });
+    this.getDetail(this.state.projectCode);
+    this.getSalary(this.state.projectCode);
+    // let point = e.target.getPosition();
+    // if (this.marker) {
+    //   this.marker.setMap(null);
+    //   this.initPageData();
+    //   let mPoint = this.marker.getPosition();
+    //   if (mPoint.lng === point.lng && mPoint.lat === point.lat) {
+    //     this.marker = null;
+    //     this.setState({ chosed: false });
+    //     this.closeVideo();
+    //     return;
+    //   }
+    // }
+    // let item = this.data[e.target.content.index];
+    // this.createMarker(item, [point.lng, point.lat]);
   }
   createMarker(item, point) {
     this.marker = new AMap.Marker({
@@ -543,6 +604,7 @@ class Home extends React.Component {
                     <Panel header="本月工资详情" key="1">
                       <Table
                         columns={payColumns}
+                        locale={{emptyText: '暂无数据'}}
                         dataSource={payData}
                         rowKey={record => record.code}
                         pagination={payPagination}
@@ -555,6 +617,7 @@ class Home extends React.Component {
                     <Panel header="项目考勤" key="2">
                       <Table
                         columns={checkColumns}
+                        locale={{emptyText: '暂无数据'}}
                         dataSource={checkData}
                         rowKey={record => record.code}
                         pagination={checkPagination}
@@ -567,6 +630,7 @@ class Home extends React.Component {
                     <Panel header="异常事件" key="3">
                       <Table
                         columns={abnormalColumns}
+                        locale={{emptyText: '暂无数据'}}
                         dataSource={abnormalData}
                         rowKey={record => record.code}
                         pagination={abnormalPagination}

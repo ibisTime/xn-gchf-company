@@ -31,7 +31,7 @@ class DaifaAddEdit extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      companyCode: '',
+      projectCode: '',
       projectCodeList: ''
     };
     this.code = getQueryString('code', this.props.location.search);
@@ -39,7 +39,7 @@ class DaifaAddEdit extends React.Component {
   componentDidMount() {
     getUserDetail(getUserId()).then((data) => {
       this.setState({
-        companyCode: data.companyCode,
+        projectCode: data.projectCode,
         projectCodeList: data.projectCodeList
       });
     });
@@ -130,7 +130,7 @@ class DaifaAddEdit extends React.Component {
       }]
     };
     if (getUserKind() === 'O') {
-      return this.state.companyCode ? (
+      return this.state.projectCode ? (
         <div>
           {
             this.props.buildList({
@@ -156,7 +156,7 @@ class DaifaAddEdit extends React.Component {
               }],
               searchParams: {
                 messageCode: this.code,
-                companyCode: this.state.companyCode,
+                projectCode: this.state.projectCode,
                 kind: 'O'
               },
               pageCode: 631445

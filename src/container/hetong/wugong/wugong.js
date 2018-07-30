@@ -41,7 +41,6 @@ class Wugong extends React.Component {
       field: 'projectCode',
       title: '工程名称',
       type: 'select',
-      search: true,
       listCode: '631357',
       params: {
         companyCode: this.state.companyCode,
@@ -63,6 +62,12 @@ class Wugong extends React.Component {
     }, {
       field: 'remark',
       title: '备注'
+    }, {
+      field: 'keyword',
+      title: '关键字查询',
+      placeholder: '手机号模糊查询',
+      hidden: true,
+      search: true
     }];
     return this.state.projectCode ? this.props.buildList({
       fields,

@@ -32,68 +32,25 @@ class Jindu extends React.Component {
     this.state = {
       data: [],
       proList: [],
-      proTitle: ''
+      proTitle: '',
+      projectCode: ''
     };
   }
   componentDidMount() {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        getjinduO(data.companyCode).then(data => {
-          this.setState({
-            data: data
-          });
-        });
-        getjinduList(data.projectCodeList, data.companyCode).then(data => {
-          this.setState({
-            proList: data
-          });
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({ projectCode: data.projectCode });
+      getjinduO(this.state.projectCode).then(data => {
+        this.setState({
+          data: data
         });
       });
-    } else {
-      getUserDetail(getUserId()).then((data) => {
-        getjindu(data.companyCode).then(data => {
-          this.setState({
-            data: data
-          });
-        });
-        getjinduList(data.projectCodeList, data.companyCode).then(data => {
-          this.setState({
-            proList: data
-          });
-        });
-      });
-    }
+    });
   }
   goBack() {
     this.props.history.go(-1);
   };
   addjindu() {
-    if(this.state.code) {
-      this.props.history.push(`/hetong/jindu/addedit?code=${this.state.code}`);
-    } else {
-      this.props.history.push(`/hetong/jindu/addedit?code=${this.state.code}`);
-    }
-  }
-  handleClick = (e) => {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        getjinduO(data.companyCode, e.key).then(data => {
-          this.setState({
-            data: data,
-            proTitle: e.item.props.children,
-            code: e.key
-          });
-        });
-      });
-    } else {
-      getUserDetail(getUserId()).then((data) => {
-        getjindu(data.companyCode, e.key).then(data => {
-          this.setState({
-            data: data
-          });
-        });
-      });
-    }
+    this.props.history.push(`/hetong/jindu/addedit`);
   }
   render() {
     const { data, proList, proTitle } = this.state;
@@ -104,26 +61,10 @@ class Jindu extends React.Component {
           <Button type='primary' onClick={this.addjindu.bind(this)}>新增进度</Button>
         </div>
         <Divider />
-        <div style={{ float: 'right', width: 100, maxHeight: 900, marginRight: 132 }}>
-          <Menu
-            onClick={this.handleClick}
-            style={{ width: 256 }}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['0']}
-            mode="inline"
-          >
-            <SubMenu key={0} title={<span><Icon type="setting" /><span>项目列表</span></span>}>
-              {proList.length
-                ? proList.map((v, i) => <Menu.Item key={v.code}>{v.name}</Menu.Item>)
-                : <Menu.Item key="0">请录入项目</Menu.Item>
-              }
-            </SubMenu>
-          </Menu>
-        </div>
         <div style={{ paddingLeft: 200, paddingTop: 60, display: 'inline-block' }}>
           <Timeline key={0}>
             {data.length
-              ? data.map(v => <Timeline.Item key={v.code}>{formatDate(v.datetime)}&nbsp;&nbsp;{v.projectName}&nbsp;&nbsp;<div style={{ display: 'inline-block', width: 200 }}>{v.description}</div><img src={formatImg(v.picture)} style={{ width: 100, height: 90, display: 'inlineBlock', verticalAlign: 'text-top', position: 'relative', left: -480, top: -40 }} /></Timeline.Item>)
+              ? data.map(v => <Timeline.Item key={v.code}>{formatDate(v.datetime)}&nbsp;&nbsp;{v.projectName}&nbsp;&nbsp;<div style={{ display: 'inline-block', width: 200 }}>{v.description}</div><img src={formatImg(v.picture)} style={{ width: 100, height: 90, display: 'inlineBlock', verticalAlign: 'text-top', position: 'relative', left: -580, top: -40 }} /></Timeline.Item>)
               : <Timeline.Item>该项目没有录入进度</Timeline.Item>}
           </Timeline>
         </div>

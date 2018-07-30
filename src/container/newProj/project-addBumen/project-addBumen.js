@@ -190,7 +190,7 @@ class ProjectAddBumen extends React.Component {
         }
       });
     } else {
-      showWarnMsg('请选择一家公司');
+      showWarnMsg('请选择一个部门');
     }
   };
   goBack = () => {

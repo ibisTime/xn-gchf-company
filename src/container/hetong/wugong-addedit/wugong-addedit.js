@@ -22,32 +22,26 @@ class WugongAddEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      companyCode: ''
+      projectCode: '',
+      projectName: ''
     };
     this.code = getQueryString('code', this.props.location.search);
-    this.projectCode = getQueryString('projectCode', this.props.location.search);
+    // this.projectCode = getQueryString('projectCode', this.props.location.search);
   }
   componentDidMount() {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'companyCode': data.companyCode });
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({
+        projectCode: data.projectCode,
+        projectName: data.projectName
       });
-    };
+    });
   }
   render() {
     const fields = [{
       field: 'projectCode',
       title: '所属工程',
-      type: 'select',
-      listCode: '631357',
-      params: {
-        kind: 'O',
-        updater: '',
-        companyCode: this.state.companyCode
-      },
-      keyName: 'code',
-      valueName: 'name',
-      required: true
+      value: this.state.projectName,
+      readonly: true
     }, {
       field: 'staffCode',
       title: '工人名字',
@@ -71,13 +65,17 @@ class WugongAddEdit extends React.Component {
       field: 'remark',
       title: '备注'
     }];
-    return this.state.companyCode ? this.props.buildDetail({
+    return this.state.projectCode ? this.props.buildDetail({
       fields,
       code: this.code,
       view: this.view,
       addCode: 631400,
       editCode: 631402,
       detailCode: 631407,
+      beforeSubmit: (params) => {
+        params.projectCode = this.state.projectCode;
+        return params;
+      },
       onOk: () => {
         this.props.cancelFetching();
         setTimeout(() => {

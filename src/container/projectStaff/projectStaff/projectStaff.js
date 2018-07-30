@@ -66,7 +66,9 @@ class ProjectStaff extends React.Component {
       title: '部门'
     }, {
       field: 'position',
-      title: '职位'
+      title: '职位',
+      type: 'select',
+      key: 'position_type'
     }, {
       field: 'status',
       title: '状态',

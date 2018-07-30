@@ -69,9 +69,6 @@ class ProjectStaffAddedit extends React.Component {
         return d.staff.contactsMobile;
       }
     }, {
-      field: 'companyName',
-      title: '公司名'
-    }, {
       field: 'projectName',
       title: '所在工程'
     }, {
@@ -79,7 +76,9 @@ class ProjectStaffAddedit extends React.Component {
       title: '所在部门'
     }, {
       field: 'position',
-      title: '职位'
+      title: '职位',
+      type: 'select',
+      key: 'position_type'
     }, {
       field: 'salary',
       title: '日薪',
@@ -124,6 +123,10 @@ class ProjectStaffAddedit extends React.Component {
     }, {
       field: 'joinDatetime',
       title: '入职时间',
+      type: 'date'
+    }, {
+      field: 'leavingDatetime',
+      title: '离职时间',
       type: 'date'
     }, {
       field: 'remark',

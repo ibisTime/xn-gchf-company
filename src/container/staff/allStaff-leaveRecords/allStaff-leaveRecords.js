@@ -28,22 +28,14 @@ class AllStaffLeaveRecords extends React.Component {
     super(props);
     this.state = {
       pageCode: null,
-      searchParams: null
+      searchParams: null,
+      projectCode: ''
     };
-    this.staffCode = getQueryString('staffCode', this.props.location.search);
   }
   componentDidMount() {
-    // console.log(1);
-    // if (getUserKind() === 'S') {
-    //   getUserDetail(getUserId()).then((data) => {
-    //     this.setState({ 'projectCodeList': data.projectCodeList });
-    //   });
-    // };
-    // if (getUserKind() === 'O') {
-    //   getUserDetail(getUserId()).then((data) => {
-    //     this.setState({ 'companyCode': data.companyCode });
-    //   });
-    // };
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({ 'projectCode': data.projectCode });
+    });
   }
   render() {
     const fields = [{
@@ -63,28 +55,8 @@ class AllStaffLeaveRecords extends React.Component {
     }, {
       field: 'leaveDays',
       title: '请假天数'
-    }, {
-      field: 'updateDatetime',
-      title: '更新时间',
-      type: 'datetime'
-    }
-    // , {
-    //   field: 'updater',
-    //   title: '更新人'
-    // }
-    ];
-    const btnEvent = [{
-      detail: (selectedRowKeys, selectedRows) => {
-        if (!selectedRowKeys.length) {
-          showWarnMsg('请选择记录');
-        } else if (selectedRowKeys.length > 1) {
-          showWarnMsg('请选择一条记录');
-        } else {
-          this.props.history.push(`/staff/allStaff/detailadd?staffCode=${selectedRowKeys[0]}`);
-        }
-      }
     }];
-    return this.props.buildList({
+    return this.state.projectCode ? this.props.buildList({
       fields,
       buttons: [{
         code: 'detail',
@@ -100,10 +72,10 @@ class AllStaffLeaveRecords extends React.Component {
         }
       }],
       searchParams: {
-        staffCode: this.staffCode
+        projectCode: this.state.projectCode
       },
       pageCode: 631468
-    });
+    }) : null;
   }
 }
 

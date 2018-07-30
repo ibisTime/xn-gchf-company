@@ -45,7 +45,6 @@ class Chengbaoshang extends React.Component {
       field: 'projectCode',
       title: '工程名称',
       type: 'select',
-      search: true,
       listCode: '631357',
       params: {
         updater: '',

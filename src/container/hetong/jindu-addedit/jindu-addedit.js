@@ -20,31 +20,25 @@ class JinduAddEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      companyCode: ''
+      projectCode: '',
+      projectName: ''
     };
     this.code = getQueryString('code', this.props.location.search);
   }
   componentDidMount() {
-    if (getUserKind() === 'O') {
-      getUserDetail(getUserId()).then((data) => {
-        this.setState({ 'companyCode': data.companyCode });
+    getUserDetail(getUserId()).then((data) => {
+      this.setState({
+        projectCode: data.projectCode,
+        projectName: data.projectName
       });
-    }
+    });
   };
   render() {
     const fields = [{
       field: 'projectCode',
       title: '所属工程',
-      type: 'select',
-      listCode: '631357',
-      params: {
-        updater: '',
-        companyCode: this.state.companyCode,
-        kind: 'O'
-      },
-      keyName: 'code',
-      valueName: 'name',
-      required: true
+      value: this.state.projectName,
+      readonly: true
     }, {
       field: 'description',
       title: '工程进度描述',
@@ -64,11 +58,15 @@ class JinduAddEdit extends React.Component {
       field: 'remark',
       title: '备注'
     }];
-    return this.state.companyCode ? this.props.buildDetail({
+    return this.state.projectCode ? this.props.buildDetail({
       fields,
       // code: this.code,
       addCode: 631380,
-      editCode: 631380
+      editCode: 631380,
+      beforeSubmit: (params) => {
+        params.projectCode = this.state.projectCode;
+        return params;
+      }
     }) : null;
   }
 }

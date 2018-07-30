@@ -49,9 +49,6 @@ class AlreadyQuest extends React.Component {
   }
   render() {
     const fields = [{
-      title: '公司名称',
-      field: 'companyName'
-    }, {
       title: '项目名称',
       field: 'projectName'
     }, {

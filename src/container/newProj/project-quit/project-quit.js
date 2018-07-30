@@ -43,7 +43,7 @@ class ProjectQuit extends React.Component {
       title: '离职时间',
       field: 'leavingDatetime',
       required: true,
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '备注',
       field: 'remark'

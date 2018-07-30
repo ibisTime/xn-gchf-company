@@ -75,6 +75,9 @@ class Skill extends React.Component {
             }
           });
         }
+      },
+      back: (selectedRowKeys, selectedRows) => {
+        this.props.history.go(-1);
       }
     };
     return this.props.buildList({
@@ -92,6 +95,9 @@ class Skill extends React.Component {
       }, {
         code: 'delete',
         name: '删除'
+      }, {
+        code: 'back',
+        name: '返回'
       }],
       pageCode: 631505
     });

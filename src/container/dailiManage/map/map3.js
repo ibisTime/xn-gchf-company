@@ -205,17 +205,12 @@ class Map extends React.Component {
       }
     };
     const fields = [{
-      field: 'companyName',
-      title: '公司名称',
-      hidden: this.state.userKind !== 'S'
-    }, {
       field: 'projectCode',
       formatter: (v, d) => {
         return d.name;
       },
       title: '工程名称',
       type: 'select',
-      search: true,
       listCode: '631357',
       params: {
         updater: '',
@@ -228,7 +223,7 @@ class Map extends React.Component {
       field: 'provinces',
       title: '项目详细地址',
       formatter: (v, d) => {
-        return d.province + d.city + d.area + d.address;
+        return d.province ? d.province + d.city + d.area + d.address : '';
       }
     }, {
       field: 'startDatetime',

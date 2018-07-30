@@ -37,107 +37,11 @@ class ProjectAddedit extends React.Component {
     });
   }
   render() {
-    // 新增
+    // 修改
     const fields = [{
       field: 'name',
       title: '项目名称',
-      required: true
-    }, {
-      field: 'chargeUser',
-      title: '负责人',
-      required: true
-    }, {
-      field: 'chargeMobile',
-      title: '负责人手机号',
-      mobile: true,
-      required: true
-    }, {
-      field: 'quyu',
-      title: '地区',
-      type: 'citySelect',
-      required: true
-    // }, {
-    //   field: 'aaa',
-    //   title: '123',
-    //   type: 'chooseMap',
-    //   // lnglat: 'quyu',
-    //   // lnglatTo: ['longitude', 'latitude'],
-    //   required: true
-    }, {
-      field: 'address',
-      title: '详细地址',
-      type: 'lnglat',
-      lnglat: 'quyu',
-      lnglatTo: ['longitude', 'latitude'],
-      required: true
-    }, {
-      field: 'longitude',
-      title: '经度',
-      required: true
-    }, {
-      field: 'latitude',
-      title: '纬度',
-      required: true
-    }, {
-      field: 'attendanceStarttime',
-      title: '上班时间',
-      type: 'time',
-      required: true
-    }, {
-      field: 'attendanceEndtime',
-      title: '下班时间',
-      type: 'time',
-      required: true
-    }, {
-      field: 'code1',
-      title: '开户行',
-      // type: this.view ? null : 'select',
-      type: this.view ? null : 'select',
-      listCode: '631106',
-      keyName: 'code',
-      valueName: 'bankSubbranchName',
-      required: true
-    }, {
-      field: 'companyCode',
-      formatter: (v, d) => {
-        return this.state.companyCode;
-      },
-      hidden: true
-    }, {
-      field: 'accountName',
-      title: '户名',
-      required: true
-    }, {
-      field: 'bankcardNumber',
-      title: '银行账户',
-      _keys: ['companyCard', 'bankcardNumber'],
-      required: true
-    }, {
-      field: 'startDatetime',
-      title: '项目开始时间',
-      type: 'date',
-      required: true
-    }, {
-      field: 'salaryCreateDatetime',
-      title: '工资条形成时间',
-      type: 'date28',
-      date28: true,
-      required: true
-    }, {
-      field: 'salaryDatetime',
-      title: '薪资发放时间',
-      type: 'date28',
-      date28: true,
-      required: true
-    }, {
-      field: 'remark',
-      title: '备注'
-    }];
-    // 修改
-    const fieldsedit = [{
-      field: 'name',
-      title: '项目名称',
-      required: true
+      readonly: true
     }, {
       field: 'chargeUser',
       title: '负责人',
@@ -325,7 +229,7 @@ class ProjectAddedit extends React.Component {
       }
     }];
     return this.state.projectCode ? this.props.buildDetail({
-      fields: this.view ? fieldos : this.code ? fieldsedit : fields,
+      fields,
       code: this.state.projectCode,
       view: this.view,
       buttons: !this.view ? [{

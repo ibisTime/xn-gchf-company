@@ -25,33 +25,24 @@ class AccountAddEdit extends React.Component {
   }
   render() {
     const fields = [{
+      field: 'code',
+      value: this.code,
+      hidden: true
+    }, {
       field: 'projectName',
       title: '工程名称',
       readonly: true
     }, {
+      field: 'bankSubbranch',
+      title: '开户行'
+    }, {
       field: 'accountName',
-      title: '户名'
-    }, {
-      field: 'bankNames',
-      title: '开户行',
-      formatter: (v, d) => {
-        return d.bankName + d.subbranch;
-      }
-    }, {
-      field: 'bankCode',
-      title: '银行代号'
+      title: '户名',
+      required: true
     }, {
       field: 'bankcardNumber',
-      title: '银行账户',
+      title: '银行卡号',
       required: true
-    }, {
-      field: 'updateName',
-      title: '更新人',
-      required: true
-    }, {
-      field: 'createDatetime',
-      title: '创建时间',
-      type: 'datetime'
     }, {
       field: 'status',
       title: '状态',
@@ -60,6 +51,7 @@ class AccountAddEdit extends React.Component {
       search: true,
       readonly: true
     }];
+    // 修改
     const fieldso = [{
       field: 'code',
       value: this.code,
@@ -69,24 +61,20 @@ class AccountAddEdit extends React.Component {
       title: '工程名称',
       readonly: true
     }, {
+      field: 'bankSubbranch',
+      title: '开户行',
+      type: 'select',
+      listCode: '631106',
+      keyName: 'code',
+      valueName: 'bankSubbranchName',
+      required: true
+    }, {
       field: 'accountName',
       title: '户名',
       required: true
     }, {
-      field: 'bankCode',
-      title: '银行代号',
-      required: true
-    }, {
-      field: 'bankName',
-      title: '银行名',
-      required: true
-    }, {
       field: 'bankcardNumber',
-      title: '银行账户',
-      required: true
-    }, {
-      field: 'subbranch',
-      title: '开户行',
+      title: '银行卡号',
       required: true
     }, {
       field: 'status',
@@ -101,7 +89,19 @@ class AccountAddEdit extends React.Component {
       code: this.code,
       view: this.view,
       detailCode: 631367,
-      editCode: 631362
+      editCode: 631362,
+      beforeSubmit: (params) => {
+        for (let i = 0; i < this.props.selectData.bankSubbranch.length; i++) {
+          console.log(params.bankName);
+          console.log(this.props.selectData.bankSubbranch[i]);
+          if (params.bankSubbranch === this.props.selectData.bankSubbranch[i].bankSubbranchName || params.bankSubbranch === this.props.selectData.bankSubbranch[i].code) {
+            params.bankName = this.props.selectData.bankSubbranch[i].bankName;
+            params.bankCode = this.props.selectData.bankSubbranch[i].bankCode;
+            params.subbranch = this.props.selectData.bankSubbranch[i].subbranchName;
+          }
+        }
+        return params;
+      }
     });
   }
 }
