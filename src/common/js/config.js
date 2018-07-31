@@ -55,3 +55,13 @@ export const ruzhiFormItemLayout = {
     sm: { span: 14 }
   }
 };
+export const configLayout = {
+  labelCol: {
+    xs: { span: 22 },
+    sm: { span: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 8 }
+  }
+};

@@ -31,13 +31,14 @@ class Kaoqin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      projectCode: ''
+      projectCode: '',
+      projectName: ''
     };
     this.code = getQueryString('code', this.props.location.search);
   }
   componentDidMount() {
     getUserDetail(getUserId()).then((data) => {
-      this.setState({ projectCode: data.projectCode });
+      this.setState({ projectCode: data.projectCode, projectName: data.projectName });
     });
   }
   render() {
@@ -129,7 +130,7 @@ class Kaoqin extends React.Component {
                 code: 'export',
                 name: '导出',
                 handler: (selectedRowKeys, selectedRows) => {
-                  fetch(631395, {projectCode: this.projectCode, limit: 10000, start: 1}).then((data) => {
+                  fetch(631395, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
                     let tableData = [];
                     let title = [];
                     fields.map((item) => {
@@ -159,7 +160,7 @@ class Kaoqin extends React.Component {
                     const ws = XLSX.utils.aoa_to_sheet(tableData);
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
-                    XLSX.writeFile(wb, this.state.companyName + '考勤记录.xlsx');
+                    XLSX.writeFile(wb, this.state.projectName + '考勤记录.xlsx');
                   });
                 }
               },

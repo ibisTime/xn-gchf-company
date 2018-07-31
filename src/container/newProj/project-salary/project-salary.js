@@ -35,6 +35,7 @@ class Salary extends React.Component {
     this.state = {
       visible: false,
       projectCode: '',
+      projectName: '',
       projectCodeList: '',
       salaryStatus: []
     };
@@ -43,6 +44,7 @@ class Salary extends React.Component {
     getUserDetail(getUserId()).then((data) => {
       this.setState({
         projectCode: data.projectCode,
+        projectName: data.projectName,
         projectCodeList: data.projectCodeList
       });
     });
@@ -238,7 +240,7 @@ class Salary extends React.Component {
                 name: '导出',
                 handler: (selectedRowKeys, selectedRows) => {
                   fetch(631446, {
-                    projectCode: this.projectCode,
+                    projectCode: this.state.projectCode,
                     companyCode: this.state.companyCode,
                     kind: 'O'
                   }).then((data) => {
@@ -252,7 +254,7 @@ class Salary extends React.Component {
                     const ws = XLSX.utils.aoa_to_sheet(payroll1);
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
-                    XLSX.writeFile(wb, 'sheetjs.xlsx');
+                    XLSX.writeFile(wb, this.state.projectName + '工资明细.xlsx');
                   }, () => { });
                 }
               }],
