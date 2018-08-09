@@ -69,9 +69,6 @@ class PWugong extends React.Component {
       title: '入职时间',
       type: 'date'
     }, {
-      field: 'upUserName',
-      title: '上级'
-    }, {
       field: 'status',
       title: '状态',
       type: 'select',

@@ -12,7 +12,7 @@ export function getOwnerBtns(parentCode) {
     roleCode: getRoleCode(),
     type: 2,
     updater: '',
-    roleType: 'O'
+    systemCode: 'O'
   });
 }
 
@@ -21,7 +21,7 @@ export function getOwnerBtns(parentCode) {
  */
 
 export function getMenuBtnList() {
-  return fetch(631066, {roleType: 'O'});
+  return fetch(631066, {systemCode: 'O'});
 }
 
 /**
@@ -32,7 +32,7 @@ export function getRoleMenuList() {
     type: 1,
     roleCode: getRoleCode(),
     updater: '',
-    roleType: 'O'
+    systemCode: 'O'
   });
 }
 
@@ -41,5 +41,5 @@ export function getRoleMenuList() {
  */
 export function getRoleMenuBtnList(roleCode) {
   roleCode = roleCode || getRoleCode();
-  return fetch(631056, { roleCode, updater: '', roleType: 'O' });
+  return fetch(631056, { roleCode, updater: '', systemCode: 'O' });
 }

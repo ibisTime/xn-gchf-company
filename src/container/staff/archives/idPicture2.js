@@ -263,7 +263,6 @@ class mianguanRead extends React.Component {
 };
 
   render() {
-    const url = './touxiang.png';
     return (
       <div className="SectionContainer1" style={{ border: '2px solid #096dd9' }}>
         <div className="section1">

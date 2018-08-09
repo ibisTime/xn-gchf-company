@@ -218,10 +218,6 @@ const ROUTES = [
     component: asyncComponent(() => import('container/people/wugong/wugong'))
   },
   {
-    path: '/staff/allStaff/entry',
-    component: asyncComponent(() => import('container/people/wugong-addedit/wugong-addedit'))
-  },
-  {
     path: '/people/wugong/break',
     component: asyncComponent(() => import('container/people/wugong-break/wugong-break'))
   },
@@ -229,10 +225,10 @@ const ROUTES = [
     path: '/people/wugong/leave',
     component: asyncComponent(() => import('container/people/wugong-leave/wugong-leave'))
   },
-  {
-    path: '/people/history',
-    component: asyncComponent(() => import('container/people/history/history'))
-  },
+  // {
+  //   path: '/people/history',
+  //   component: asyncComponent(() => import('container/people/history/history'))
+  // },
   {
     path: '/staff/allStaff',
     component: asyncComponent(() => import('container/staff/allStaff/allStaff'))
@@ -369,9 +365,9 @@ const ROUTES = [
     path: '/staff/ruzhiInfo',
     component: asyncComponent(() => import('container/staff/archives/ruzhiInfo'))
   },
-  { path: '/staff/allStaff/addBankCard',
-    component: asyncComponent(() => import('container/staff/allStaff-addBankCard/allStaff-addBankCard'))
-  },
+  // { path: '/staff/allStaff/addBankCard',
+  //   component: asyncComponent(() => import('container/staff/allStaff-addBankCard/allStaff-addBankCard'))
+  // },
   {
     path: '/staff/jiandang/idPicture',
     component: asyncComponent(() => import('container/staff/archives/idPicture'))
@@ -455,6 +451,10 @@ const ROUTES = [
   {
     path: '/projectStaff/projectStaff/addBankCard',
     component: asyncComponent(() => import('container/projectStaff/projectStaff-addBankCard/projectStaff-addBankCard'))
+  },
+  {
+    path: '/projectStaff/addContract',
+    component: asyncComponent(() => import('container/projectStaff/projectStaff-addContract/projectStaff-addContract'))
   },
   {
     path: '/waitList/alreadyQuest',

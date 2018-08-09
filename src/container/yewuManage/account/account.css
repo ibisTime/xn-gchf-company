@@ -1,0 +1,14 @@
+.big {
+    padding: 30px 200px;
+    background: #7fb2d9;
+    text-align: center;
+}
+.big .title {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+.big .updateDateTime {
+    text-align: center;
+    margin-bottom: 30px;
+}

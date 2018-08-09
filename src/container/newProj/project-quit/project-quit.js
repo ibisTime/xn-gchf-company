@@ -24,10 +24,6 @@ class ProjectQuit extends React.Component {
     this.projectCode = getQueryString('projectCode', this.props.location.search);
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((data) => {
-      console.log(data);
-      this.setState({ projectCodeList: data.projectCodeList });
-    });
   };
   render() {
     const fields = [{
@@ -48,10 +44,10 @@ class ProjectQuit extends React.Component {
       title: '备注',
       field: 'remark'
     }];
-    return this.state.projectCodeList ? this.props.buildDetail({
+    return this.props.buildDetail({
       fields,
       addCode: 631462
-    }) : null;
+    });
   }
 }
 

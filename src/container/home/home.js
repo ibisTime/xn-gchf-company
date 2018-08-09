@@ -248,22 +248,6 @@ class Home extends React.Component {
           this.points[item.code] = point;
         });
       });
-
-      // getProjectList(getUserKind(), data.projectCodeList, data.companyCode).then(data => {
-      //   this.data = data;
-      //   data.forEach((item, i) => {
-      //     let point = [item.longitude, item.latitude];
-      //     let marker = new AMap.Marker({
-      //       position: point,
-      //       map: this.map,
-      //       zIndex: 99,
-      //       content: `<div class="map-marker-point">${i + 1}</div>`
-      //     });
-      //     marker.content = { index: i, code: item.code };
-      //     marker.on('click', this.markerClick);
-      //     this.points[item.code] = point;
-      //   });
-      // });
     });
   }
   // marker点击事件

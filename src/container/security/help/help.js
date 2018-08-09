@@ -20,7 +20,7 @@ import { getUserKind } from 'common/js/util';
   { setTableData, clearSearchParam, doFetching, setBtnList,
     cancelFetching, setPagination, setSearchParam, setSearchData }
 )
-class Menu extends React.Component {
+class Help extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,4 +78,4 @@ class Menu extends React.Component {
   }
 }
 
-export default Menu;
+export default Help;

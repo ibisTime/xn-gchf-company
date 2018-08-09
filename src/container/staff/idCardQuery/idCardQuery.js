@@ -34,27 +34,14 @@ class AllStaffAddEdit extends React.Component {
     });
   }
   clickQuery() {
-    if (getUserKind() === 'S' || getUserKind() === 'O') {
-      if (this.state.projectCodeList) {
-        let idCard = document.getElementById('idCard').value;
-        console.log(idCard);
-        if (!idCard) {
-          showWarnMsg('请输入身份证号码！');
-          return;
-        }
-        query(idCard, this.state.projectCodeList).then(data => {
-          console.log(data);
-          this.setState({ data: data });
-        });
-      }
-    }
-    if (getUserKind() === 'P') {
+    if (this.state.projectCodeList) {
       let idCard = document.getElementById('idCard').value;
+      console.log(idCard);
       if (!idCard) {
         showWarnMsg('请输入身份证号码！');
         return;
       }
-      query1(idCard).then(data => {
+      query(idCard, this.state.projectCodeList).then(data => {
         console.log(data);
         this.setState({ data: data });
       });

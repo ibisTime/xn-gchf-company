@@ -37,7 +37,7 @@ class ProjectWeekday extends React.Component {
       value: this.projectCode,
       hidden: true
     }, {
-      field: 'staffCode',
+      field: 'employCode',
       value: this.code,
       hidden: true
     }, {
@@ -46,10 +46,10 @@ class ProjectWeekday extends React.Component {
       required: true,
       type: 'date'
     }, {
-      title: '请假天数',
-      field: 'leaveDays',
+      title: '结束时间',
+      field: 'endDatetime',
       required: true,
-      number: true
+      type: 'date'
     }, {
       title: '备注',
       field: 'remark'

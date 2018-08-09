@@ -22,7 +22,6 @@ import { publicAboutusAddEdit } from './redux/public/aboutus-addedit';
 import { publicTimeAddEdit } from './redux/public/time-addedit';
 import { generalTextParam } from './redux/general/text-param';
 import { generalTextParamAddEdit } from './redux/general/text-param-addedit';
-import { dailiManageMap } from './redux/dailiManage/map';
 import { newProjCompanyConstruct } from './redux/newProj/companyConstruct';
 import { newProjBumenConstruct } from './redux/newProj/bumenConstruct';
 import { newProjAddCompany } from './redux/newProj/addCompany';
@@ -58,7 +57,6 @@ import { peopleWugong } from './redux/people/wugong';
 import { peopleWugongAddEdit } from './redux/people/wugong-addedit';
 import { peopleWugongBreak } from './redux/people/wugong-break';
 import { peopleWugongLeave } from './redux/people/wugong-leave';
-import { peopleHistory } from './redux/people/history';
 import { staffAllStaff } from './redux/staff/allStaff';
 import { staffAllStaffAddEdit } from './redux/staff/allStaff-addedit';
 import { staffAllStaffLeaveRecords } from './redux/staff/allStaff-leaveRecords';
@@ -77,7 +75,6 @@ import { staffAllStaffWages } from './redux/staff/allStaff-wages';
 import { staffBankCard } from './redux/staff/bankCard';
 import { staffBankCardAddEdit } from './redux/staff/bankCard-addedit';
 import { staffHistoryDetail } from './redux/staff/history-detail';
-import { staffAllStaffAddBankCard } from './redux/staff/allStaff-addBankCard';
 import { daifaDaifa } from './redux/daifa/daifa';
 import { mapMap } from './redux/map/map';
 import { daifaDaifaAddEdit } from './redux/daifa/daifa-addedit';
@@ -157,7 +154,6 @@ export default combineReducers({
   peopleWugongAddEdit,
   peopleWugongBreak,
   peopleWugongLeave,
-  peopleHistory,
   staffAllStaff,
   staffAllStaffAddEdit,
   staffAllStaffLeaveRecords,
@@ -176,7 +172,6 @@ export default combineReducers({
   staffAllStaffWages,
   staffAllStaffErrorAddEdit,
   staffHistoryDetail,
-  staffAllStaffAddBankCard,
   daifaDaifa,
   daifaDaifaAddEdit,
   daifaDaifaEdit,

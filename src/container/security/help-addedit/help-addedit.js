@@ -14,7 +14,7 @@ import { DetailWrapper } from 'common/js/build-detail';
   state => state.securityMenuAddEdit,
   { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
 )
-class MenuAddEdit extends React.Component {
+class HelpAddedit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,4 +90,4 @@ class MenuAddEdit extends React.Component {
   }
 }
 
-export default MenuAddEdit;
+export default HelpAddedit;

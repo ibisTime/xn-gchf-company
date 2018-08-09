@@ -2,9 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import { Button } from 'antd';
 import './idPicture.css';
-import idPic1 from './idzhengmian.png';
-import idPic2 from './idfanmian.png';
-import idPic3 from './shouchizhengjian.png';
+import Figure from './figure.png';
+import Hold from './hold.png';
+import IDFRONT from './id-front.png';
+import IDBACK from './id-back.png';
 import { getQueryString, getUserId } from 'common/js/util';
 import { idPicture3, getStaffDetail } from 'api/user';
 import { showSucMsg } from '../../../common/js/util';
@@ -180,9 +181,36 @@ class mianguanRead extends React.Component {
     });
     let currentCanvas = this[`canvas${index}`];
     let currentVideo = this[`video${index}`];
-    this.context = currentCanvas.getContext('2d');
-    this.context.drawImage(currentVideo, 0, 0, 260, 213);
-    this.getBase64(currentCanvas, index);
+    // this.context = currentCanvas.getContext('2d');
+    if(index === '1' || index === '2') {
+      // this.context.drawImage(currentVideo, 0, 0, 1020, 720);
+      this.context = currentCanvas.getContext('2d');
+      currentCanvas.width = 338 * 3;
+      currentCanvas.height = 238 * 3;
+      let scaleH = currentVideo.videoHeight / 238;
+      let scaleW = currentVideo.videoWidth / 338;
+      if (scaleH > scaleW) {
+        let sy = (currentVideo.videoHeight - 238 * scaleW) / 2;
+        this.context.drawImage(currentVideo, 0, sy, currentVideo.videoWidth, 238 * scaleW, 0, 0, 338 * 3, 238 * 3);
+      } else {
+        let sx = (currentVideo.videoWidth - scaleH * 338) / 2;
+        this.context.drawImage(currentVideo, sx, 0, scaleH * 338, currentVideo.videoHeight, 0, 0, 338 * 3, 238 * 3);
+      }
+    } else {
+      // this.context.drawImage(currentVideo, 0, 0, 1020, 1536);
+      this.context = currentCanvas.getContext('2d');
+      currentCanvas.width = 340 * 3;
+      currentCanvas.height = 512 * 3;
+      let scaleH = currentVideo.videoHeight / 512;
+      let scaleW = currentVideo.videoWidth / 340;
+      if (scaleH > scaleW) {
+        let sy = (currentVideo.videoHeight - 512 * scaleW) / 2;
+        this.context.drawImage(currentVideo, 0, sy, currentVideo.videoWidth, 512 * scaleW, 0, 0, 340 * 3, 512 * 3);
+      } else {
+        let sx = (currentVideo.videoWidth - scaleH * 340) / 2;
+        this.context.drawImage(currentVideo, sx, 0, scaleH * 340, currentVideo.videoHeight, 0, 0, 340 * 3, 512 * 3);
+      }
+    }
   };
   getPixelRatio() {
     var backingStore = this.context.backingStorePixelRatio ||
@@ -268,56 +296,50 @@ class mianguanRead extends React.Component {
 };
 
   render() {
-    const url = './touxiang.png';
     return (
-      <div className="SectionContainer1" style={{ border: '2px solid #096dd9' }}>
-        <div className="section1">
-            <div style={{ verticalAlign: 'middle', width: '100%' }}>
-                <div className="comparison-main1 comparison-mains1">
-                <div className="head-wrap1"><i></i>证件照读取</div>
-                    <div className="clearfix1">
-                        <div className="inner-box1">
-                          <div className="title">
-                            <span>身份证正面照</span>
-                            <span>身份证反面照</span>
-                            <span>手持身份证照</span>
-                          </div>
-                            <div
-                                className="img-wrap1 right-img1"
-                                style={{ border: '1px solid #4c98de', display: 'inline-block', margin: '0 58px 0 70px' }}
-                                onClick={ () => { this.shot(1); } }
-                            >
-                                <img src={this.state.pic1} className="haveUserImg1" id="userImg" style={{ display: 'inline-block' }}/>
-                                <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" width="260" height="213"></canvas>
-                            </div>
-                            <div
-                                className="img-wrap1 right-img1"
-                                style={{ border: '1px solid #4c98de', display: 'inline-block', margin: '0 58px 0 0' }}
-                                onClick={ () => { this.shot(2); } }
-                            >
-                                <img src={this.state.pic2} className="haveUserImg1" id="userImg" style={{ display: 'inline-block' }}/>
-                                <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" width="260" height="213"></canvas>
-                            </div>
-                            <div
-                                className="img-wrap1 right-img1"
-                                style={{ border: '1px solid #4c98de', display: 'inline-block', margin: '0 0 0 0' }}
-                                onClick={ () => { this.shot(3); } }
-                            >
-                                <img src={this.state.pic3} className="haveUserImg1" id="userImg" style={{ display: 'inline-block' }}/>
-                                <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" width="260" height="213"></canvas>
-                            </div>
-                            <div style={{ paddingTop: 20 }}>
-                                <div className="btn-item" style={{ textAlign: 'center' }}>
-                                <div>
-                                <Button type="primary" style={{ width: 250 }} id="cut" onClick={ this.handleSubmit }>下一步</Button>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
+        <div className="id-total">
+          <div className="title"><i></i><span>证件采集</span></div>
+          <div className="out">
+            <div className="left">
+              <div className="top">
+                <div className="id-video-box" style={{ display: this.state.video1 ? 'block' : 'none' }}>
+                  <div className="border">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <video ref={video => this.video1 = video} className="id-video"></video>
                 </div>
+                <div className="id-img-box" style={{ display: this.state.video1 ? 'none' : 'block' }}>
+                  <img src={this.state.pic1} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                  <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                </div>
+              </div>
+              <div className="bottom">
+                <div className="id-video-box" style={{ display: this.state.video2 ? 'block' : 'none' }}>
+                  <div className="border">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <video ref={video => this.video2 = video} className="id-video"></video>
+                </div>
+                <div className="id-img-box" style={{ display: this.state.video2 ? 'none' : 'block' }}>
+                  <img src={this.state.pic2} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                  <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                </div>
+              </div>
             </div>
+            <div className="right">
+              <div className="id-video-box" style={{ display: this.state.video3 ? 'block' : 'none' }}>
+                <div className="figure"><img src={Figure} alt=""/></div>
+                <video ref={video => this.video3 = video} className="id-video"></video>
+              </div>
+              <div className="id-img-box" style={{ display: this.state.video3 ? 'none' : 'block' }}>
+                <img src={this.state.pic3} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" style={{ width: '340px', height: '512px' }} width="1020" height="1536"></canvas>
+              </div>
+            </div>
+            <div className="button">
+              <Button type="primary" style={{ width: 340, height: 46 }} id="cut" onClick={ this.handleSubmit }>下一步</Button>
+            </div>
+          </div>
         </div>
     );
   }

@@ -5,7 +5,7 @@ import { getProjectListForO, getBumen, getZhiHang } from 'api/project';
 import { getUserDetail, getUserId, ruzhi, reruzhi, getStaffDetail } from 'api/user';
 import { getDict } from 'api/dict';
 import { getQiniuToken } from 'api/general';
-import { getQueryString, showErrMsg, showWarnMsg, showSucMsg, formatImg, dateFormat, moneyFormat } from 'common/js/util';
+import { getQueryString, showErrMsg, showWarnMsg, showSucMsg, formatImg, dateFormat, moneyFormat, isUndefined } from 'common/js/util';
 import { UPLOAD_URL, ruzhiFormItemLayout } from 'common/js/config';
 import locale from 'common/js/lib/date-locale';
 import Moment from 'moment';
@@ -39,9 +39,9 @@ class RuzhiInfo extends React.Component {
       departmentList: [],
       zhihang: [],
       bank: [],
-      position: []
+      position: [],
+      departmentCode: ''
     };
-    this.handleProjectChange = this.handleProjectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTypeChange = this.handleTypeChange.bind(this);
     this.code = getQueryString('code', this.props.location.search);
@@ -62,6 +62,23 @@ class RuzhiInfo extends React.Component {
         }
         this.setState({ departmentList: data });
         this.getTree(data);
+        if(this.reruzhi) {
+          fetch(631467, { code: this.code }).then((data) => {
+            data.joinDatetime = dateFormat(data.joinDatetime);
+            var formatTime = Moment(data.joinDatetime);// 参数换成毫秒的变量就OK
+            this.props.form.setFieldsValue({
+              // departmentCode: data.departmentCode,
+              position: data.position,
+              joinDatetime: formatTime,
+              cutAmount: data.cutAmount / 1000,
+              salary: data.salary / 1000,
+              subbranch: data.bankCard ? data.bankCard.bankSubbranchName : '',
+              bankcardNumber: data.bankCard ? data.bankCard.bankcardNumber : '',
+              type: data.type
+            });
+            this.setState({departmentCode: data.departmentCode});
+          });
+        }
       });
       this.props.form.setFieldsValue({
         projectCode: res.projectName
@@ -91,22 +108,6 @@ class RuzhiInfo extends React.Component {
       getStaffDetail(this.idNo).then((res) => {
         this.setState({
           staffCode: res.code
-        });
-      });
-    }
-    if(this.reruzhi) {
-      fetch(631467, { code: this.code }).then((data) => {
-        data.joinDatetime = dateFormat(data.joinDatetime);
-        var formatTime = Moment(data.joinDatetime);// 参数换成毫秒的变量就OK
-        this.props.form.setFieldsValue({
-          departmentCode: data.departmentCode,
-          position: data.position,
-          joinDatetime: formatTime,
-          cutAmount: data.cutAmount / 1000,
-          salary: data.salary / 1000,
-          subbranch: data.bankCard ? data.bankCard.bankSubbranchName : '',
-          bankcardNumber: data.bankCard ? data.bankCard.bankcardNumber : '',
-          type: data.type
         });
       });
     }
@@ -189,19 +190,11 @@ class RuzhiInfo extends React.Component {
       previewVisible: true
     });
   };
-  // 项目change事件
-  handleProjectChange(projectCode) {
-    this.props.form.setFieldsValue({ departmentCode: '' });
-    getBumen({ projectCode }).then((data) => {
-      this.getTree(data);
-    });
-  }
   // 生成tree
   getTree(data) {
-    console.log(data);
     let result = {};
     data.forEach(v => {
-      v.parentCode = v.parentCode === '' ? 'ROOT' : v.parentCode;
+      v.parentCode = v.parentCode === '' || isUndefined(v.parentCode) ? 'ROOT' : v.parentCode;
       if (!result[v.parentCode]) {
         result[v.parentCode] = [];
       }
@@ -212,7 +205,6 @@ class RuzhiInfo extends React.Component {
       result[v.parentCode].push(obj);
     });
     this.result = result;
-    console.log(this.result);
     let tree = [];
     if (data.length) {
       this.getTreeNode(result['ROOT'], tree);
@@ -221,7 +213,6 @@ class RuzhiInfo extends React.Component {
   }
   // 生成treeNode
   getTreeNode(arr, children) {
-    console.log(arr);
     arr.forEach(a => {
       if (this.result[a.key]) {
         a.children = [];
@@ -235,6 +226,7 @@ class RuzhiInfo extends React.Component {
   // 生成treeSelect结构
   renderTreeNodes = (data) => {
     if (!data) return null;
+    console.log(data);
     return data.map((item) => {
       if (item.children) {
         return (
@@ -278,7 +270,7 @@ class RuzhiInfo extends React.Component {
                               {getFieldDecorator('projectCode', {
                                 rules: [rule0]
                               })(
-                                  <Select placeholder="请选择项目" onChange={this.handleProjectChange} disabled>
+                                  <Select placeholder="请选择项目" disabled>
                                   </Select>
                               )}
                             </FormItem>)
@@ -287,7 +279,7 @@ class RuzhiInfo extends React.Component {
                                   {getFieldDecorator('projectCode', {
                                     rules: [rule0]
                                   })(
-                                      <Select placeholder="请选择项目" onChange={this.handleProjectChange} disabled >
+                                      <Select placeholder="请选择项目" disabled >
                                       </Select>
                                   )}
                                 </FormItem>
@@ -295,7 +287,8 @@ class RuzhiInfo extends React.Component {
                       }
                       <FormItem label="部门" {...ruzhiFormItemLayout}>
                         {getFieldDecorator('departmentCode', {
-                          rules: [rule0]
+                          rules: [rule0],
+                          initialValue: this.state.departmentCode
                         })(
                           <TreeSelect
                             style={{ width: '100%' }}

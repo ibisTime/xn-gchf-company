@@ -1,0 +1,68 @@
+.modal-out {
+    width: 100%;
+    margin-right: 0;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #373737;
+    background-color: rgba(0, 0, 0, 0.65);
+    height: 100%;
+    z-index: 1000;
+}
+.my-modal-pop-up {
+    width: 336pt;
+    /*height: 240pt;*/
+    margin: 12.5rem auto !important;
+    background: url("./background.png") no-repeat;
+    background-size: 100% 100%;
+    padding: 30pt;
+}
+.pop-up-title {
+    width: 100%;
+    height: 25pt;
+    color: #fff;
+    font-size: 18pt;
+    text-align: center;
+    margin-bottom: 20pt;
+}
+.content {
+    margin-bottom: 20pt;
+}
+.content span {
+    display: inline-block;
+    width: 271pt;
+    height: 60pt;
+    color: #fff;
+    font-size: 14pt;
+    text-align: left;
+}
+.my-modal-pop-up label {
+    color: #fff;
+}
+.buttons {
+    margin-top: 20pt;
+    height: 38pt;
+}
+.buttons div {
+    display: inline-block;
+    width: 104pt;
+    height: 100%;
+    background-size: 100% 100%;
+    font-size: 14pt;
+    padding-top: 9pt;
+}
+.buttons div:hover {
+    cursor: pointer;
+}
+.cancel {
+    background: url("./cancel.png") no-repeat;
+    margin-right: 42pt;
+    color: #6CAAFF;
+}
+.ok {
+    background: url("./ok.png") no-repeat;
+    color: #fff;
+}

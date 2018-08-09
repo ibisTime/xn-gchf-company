@@ -5,6 +5,127 @@ html, body {
 *, :after, :before {
     box-sizing: border-box;
 }
+.title {
+    height: 22pt;
+    background: #1791FF;
+    position: relative;
+    color: #fff;
+}
+.title i {
+    width: 3px;
+    height: 11pt;
+    border-radius: 2px;
+    background: #fff;
+    position: absolute;
+    left: 9px;
+    top: 7px;
+    margin-right: 10px;
+}
+.title span {
+    margin-left: 20px;
+    font-size: 11pt;
+    line-height: 22pt;
+}
+.img-box {
+    width: 340px;
+    height: 410px;
+    margin: 90px auto;
+    border: 1px solid #97C2FF;
+    border-radius: 4px;
+    background: #E9F2FF;
+    text-align: center;
+}
+.border {
+    width: 250px;
+    height: 250px;
+    display: inline-block;
+    padding: 5%;
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+.img-box .border img{
+    width: 100%;
+}
+.img-box .border span {
+    width: 12px;
+    height: 12px;
+    border-color: #77B0F8;
+    border-style: solid;
+    position: absolute;
+    display: inline-block;
+}
+.img-box .border span:nth-child(1) {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+.img-box .border span:nth-child(2) {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+.img-box .border span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+.img-box .border span:nth-child(4) {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+.img-box .tips {
+    width: 121px;
+    height: 34px;
+    margin: 0 auto;
+
+}
+.tips span {
+    display: inline-block;
+    font-size: 12px;
+    color: #A8ADB3;
+}
+
+.img-box .inner-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.img-box .haveUserImg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+.video-box {
+    width: 340px;
+    height: 410px;
+    margin: 90px auto;
+    border: 1px solid #97C2FF;
+    border-radius: 4px;
+    background: #E9F2FF;
+    text-align: center;
+    overflow: hidden;
+}
+.video-box .video3 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.video-box .figure{
+    width: 250px;
+    height: 250px;
+    display: inline-block;
+    margin: 12% 5%;
+    position: absolute;
+    margin-bottom: 30px;
+}
 .comparison-mains .clearfix3 {
     zoom: 1;
 }
@@ -12,8 +133,6 @@ html, body {
     content: " ";
     display: table;
 }
-
-
 .comparison-mains .ant-btn {
     display: inline-block;
     margin-bottom: 0;
@@ -104,14 +223,9 @@ html, body {
 .comparison-mains3 .img-wrap3 {
     display: inline-block;
     vertical-align: middle;
-    width: 512px;
-    height: 384px;
+    width: 340px;
+    height: 410px;
     text-align: center;
-}
-.comparison-mains3 .video3 {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
 }
 .comparison-mains3 .btn-wrap {
     display: inline-block;
@@ -152,29 +266,11 @@ html, body {
     -webkit-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
 }
-.comparison-mains3 .haveUserImg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-}
+.comparison-mains3
 .video-box {
     position: relative;
     text-align: center;
 }
 .img-box {
     position: relative;
-}
-.border {
-    width: 200px;
-    height: 200px;
-    border: 2px solid #5589ff;
-    position: absolute;
-    top:30%;
-    left: 30%
 }

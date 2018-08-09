@@ -65,3 +65,23 @@ export const configLayout = {
     sm: { span: 8 }
   }
 };
+export const projectLayout = {
+  labelCol: {
+    xs: { span: 22 },
+    sm: { span: 8 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 9 }
+  }
+};
+export const popUpLayout = {
+  labelCol: {
+    xs: { span: 10 },
+    sm: { span: 10 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 12 }
+  }
+};
