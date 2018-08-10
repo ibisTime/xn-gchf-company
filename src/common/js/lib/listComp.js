@@ -10,6 +10,7 @@ import { getDictList } from 'api/dict';
 import fetch from 'common/js/fetch';
 import locale from './date-locale';
 import { PIC_PREFIX } from 'common/js/config';
+import cityData from 'common/js/lib/city';
 
 moment.locale('zh-cn');
 const FormItem = Form.Item;
@@ -57,43 +58,72 @@ export default class ListComponent extends React.Component {
         className: f.className || ''
       };
       if (f.type === 'datetime') {
-        obj.render = dateTimeFormat;
+        if (f.render) {
+          obj.render = f.render;
+        } else {
+          obj.render = (v) => {
+            return f.nowrap ? <span style={{whiteSpace: 'nowrap'}}>{dateTimeFormat(v)}</span> : dateTimeFormat(v);
+          };
+          this.addRender(f, dateTimeFormat);
+        }
       } else if (f.type === 'date') {
-        obj.render = dateFormat;
-      } else if (f.type === 'img') {
-        obj.render = (value) => <img style={{ width: '200px' }} src={PIC_PREFIX + value}/>;
-      }else if (f.type === 'select') {
+        if (f.render) {
+          obj.render = f.render;
+        } else {
+          obj.render = (v) => {
+            return f.nowrap ? <span style={{whiteSpace: 'nowrap'}}>{dateFormat(v)}</span> : dateFormat(v);
+          };
+          this.addRender(f, dateFormat);
+        }
+      } else if (f.type === 'select' || f.type === 'provSelect') {
         if (f.key) {
           f.keyName = f.keyName || 'dkey';
           f.valueName = f.valueName || 'dvalue';
+        } else if (f.type === 'provSelect') {
+          f.keyName = 'value';
+          f.valueName = 'label';
+          f.data = cityData.map(c => ({
+            value: c.value,
+            label: c.label
+          }));
         }
         if (!f.data) {
           f.data = this.props.searchData[f.field];
           this.first && this.getSelectData(f);
         } else if (!this.props.searchData[f.field]) {
-          setTimeout(() => {
-            this.props.setSearchData({ data: f.data, key: f.field });
-          }, 20);
+          this.props.setSearchData({ data: f.data, key: f.field });
         }
-        obj.render = (value) => {
-          if (value && f.data) {
-            let item = f.data.find(v => v[f.keyName] === value);
-            return item
-              ? item[f.valueName]
-                ? item[f.valueName]
-                : tempString(f.valueName, item)
-              : '';
-          }
-          return '';
-        };
+        if (!f.render) {
+          obj.render = (value) => {
+            let val = this.renderSelect(value, f);
+            return f.nowrap ? <span style={{whiteSpace: 'nowrap'}}>{val}</span> : val;
+          };
+        } else {
+          obj.render = f.render;
+        }
+        this.addRender(f, (val) => this.renderSelect(val, f));
+      } else if (f.type === 'img') {
+        obj.render = (value) => <img style={{ width: '200px' }} src={PIC_PREFIX + value}/>;
       }
-      if (f.hidden) {
-        return;
+      if (f.amount) {
+        obj.render = (v, d) => <span style={{whiteSpace: 'nowrap'}}>{moneyFormat(v, d)}</span>;
+        this.addRender(f, moneyFormat);
+      }
+      if (!obj.render) {
+        if (f.render) {
+          obj.render = f.render;
+        } else {
+          obj.render = (v) => f.nowrap ? <span style={{whiteSpace: 'nowrap'}}>{v}</span> : v;
+          this.addRender(f, v => v);
+        }
       }
       if (f.formatter) {
         obj.render = f.formatter;
       } else if (f.amount) {
         obj.render = (v, d) => <span style={{whiteSpace: 'nowrap'}}>{moneyFormat(v, d)}</span>;
+      }
+      if (f.hidden) {
+        return;
       }
       columns.push(obj);
     });
@@ -101,6 +131,23 @@ export default class ListComponent extends React.Component {
     this.columns = columns;
     this.tableClass = this.options.className || '';
     return this.getPageComponent(searchFields);
+  }
+  renderSelect(value, f) {
+    let val = '';
+    if (value && f.data) {
+      let item = f.data.find(v => v[f.keyName] === value);
+      val = item
+          ? item[f.valueName]
+              ? item[f.valueName]
+              : tempString(f.valueName, item)
+          : '';
+    }
+    return val;
+  }
+  addRender(f, func) {
+    if (!f.render) {
+      f.render = func;
+    }
   }
   onSelectChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRowKeys, selectedRows });

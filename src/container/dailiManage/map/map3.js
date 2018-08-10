@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Divider, Button, Form, Select, Input, Cascader, Row, Col, TimePicker, DatePicker } from 'antd';
 import {
   setTableData,
   setPagination,
@@ -14,14 +16,14 @@ import { showSucMsg, showWarnMsg, getUserKind, getUserId, dateFormat, dateTimeFo
 import fetch from 'common/js/fetch';
 import { getUserDetail } from 'api/user';
 import { getProject, getZhiHang } from 'api/project';
+import { getOwnerBtns } from 'api/menu';
 import { getDict } from 'api/dict';
-import { Divider, Button, Form, Select, Input, Cascader, Row, Col, TimePicker, DatePicker } from 'antd';
-import './map3.css';
 import { UPLOAD_URL, projectLayout } from 'common/js/config';
 import cityData from 'common/js/lib/city';
 import Moment from 'moment';
 import locale from '../../../common/js/lib/date-locale';
 import PopUp from '../../../component/pop-up/pop-up';
+import './map3.css';
 
 const rule0 = {
   required: true,
@@ -31,7 +33,7 @@ const FormItem = Form.Item;
 const TIME_FORMAT1 = 'HH:mm';
 const DATE_FORMAT = 'YYYY-MM-DD';
 
-@listWrapper(
+@connect(
     state => ({
       ...state.mapMap,
       parentCode: state.menu.subMenuCode
@@ -46,6 +48,7 @@ class Map extends React.Component {
     super(props);
     this.state = {
       projectCode: '',
+      btnList: [], // 页面按钮列表
       initVal: [],
       zhihang: [],
       projectStatus: [],
@@ -138,6 +141,19 @@ class Map extends React.Component {
         this.state.projectStatus[item.dkey] = item.dvalue;
       });
     });
+    this.getOwnerBtns();
+  }
+  getOwnerBtns() {
+    getOwnerBtns(this.props.parentCode, getUserKind()).then(data => {
+      for (let i = 0; i < data.length - 1; i++) {
+        for (let j = i + 1; j < data.length; j++) {
+          if (+data[i].orderNo > +data[j].orderNo) {
+            [data[i], data[j]] = [data[j], data[i]];
+          }
+        }
+      }
+      this.setState({ btnList: data });
+    }).catch(() => {});
   }
   initMap = () => {
     let traffic = new AMap.TileLayer({
@@ -342,17 +358,34 @@ class Map extends React.Component {
       }
     });
   }
+  // {/*<button type="button" className="ant-btn" onClick={this.editPro}><span>编辑项目</span></button>*/}
+  // {/*<button type="button" className="ant-btn" onClick={this.addBumen}><span>施工单位</span></button>*/}
+  // {/*<button type="button" className="ant-btn" onClick={this.checkPro}><span>项目开工</span></button>*/}
+  // {/*<button type="button" className="ant-btn" onClick={this.overPro}><span>项目停工</span></button>*/}
+  // {/*<button type="button" className="ant-btn" onClick={this.aWork}><span>重新开工</span></button>*/}
+  // {/*<button type="button" className="ant-btn" onClick={this.overTime}><span>项目结束</span></button>*/}
+  handleBtnClick(url) {
+    switch (url) {
+      case '/editPro':
+        return this.editPro();
+      case '/addBumen':
+        return this.addBumen();
+      case '/checkPro':
+        return this.checkPro();
+      case '/overPro':
+        return this.overPro();
+      case '/aWork':
+        return this.aWork();
+      case '/overTime':
+        return this.overTime();
+    }
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     return this.state.initVal ? (
         <div className="all">
           <div className="tools-wrapper" style={{ marginTop: 8 }}>
-            <button type="button" className="ant-btn" onClick={this.editPro}><span>编辑项目</span></button>
-            <button type="button" className="ant-btn" onClick={this.addBumen}><span>施工单位</span></button>
-            <button type="button" className="ant-btn" onClick={this.checkPro}><span>项目开工</span></button>
-            <button type="button" className="ant-btn" onClick={this.overPro}><span>项目停工</span></button>
-            <button type="button" className="ant-btn" onClick={this.aWork}><span>重新开工</span></button>
-            <button type="button" className="ant-btn" onClick={this.overTime}><span>项目结束</span></button>
+            {this.state.btnList.map(v => <Button onClick={() => this.handleBtnClick(v.url)}><span>{v.name}</span></Button>)}
           </div>
           <Divider />
           <div className="status" style={{ background: this.state.projectCurStatus === '2' ? '#6bbc6f' : '#d75d32' }}>

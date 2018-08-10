@@ -93,7 +93,7 @@ class ProjectStaffAddedit extends React.Component {
                 <div className="hetong-img" style={{ display: contractPic && contractPic.length ? 'none' : 'inline-block' }}>暂无合同</div>
               </div>
               <div className="idInfo">
-                <span className="id-title">身份证信息采集</span>
+                <span className="detail-id-title">身份证信息采集</span>
                 <p className="id-info">姓名：{idInfo.name}</p>
                 <p className="id-info">性别：{idInfo.sex}</p>
                 <p className="id-info">民族：{idInfo.idNation}</p>

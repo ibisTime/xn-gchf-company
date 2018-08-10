@@ -40,7 +40,6 @@ class mianguanRead extends React.Component {
     this.cutImg = this.cutImg.bind(this);
     this.getFeat = this.getFeat.bind(this);
     this.handleShotClick = this.handleShotClick.bind(this);
-    this.next = this.next.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.code = getQueryString('code', this.props.location.search);
     this.pict1 = getQueryString('pict1', this.props.location.search);
@@ -67,9 +66,6 @@ class mianguanRead extends React.Component {
           this.code = res.code;
         }
       });
-  };
-  next() {
-    this.props.history.push(`/staff/jiandang/idInfoRead`);
   };
   // 打开摄像头
   openVideo(argument) {
@@ -193,12 +189,12 @@ class mianguanRead extends React.Component {
   render() {
     return (
         <div>
-          <div className="title"><i></i><span>人脸采集</span></div>
-          <div className="video-box" style={{ display: this.state.vedio ? 'block' : 'none' }}>
+          <div className="mianguan-title"><i></i><span>人脸采集</span></div>
+          <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }}>
             <div className="figure"><img src={Figure} alt=""/></div>
             <video id="video" className="video3"></video>
           </div>
-          <div className="img-box" style={{ display: this.state.vedio ? 'none' : 'block' }}>
+          <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }}>
             <div style={{ display: this.state.pict1 ? 'none' : 'block' }}>
               <div className="border">
                 <span></span><span></span><span></span><span></span>

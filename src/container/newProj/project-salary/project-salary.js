@@ -100,7 +100,8 @@ class Salary extends React.Component {
       search: true
     }, {
       title: '备注',
-      field: 'factAmountRemark'
+      field: 'factAmountRemark',
+      nowrap: true
     }];
     const options = {
       fields: [{

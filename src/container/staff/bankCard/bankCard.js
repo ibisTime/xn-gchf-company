@@ -49,11 +49,8 @@ class BankCard extends React.Component {
       field: 'projectName',
       title: '项目名称'
     }, {
-      field: 'bankNames',
-      title: '开户行',
-      formatter: (v, d) => {
-        return d.bankName && d.subbranch ? d.bankName + d.subbranch : '';
-      }
+      field: 'bankSubbranchName',
+      title: '开户行'
     }, {
       field: 'bankcardNumber',
       title: '银行账号'

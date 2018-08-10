@@ -101,7 +101,19 @@ class mianguanRead extends React.Component {
     });
     this.context = this.canvas.getContext('2d');
     // this.context.scale(0.5, 0.5);
-    this.context.drawImage(this.video, 340, 0, 600, 790, 0, 0, 1020, 1350);
+    // this.context.drawImage(this.video, 340, 0, 600, 790, 0, 0, 1020, 1350);
+    // this.context = this.canvas.getContext('2d');
+    this.canvas.width = 338 * 3;
+    this.canvas.height = 408 * 3;
+    let scaleH = this.video.videoHeight / 408;
+    let scaleW = this.video.videoWidth / 338;
+    if (scaleH > scaleW) {
+      let sy = (this.video.videoHeight - 408 * scaleW) / 2;
+      this.context.drawImage(this.video, 0, sy, this.video.videoWidth, 408 * scaleW, 0, 0, 338 * 3, 408 * 3);
+    } else {
+      let sx = (this.video.videoWidth - scaleH * 338) / 2;
+      this.context.drawImage(this.video, sx, 0, scaleH * 338, this.video.videoHeight, 0, 0, 338 * 3, 408 * 3);
+    }
   };
   getPixelRatio() {
     var backingStore = this.context.backingStorePixelRatio ||
@@ -188,12 +200,12 @@ class mianguanRead extends React.Component {
   render() {
     return (
         <div>
-          <div className="title"><i></i><span>人脸采集</span></div>
-          <div className="video-box" style={{ display: this.state.vedio ? 'block' : 'none' }} onClick={ this.handleShotClick }>
+          <div className="mianguan-title"><i></i><span>人脸采集</span></div>
+          <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }} onClick={ this.handleShotClick }>
             <div className="figure"><img src={Figure} alt=""/></div>
             <video id="video" className="video3"></video>
           </div>
-          <div className="img-box" style={{ display: this.state.vedio ? 'none' : 'block' }} onClick={ this.handleShotClick }>
+          <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }} onClick={ this.handleShotClick }>
             <div className="border">
               <span></span><span></span><span></span><span></span>
               <img src={Photo} className="userImg3" id="userImg" style={{ display: this.state.imgFlag ? 'inline-block' : 'none' }}/>

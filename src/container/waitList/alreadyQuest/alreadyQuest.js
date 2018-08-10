@@ -55,9 +55,9 @@ class AlreadyQuest extends React.Component {
       title: '标题',
       field: 'title'
     }, {
-      field: 'bankNames',
+      field: 'bankName',
       title: '开户行',
-      formatter: (v, d) => {
+      render: (v, d) => {
         return d.bankName + d.subbranch;
       }
     }, {
@@ -66,7 +66,7 @@ class AlreadyQuest extends React.Component {
     }, {
       field: 'totalAmounts',
       title: '本月累计发薪',
-      formatter: (v, d) => {
+      render: (v, d) => {
         return moneyFormat(d.totalAmount);
       }
     }, {

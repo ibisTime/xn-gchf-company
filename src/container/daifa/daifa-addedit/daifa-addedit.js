@@ -89,7 +89,8 @@ class DaifaAddEdit extends React.Component {
       key: 'salary_status'
     }, {
       title: '备注',
-      field: 'factAmountRemark'
+      field: 'factAmountRemark',
+      nowrap: true
     }];
     const options = {
       fields: [{
