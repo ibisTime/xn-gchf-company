@@ -104,7 +104,8 @@ class Jiandang extends React.Component {
         this.setState({ spanText: '读取中...' });
         jsonp('http://127.0.0.1:9081/readidcard')
         .then((data) => {
-            this.setState({ spanText: '读取身份证' });
+          console.log('1111' + data);
+          this.setState({ spanText: '读取身份证' });
             if(data.resultCode === '-102') {
                 jsonp('http://127.0.0.1:8080/readidcard')
                 .then((res) => {

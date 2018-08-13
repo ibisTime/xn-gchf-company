@@ -68,6 +68,7 @@ export default class DetailComp extends React.Component {
     let _this = this;
     Object.keys(this.textareas).forEach(v => {
       let elem = document.getElementById(v);
+      if (!elem) return;
       _this.textareas[v].editor = new E(elem);
       _this.textareas[v].editor.customConfig.uploadFileName = 'file';
       _this.textareas[v].editor.customConfig.uploadImgMaxSize = 10 * 1024 * 1024;
@@ -349,23 +350,6 @@ export default class DetailComp extends React.Component {
       }
     });
   }
-  getChooseMap(item) {
-    // let address = '';
-    // let addr = this.props.form.getFieldValue(item.lnglat).join('');
-    // address = address + addr + this.props.form.getFieldValue(item.field);
-    // let geocoder = new AMap.Geocoder();
-    // // 地理编码,返回地理编码结果
-    // geocoder.getLocation(address, (status, result) => {
-    //   if (status === 'complete' && result.info === 'OK') {
-    //     this.props.form.setFieldsValue({
-    //       [item.lnglatTo[0]]: result.geocodes[0].location.lng,
-    //       [item.lnglatTo[1]]: result.geocodes[0].location.lat
-    //     });
-    //   } else {
-    //     showErrMsg('经纬度获取失败');
-    //   }
-    // });
-  }
   getItemByType(type, item) {
     const { getFieldDecorator } = this.props.form;
     let rules = this.getRules(item);
@@ -409,8 +393,6 @@ export default class DetailComp extends React.Component {
         return this.getImportComp(item, initVal, rules, getFieldDecorator);
       case 'lnglat':
         return this.getLngLatComp(item, initVal, rules, getFieldDecorator);
-      case 'chooseMap':
-        return this.getChooseMapComp(item, initVal, rules, getFieldDecorator);
       case 'date28':
         return this.getDate28Comp(item, initVal, rules, getFieldDecorator);
       case 'line':
@@ -732,37 +714,6 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
                   )}
                 </Col>
                 <span>日</span>
-              </Row>
-            )
-        }
-      </FormItem>
-    );
-  }
-  // 插标选择地址
-  getChooseMapComp(item, initVal, rules, getFieldDecorator) {
-    return (
-      <FormItem
-        className={item.hidden ? 'hidden' : ''}
-        key={item.field}
-        {...formItemLayout}
-        label={this.getLabel(item)}>
-        {
-          item.readonly ? <div className="readonly-text" style={item.style ? item.style : {}}>{initVal}</div>
-            : (
-              <Row gutter={8}>
-                <Col span={16}>
-                  {getFieldDecorator(item.field, {
-                    rules,
-                    initialValue: initVal
-                  })(
-                    <Input type={item.hidden ? 'hidden' : 'text'}/>
-                  )}
-                </Col>
-                <Col span={8}>
-                  <Button onClick={() => {
-                    this.getChooseMap(item);
-                  }}>选择地址</Button>
-                </Col>
               </Row>
             )
         }

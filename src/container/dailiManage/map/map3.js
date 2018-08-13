@@ -125,7 +125,8 @@ class Map extends React.Component {
           startDatetime: startDatetime,
           salaryCreateDatetime: data.salaryCreateDatetime ? data.salaryCreateDatetime : '',
           salaryDatetime: data.salaryDatetime ? data.salaryDatetime : '',
-          companyName: data.companyName ? data.companyName : ''
+          companyName: data.companyName ? data.companyName : '',
+          quyu: this.state.initVal
         });
         this.initMap();
         this.makeMarker();
@@ -193,7 +194,7 @@ class Map extends React.Component {
         this.points[item.code] = point;
       });
     });
-  }
+  };
   mapClick = (e) => {
     console.log(e.lnglat.getLng() + ',' + e.lnglat.getLat());
     // 删除原有点标记
@@ -211,7 +212,7 @@ class Map extends React.Component {
       longitude: e.lnglat.getLng(),
       latitude: e.lnglat.getLat()
     });
-  }
+  };
   // 编辑项目
   editPro = (selectedRowKeys, selectedRows) => {
     this.setState({ disabled: false });
@@ -328,10 +329,11 @@ class Map extends React.Component {
         });
         this.props.doFetching();
         fetch(631352, params).then((res) => {
-          console.log(params);
+          console.log(this.state.projectCurStatus);
           if(res.isSuccess) {
             showSucMsg('操作成功');
             this.setState({
+              disabled: true,
               // 以下是为了非编辑状态下能正常显示
               chargeUser: params.chargeUser,
               chargeMobile: params.chargeMobile,
@@ -346,6 +348,11 @@ class Map extends React.Component {
               quyu: params.province + params.city + params.area,
               companyName: params.companyName
             });
+            if(this.state.projectCurStatus === '0') {
+              this.setState({
+                projectCurStatus: '1'
+              });
+            }
             this.setState({ disabled: true });
             this.map.off('click', this.mapClick);
           } else {
@@ -415,7 +422,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.chargeUser}</span>
-                          : <Input style={{ width: '280px' }} placeholder="请输入负责人名称" disabled={this.state.disabled}/>
+                          : <Input style={{ width: '280px' }} placeholder="请输入负责人名称"/>
                   )}
                 </FormItem>
                 <FormItem label="负责人联系方式" {...projectLayout}>
@@ -424,7 +431,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.chargeMobile}</span>
-                          : <Input style={{ width: '280px' }} placeholder="请输入负责人联系方式" disabled={this.state.disabled}/>
+                          : <Input style={{ width: '280px' }} placeholder="请输入负责人联系方式"/>
                   )}
                 </FormItem>
                 <FormItem label="地区" {...projectLayout}>
@@ -434,7 +441,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.quyu}</span>
-                          : <Cascader placeholder="请选择" options={cityData} disabled={this.state.disabled}/>
+                          : <Cascader placeholder="请选择" options={cityData}/>
                       // <Cascader placeholder="请选择" options={cityData} defaultValue={[this.state.province, this.state.city, this.state.area]}/>
                   )}
                 </FormItem>
@@ -444,7 +451,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.attendanceStarttime}</span>
-                          : <TimePicker placeholder='选择上班时间时间' format={TIME_FORMAT1}/>
+                          : <TimePicker placeholder='选择上班时间' format={TIME_FORMAT1} width="200"/>
                   )}
                 </FormItem>
                 <FormItem label="下班时间" {...projectLayout}>
@@ -453,7 +460,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.attendanceEndtime}</span>
-                          : <TimePicker placeholder='选择下班时间时间' format={TIME_FORMAT1}/>
+                          : <TimePicker placeholder='选择下班时间' format={TIME_FORMAT1}/>
                   )}
                 </FormItem>
                 <FormItem label="项目开始时间" {...projectLayout}>
@@ -467,35 +474,34 @@ class Map extends React.Component {
                           locale={locale}
                           placeholder='请选择项目开始时间'
                           format={DATE_FORMAT}
-                          showTime={false}
-                          disabled={this.state.disabled} />
+                          showTime={false}/>
                   )}
                 </FormItem>
                 <FormItem label="工资条生成时间" {...projectLayout}>
                   <Row gutter={8}>
                     <span style={{ float: 'left' }}>每月</span>
-                    <Col span={5}>
+                    <Col span={6}>
                       {getFieldDecorator('salaryCreateDatetime', {
                         rules: [rule0]
                       })(
                           this.state.disabled
                               ? <span>{this.state.salaryCreateDatetime}</span>
-                              : <Input disabled={this.state.disabled}/>
+                              : <Input/>
                       )}
                     </Col>
                     <span>日</span>
-                </Row>
+                  </Row>
                 </FormItem>
                 <FormItem label="薪资发放时间" {...projectLayout}>
                   <Row gutter={8}>
                     <span style={{ float: 'left' }}>每月</span>
-                    <Col span={5}>
+                    <Col span={6}>
                       {getFieldDecorator('salaryDatetime', {
                         rules: [rule0]
                       })(
                           this.state.disabled
                               ? <span>{this.state.salaryDatetime}</span>
-                              : <Input disabled={this.state.disabled}/>
+                              : <Input/>
                       )}
                     </Col>
                     <span>日</span>
@@ -509,7 +515,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.accountName}</span>
-                          : <Input style={{ width: '280px' }} placeholder="请输入工资专户户名" disabled={this.state.disabled}/>
+                          : <Input style={{ width: '280px' }} placeholder="请输入工资专户户名"/>
                   )}
                 </FormItem>
                 <FormItem label="工资专户账户" {...projectLayout}>
@@ -518,7 +524,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.bankcardNumber}</span>
-                          : <Input style={{ width: '280px' }} placeholder="请输入工资专户账户" disabled={this.state.disabled}/>
+                          : <Input style={{ width: '280px' }} placeholder="请输入工资专户账户"/>
                   )}
                 </FormItem>
                 <FormItem label="工资专户开户行" {...projectLayout}>
@@ -527,7 +533,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.bankSubbranch}</span>
-                          : <Select style={{ width: '300px' }} placeholder="请选择工资专户开户行" onChange={this.handleProjectChange} disabled={this.state.disabled}>
+                          : <Select style={{ width: '300px' }} placeholder="请选择工资专户开户行" onChange={this.handleProjectChange}>
                         {this.state.zhihang.map((item) => <Option key={item.code} value={item.code}>{item.bankSubbranchName}</Option>)}
                       </Select>
                   )}

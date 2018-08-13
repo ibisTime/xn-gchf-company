@@ -138,18 +138,22 @@ class RuzhiInfo extends React.Component {
         this.setState({ spanText: '读取中...' });
         jsonp('http://127.0.0.1:8080/readbankcard')
           .then((res) => {
-              console.log(res);
+            console.log(res);
+            if(res.resultCode !== '-101') {
               this.setState({
                 bankcardNumber: res.CardNo
               });
-            this.props.form.setFieldsValue({
-              bankcardNumber: this.state.bankcardNumber
-            });
+              this.props.form.setFieldsValue({
+                bankcardNumber: this.state.bankcardNumber
+              });
+            } else {
+              showWarnMsg('银行卡号读取失败，请把银行卡放置准确后再次读取');
+            }
           }).catch(() => {
               this.setState({ spanText: '读取银行卡号' });
               showWarnMsg('银行卡号读取失败，请把银行卡放置准确后再次读取');
           });
-  }
+  };
   // 最终提交
   handleSubmit() {
     this.props.form.validateFieldsAndScroll((err, params) => {
