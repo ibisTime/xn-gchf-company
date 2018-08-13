@@ -13,7 +13,7 @@ function jsonp(url, data, option) {
     return new Promise((resolve, reject) => {
         originJsonp(url, {
             name: 'getinfo',
-            timeout: 5000
+            timeout: 2000
         }, (err, data) => {
         if(!err) {
             resolve(data);
@@ -103,15 +103,15 @@ class Jiandang extends React.Component {
         e.preventDefault();
         document.getElementById('nextBtn').setAttribute('disabled', true);
         this.setState({ spanText: '读取中...' });
-        jsonp('http://127.0.0.1:9081/readidcard')
+        jsonp('http://127.0.0.1:8080/readidcard')
         .then((data) => {
-            debugger;
-          console.log('1111' + data);
+          // console.log('1111' + data);
           this.setState({ spanText: '读取身份证' });
-            if(data.resultCode === '-102') {
-                jsonp('http://127.0.0.1:8080/readidcard')
+            if(data.resultCode === '-101' || data.resultCode === '-102') {
+                jsonp('http://127.0.0.1:9081/readidcard')
                 .then((res) => {
-                    console.log(res);
+                  this.setState({ spanText: '读取身份证' });
+                    // console.log(res);
                     this.setState({
                         realName: res.m_name,
                         sex: res.m_sex,
@@ -119,8 +119,8 @@ class Jiandang extends React.Component {
                         birthday: res.m_birth,
                         idNo: res.m_idcode,
                         idAddress: res.m_addr,
-                        idStartDate: res.m_termday.split('-')[0],
-                        idEndDate: res.m_termday.split('-')[1],
+                        idStartDate: res.StartDate || res.m_termday.split('-')[0],
+                        idEndDate: res.EndDate || res.m_termday.split('-')[1],
                         idPolice: res.m_depart,
                         idPic: res.pic,
                         isIdpic: true
@@ -185,9 +185,10 @@ class Jiandang extends React.Component {
             // this.setState({ spanText: '读取身份证' });
             // showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
             // document.getElementById('getCard').removeAttribute('disabled');
-            jsonp('http://127.0.0.1:8080/readidcard')
+            jsonp('http://127.0.0.1:9081/readidcard')
                 .then((res) => {
-                    console.log(res);
+                    this.setState({ spanText: '读取身份证' });
+                    // console.log(res);
                     this.setState({
                         realName: res.m_name,
                         sex: res.m_sex,
@@ -195,8 +196,8 @@ class Jiandang extends React.Component {
                         birthday: res.m_birth,
                         idNo: res.m_idcode,
                         idAddress: res.m_addr,
-                        idStartDate: res.m_termday.split('-')[0],
-                        idEndDate: res.m_termday.split('-')[1],
+                        idStartDate: res.StartDate || res.m_termday.split('-')[0],
+                        idEndDate: res.EndDate || res.m_termday.split('-')[1],
                         idPolice: res.m_depart,
                         idPic: res.pic,
                         isIdpic: true
