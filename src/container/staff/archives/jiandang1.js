@@ -12,7 +12,8 @@ const FormItem = Form.Item;
 function jsonp(url, data, option) {
     return new Promise((resolve, reject) => {
         originJsonp(url, {
-            name: 'getinfo'
+            name: 'getinfo',
+            timeout: 5000
         }, (err, data) => {
         if(!err) {
             resolve(data);
@@ -104,6 +105,7 @@ class Jiandang extends React.Component {
         this.setState({ spanText: '读取中...' });
         jsonp('http://127.0.0.1:9081/readidcard')
         .then((data) => {
+            debugger;
           console.log('1111' + data);
           this.setState({ spanText: '读取身份证' });
             if(data.resultCode === '-102') {
@@ -176,17 +178,45 @@ class Jiandang extends React.Component {
               }
               document.getElementById('nextBtn').removeAttribute('disabled');
             });
-            // let val = /^data:image/.test(data.idPic) ? data.idPic : 'data:image/bmp;base64,' + data.idPic;
-            // this.setState({
-            //     idPic: '123',
-            //     isIdpic: true
-            // });
         }).catch((e) => {
-            alert(e);
-            document.getElementById('getCard').setAttribute('disabled', false);
-            this.setState({ spanText: '读取身份证' });
-            showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
-            document.getElementById('getCard').removeAttribute('disabled');
+            // debugger;
+            // alert(e);
+            // document.getElementById('getCard').setAttribute('disabled', false);
+            // this.setState({ spanText: '读取身份证' });
+            // showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
+            // document.getElementById('getCard').removeAttribute('disabled');
+            jsonp('http://127.0.0.1:8080/readidcard')
+                .then((res) => {
+                    console.log(res);
+                    this.setState({
+                        realName: res.m_name,
+                        sex: res.m_sex,
+                        idNation: res.m_nation,
+                        birthday: res.m_birth,
+                        idNo: res.m_idcode,
+                        idAddress: res.m_addr,
+                        idStartDate: res.m_termday.split('-')[0],
+                        idEndDate: res.m_termday.split('-')[1],
+                        idPolice: res.m_depart,
+                        idPic: res.pic,
+                        isIdpic: true
+                    });
+                  this.props.form.setFieldsValue({
+                    realName: this.state.realName,
+                    sex: this.state.sex,
+                    idNation: this.state.idNation,
+                    birthday: this.state.birthday,
+                    idNo: this.state.idNo,
+                    idAddress: this.state.idAddress,
+                    idStartDate: this.state.idStartDate,
+                    idEndDate: this.state.idEndDate,
+                    idPolice: this.state.idPolice
+                  });
+                }).catch(() => {
+                    this.setState({ spanText: '读取身份证' });
+                    showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
+                    document.getElementById('getCard').removeAttribute('disabled');
+                });
         });
     };
     // 提交
