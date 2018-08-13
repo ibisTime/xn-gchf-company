@@ -1,6 +1,7 @@
 import React from 'react';
+import originJsonp from 'jsonp';
 import fetch from 'common/js/fetch';
-import { Input, Select, Button, Form, DatePicker, Modal, TreeSelect } from 'antd';
+import { Input, Select, Button, Form, DatePicker, Modal, TreeSelect, Row, Col } from 'antd';
 import { getProjectListForO, getBumen, getZhiHang } from 'api/project';
 import { getUserDetail, getUserId, ruzhi, reruzhi, getStaffDetail } from 'api/user';
 import { getDict } from 'api/dict';
@@ -21,6 +22,19 @@ const rule0 = {
   required: true,
   message: '必填字段'
 };
+function jsonp(url, data, option) {
+  return new Promise((resolve, reject) => {
+      originJsonp(url, {
+          name: 'getinfo'
+      }, (err, data) => {
+      if(!err) {
+          resolve(data);
+      } else {
+          reject(err);
+      }
+      });
+  });
+}
 class RuzhiInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -117,6 +131,24 @@ class RuzhiInfo extends React.Component {
     this.setState({
       selectSource: value
     });
+  }
+  // 读取银行卡号
+  getbankcard = (e) => {
+    e.preventDefault();
+        this.setState({ spanText: '读取中...' });
+        jsonp('http://127.0.0.1:8080/readbankcard')
+          .then((res) => {
+              console.log(res);
+              this.setState({
+                bankcardNumber: res.CardNo
+              });
+            this.props.form.setFieldsValue({
+              bankcardNumber: this.state.bankcardNumber
+            });
+          }).catch(() => {
+              this.setState({ spanText: '读取银行卡号' });
+              showWarnMsg('银行卡号读取失败，请把银行卡放置准确后再次读取');
+          });
   }
   // 最终提交
   handleSubmit() {
@@ -226,7 +258,6 @@ class RuzhiInfo extends React.Component {
   // 生成treeSelect结构
   renderTreeNodes = (data) => {
     if (!data) return null;
-    console.log(data);
     return data.map((item) => {
       if (item.children) {
         return (
@@ -346,9 +377,14 @@ class RuzhiInfo extends React.Component {
                         )}
                       </FormItem>
                       <FormItem label="银行卡号" {...ruzhiFormItemLayout}>
-                        {getFieldDecorator('bankcardNumber')(
-                            <Input placeholder="请输入银行卡号"/>
-                        )}
+                        <Row gutter={8}>
+                          <Col span={16}>
+                            {getFieldDecorator('bankcardNumber')(
+                              <Input placeholder="请输入银行卡号"/>
+                            )}
+                          </Col>
+                          <Button type="primary" onClick={this.getbankcard}>读取银行卡号</Button>
+                        </Row>
                       </FormItem>
 
                       <div style={{ fontWeight: 700, marginBottom: 10, textAlign: 'center' }}>员工来源</div>

@@ -415,6 +415,8 @@ export default class DetailComp extends React.Component {
         return this.getDate28Comp(item, initVal, rules, getFieldDecorator);
       case 'line':
         return this.getLineComp(item, initVal, rules, getFieldDecorator);
+      case 'buttonEvent':
+        return this.getButtonEvent(item, initVal, rules, getFieldDecorator);
       default:
         return this.getInputComp(item, initVal, rules, getFieldDecorator);
     }
@@ -659,6 +661,36 @@ getLngLatComp(item, initVal, rules, getFieldDecorator) {
       </FormItem>
     );
   }
+  // 获取经纬度getButtonEvent
+getButtonEvent(item, initVal, rules, getFieldDecorator) {
+  return (
+    <FormItem
+      className={item.hidden ? 'hidden' : ''}
+      key={item.field}
+      {...formItemLayout}
+      label={this.getLabel(item)}>
+      {
+        item.readonly ? <div className="readonly-text" style={item.style ? item.style : {}}>{initVal}</div>
+          : (
+            <Row gutter={8}>
+              <Col span={16}>
+                {getFieldDecorator(item.field, {
+                  rules,
+                  initialValue: initVal
+                })(
+                  <Input type={item.hidden ? 'hidden' : 'text'}/>
+                )}
+              </Col>
+              <Col span={8}>
+                <Button type="primary"
+                onClick={() => { item.event(item); }}>{item.buttonTitle}</Button>
+              </Col>
+            </Row>
+          )
+      }
+    </FormItem>
+  );
+}
   // 划线
   getLineComp(item, initVal, rules, getFieldDecorator) {
     return (

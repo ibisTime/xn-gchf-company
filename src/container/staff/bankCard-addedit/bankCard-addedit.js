@@ -1,4 +1,5 @@
 import React from 'react';
+import originJsonp from 'jsonp';
 import fetch from 'common/js/fetch';
 import {
   initStates,
@@ -8,7 +9,7 @@ import {
   setPageData,
   restore
 } from '@redux/staff/bankCard-addedit';
-import { getQueryString, showSucMsg } from 'common/js/util';
+import { getQueryString, showSucMsg, showWarnMsg } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
 import { getBankNameByCode } from 'api/project';
 import { getUserId } from 'api/user';
@@ -17,11 +18,40 @@ import { getUserId } from 'api/user';
   state => state.staffBankCardAddEdit,
   { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
 )
+
 class BankCardAddEdit extends React.Component {
   constructor(props) {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
+  }
+  jsonp = (url, data, option) => {
+    return new Promise((resolve, reject) => {
+        originJsonp(url, {
+            name: 'getinfo'
+        }, (err, data) => {
+        if(!err) {
+            resolve(data);
+        } else {
+            reject(err);
+        }
+        });
+    });
+  }
+  getbankcard = () => {
+    this.jsonp('http://127.0.0.1:8080/readbankcard')
+          .then((res) => {
+              console.log(res);
+              this.setState({
+                bankcardNumber: res.CardNo
+              });
+            this.props.form.setFieldsValue({
+              bankcardNumber: this.state.bankcardNumber
+            });
+          }).catch(() => {
+              this.setState({ spanText: '读取银行卡号' });
+              showWarnMsg('银行卡号读取失败，请把银行卡放置准确后再次读取');
+          });
   }
   render() {
     const fields = [{
@@ -44,6 +74,9 @@ class BankCardAddEdit extends React.Component {
     }, {
       field: 'bankcardNumber',
       title: '银行卡号',
+      type: 'buttonEvent',
+      event: this.getbankcard,
+      buttonTitle: '读取银行卡号',
       required: true
     }, {
       field: 'remark',
@@ -80,8 +113,6 @@ class BankCardAddEdit extends React.Component {
       editCode: 631422,
       beforeSubmit: (params) => {
         for (let i = 0; i < this.props.selectData.bankSubbranchName.length; i++) {
-          console.log(params.bankName);
-          console.log(this.props.selectData.bankSubbranchName[i]);
           if (params.bankSubbranchName === this.props.selectData.bankSubbranchName[i].bankSubbranchName || params.bankSubbranchName === this.props.selectData.bankSubbranchName[i].code) {
             params.bankName = this.props.selectData.bankSubbranchName[i].bankName;
             params.bankCode = this.props.selectData.bankSubbranchName[i].bankCode;

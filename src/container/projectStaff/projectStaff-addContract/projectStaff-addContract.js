@@ -43,7 +43,6 @@ class ProjectStaffAddContract extends React.Component {
   componentDidMount() {
     this.openVideo();
     getQiniuToken().then((res) => {
-      console.log(res);
       this.token = res.uploadToken;
     });
     getEmployContractList({
@@ -166,7 +165,6 @@ class ProjectStaffAddContract extends React.Component {
   };
   // 最后提交事件
   handleSubmit = () => {
-    console.log(this.state.contractPics);
     let contractArr = this.state.contractPics.map((item) => {
       if(!item.isOrigin) {
         return this.uploadByBase64(item.url);
@@ -175,13 +173,11 @@ class ProjectStaffAddContract extends React.Component {
     });
     Promise.all(contractArr).then(([...res]) => {
       let photos = res.map(v => v.body.key);
-      console.log(photos);
       uploadContract({
         contentPicList: photos,
         code: this.code,
         updater: getUserId()
       }).then((res) => {
-        console.log(res);
         if(res.code) {
           showSucMsg('操作成功');
           this.props.history.push(`/projectStaff/projectStaff`);
