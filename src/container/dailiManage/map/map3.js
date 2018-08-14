@@ -84,7 +84,6 @@ class Map extends React.Component {
   componentDidMount() {
     getUserDetail(getUserId()).then((res) => {
       getProject(res.projectCode).then((data) => {
-        console.log(data);
         data.startDatetime = data.startDatetime ? dateFormat(data.startDatetime) : '';
         this.setState({
           projectCode: res.projectCode,
@@ -113,6 +112,11 @@ class Map extends React.Component {
         let startDatetime = data.startDatetime ? Moment(data.startDatetime, DATE_FORMAT) : '';
         let attendanceStarttime = data.attendanceStarttime ? Moment(data.attendanceStarttime, TIME_FORMAT1) : '';
         let attendanceEndtime = data.attendanceEndtime ? Moment(data.attendanceEndtime, TIME_FORMAT1) : '';
+        // 控制上下班时间
+        this.startTimeHour = attendanceStarttime ? attendanceStarttime.hour() : 0;
+        this.startTimeMin = attendanceStarttime ? attendanceStarttime.minute() : 0;
+        this.endTimeHour = attendanceEndtime ? attendanceEndtime.hour() : 0;
+        this.endTimeMin = attendanceEndtime ? attendanceEndtime.minute() : 0;
         this.props.form.setFieldsValue({
           name: data.name,
           chargeUser: data.chargeUser,
@@ -346,7 +350,8 @@ class Map extends React.Component {
               salaryCreateDatetime: params.salaryCreateDatetime,
               salaryDatetime: params.salaryDatetime,
               quyu: params.province + params.city + params.area,
-              companyName: params.companyName
+              companyName: params.companyName,
+              endDatetime: params.endDatetime
             });
             if(this.state.projectCurStatus === '0') {
               this.setState({
@@ -386,6 +391,60 @@ class Map extends React.Component {
       case '/overTime':
         return this.overTime();
     }
+  }
+  getStarttime() {
+    const shours = [];
+    for (let i = 0; i > this.endTimeHour; i++) {
+      shours.push(i);
+    }
+    return {
+      placeholder: '选择上班时间',
+      format: TIME_FORMAT1,
+      disabledHours: () => {
+        return shours;
+      },
+      disabledMinutes: (selectedHour) => {
+        if (selectedHour === this.endTimeHour) {
+          const minutes = [];
+          for (let i = 0; i >= this.endTimeMin; i++) {
+            minutes.push(i);
+          }
+          return minutes;
+        }
+        return null;
+      },
+      onChange: (time) => {
+        this.startTimeHour = time.hour();
+        this.startTimeMin = time.minute();
+      }
+    };
+  }
+  getEndtime() {
+    const hours = [];
+    for (let i = 0; i < this.startTimeHour; i++) {
+      hours.push(i);
+    }
+    return {
+      placeholder: '选择下班时间',
+      format: TIME_FORMAT1,
+      disabledHours: () => {
+        return hours;
+      },
+      disabledMinutes: (selectedHour) => {
+        if (selectedHour === this.startTimeHour) {
+          const minutes = [];
+          for (let i = 0; i <= this.startTimeMin; i++) {
+            minutes.push(i);
+          }
+          return minutes;
+        }
+        return null;
+      },
+      onChange: (time) => {
+        this.endTimeHour = time.hour();
+        this.endTimeMin = time.minute();
+      }
+    };
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -451,7 +510,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.attendanceStarttime}</span>
-                          : <TimePicker placeholder='选择上班时间' format={TIME_FORMAT1} width="200"/>
+                          : <TimePicker {...this.getStarttime()}/>
                   )}
                 </FormItem>
                 <FormItem label="下班时间" {...projectLayout}>
@@ -460,7 +519,7 @@ class Map extends React.Component {
                   })(
                       this.state.disabled
                           ? <span>{this.state.attendanceEndtime}</span>
-                          : <TimePicker placeholder='选择下班时间' format={TIME_FORMAT1}/>
+                          : <TimePicker {...this.getEndtime()}/>
                   )}
                 </FormItem>
                 <FormItem label="项目开始时间" {...projectLayout}>

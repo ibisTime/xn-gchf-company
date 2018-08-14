@@ -72,7 +72,7 @@ export const projectLayout = {
   },
   wrapperCol: {
     xs: { span: 18 },
-    sm: { span: 9 }
+    sm: { span: 10 }
   }
 };
 export const popUpLayout = {
