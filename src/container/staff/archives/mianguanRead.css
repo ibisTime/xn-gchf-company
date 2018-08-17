@@ -132,13 +132,24 @@ html, body {
     /*margin: 18% 7%;*/
     /*position: absolute;*/
     /*margin-bottom: 30px;*/
-    width: 280px;
-    height: 280px;
+    /*width: 280px;*/
+    /*height: 280px;*/
+    /*display: inline-block;*/
+    /*margin: 18% 9%;*/
+    /*position: absolute;*/
+    /*margin-bottom: 30px;*/
+    /*width: 488px;*/
+    /*height: 339px;*/
+    /*display: inline-block;*/
+    /*margin: 0% -22%;*/
+    /*position: absolute;*/
+    /*margin-bottom: 30px;*/
+    width: 553px;
+    height: 339px;
     display: inline-block;
-    margin: 18% 9%;
+    margin: 0% -30%;
     position: absolute;
     margin-bottom: 30px;
-
 }
 .mianguan-video-box .figure img {
     width: 100%;

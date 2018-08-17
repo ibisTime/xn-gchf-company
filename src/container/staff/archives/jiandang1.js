@@ -136,6 +136,17 @@ class Jiandang extends React.Component {
                     idEndDate: this.state.idEndDate,
                     idPolice: this.state.idPolice
                   });
+                  getStaffDetail(this.state.idNo).then((res) => {
+                    if (!res.idNo) {
+                      this.setState({new: true});
+                    }
+                    if (res.pic1 || res.pict1) {
+                      this.setState({
+                        next: true
+                      });
+                    }
+                    document.getElementById('nextBtn').removeAttribute('disabled');
+                  });
                 }).catch(() => {
                     this.setState({ spanText: '读取身份证' });
                     showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
@@ -212,6 +223,17 @@ class Jiandang extends React.Component {
                     idStartDate: this.state.idStartDate,
                     idEndDate: this.state.idEndDate,
                     idPolice: this.state.idPolice
+                  });
+                  getStaffDetail(this.state.idNo).then((res) => {
+                    if (!res.idNo) {
+                      this.setState({new: true});
+                    }
+                    if (res.pic1 || res.pict1) {
+                      this.setState({
+                        next: true
+                      });
+                    }
+                    document.getElementById('nextBtn').removeAttribute('disabled');
                   });
                 }).catch(() => {
                     this.setState({ spanText: '读取身份证' });
