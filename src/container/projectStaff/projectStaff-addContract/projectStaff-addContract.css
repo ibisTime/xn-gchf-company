@@ -24,6 +24,10 @@
     font-size: 11pt;
     line-height: 22pt;
 }
+.addContract-select {
+    text-align: left;
+    margin-bottom: 20px;
+}
 .addContract-content {
     /*padding: 75px 43px;*/
     display: inline-block;

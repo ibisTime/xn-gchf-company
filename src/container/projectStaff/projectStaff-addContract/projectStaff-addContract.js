@@ -8,7 +8,7 @@ import {
   setPageData,
   restore
 } from '@redux/projectStaff/projectStaff-addedit';
-import { Pagination } from 'antd';
+import { Pagination, Select } from 'antd';
 import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
 import { getBankNameByCode } from 'api/project';
@@ -20,10 +20,9 @@ import {Base64} from 'js-base64';
 import Contract from './contract.png';
 import Delete from './delete.png';
 import {showWarnMsg} from '../../../common/js/util';
-@DetailWrapper(
-    state => state.projectStaffAddEdit,
-    { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
-)
+
+const {Option} = Select;
+
 class ProjectStaffAddContract extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +31,9 @@ class ProjectStaffAddContract extends React.Component {
       shot: false,
       contractPics: [],
       page: 1,
-      pageSize: 8
+      pageSize: 8,
+      deviceId: '',
+      devices: []
     };
     this.code = getQueryString('code', this.props.location.search);
     this.projectCode = getQueryString('projectCode', this.props.location.search);
@@ -41,7 +42,7 @@ class ProjectStaffAddContract extends React.Component {
     this.contractPics = [];
   }
   componentDidMount() {
-    this.openVideo();
+    this.getdeviceId();
     getQiniuToken().then((res) => {
       this.token = res.uploadToken;
     });
@@ -60,12 +61,32 @@ class ProjectStaffAddContract extends React.Component {
       }
     });
   }
+  getdeviceId = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.enumerateDevices()
+          .then((devices) => {
+            this.deviceArr = [];
+            let tmpArr = devices.filter(device => device.kind === 'videoinput');
+            this.setState({
+              devices: tmpArr,
+              deviceId: tmpArr.length ? tmpArr[0].deviceId : ''
+            });
+            if (tmpArr.length) {
+              this.openVideo(tmpArr[0].deviceId);
+            } else {
+              showWarnMsg('未发现摄像头');
+            }
+          }).catch(function(err) {
+        console.log(err.name + ': ' + err.message);
+      });
+    }
+  }
   // 打开摄像头
-  openVideo() {
+  openVideo(deviceId) {
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { deviceId },
         audio: true
       }).then((stream) => {
         this.mediaStreamTrack = typeof (stream.stop) === 'function' ? stream : stream.getTracks()[1];
@@ -199,10 +220,28 @@ class ProjectStaffAddContract extends React.Component {
       .send(base64)
       .promise();
   };
+  deviceChange = (v) => {
+    this.setState({deviceId: v});
+    if (v) {
+      this.cancel();
+      this.openVideo(v);
+    }
+  }
   render() {
     return (
         <div className="contract-total">
           <div className="addContract-title"><i></i><span>证件补录</span></div>
+          <div className="addContract-select">
+            <label>摄像头</label>
+            <Select style={{
+              marginTop: 20,
+              marginLeft: 20,
+              width: 300
+            }} onChange={this.deviceChange}
+                    value={this.state.deviceId}>
+              {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
+            </Select>
+          </div>
           <div className="addContract-content">
             <div className="cut-contract">
               <div className="contract-video-box" style={{ display: this.state.video ? 'block' : 'none' }} onClick={ this.handleShotClick }>

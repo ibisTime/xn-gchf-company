@@ -1,30 +1,34 @@
 import React from 'react';
 import axios from 'axios';
-import { Button } from 'antd';
+import { Button, Select } from 'antd';
 import './idPicture.css';
 import Figure from './figure.png';
 import Hold from './hold.png';
 import IDFRONT from './id-front.png';
 import IDBACK from './id-back.png';
-import { getQueryString, getUserId } from 'common/js/util';
+import { getQueryString, getUserId, showWarnMsg } from 'common/js/util';
 import { idPicture3, getStaffDetail } from 'api/user';
 import { showSucMsg } from '../../../common/js/util';
+
+const {Option} = Select;
 
 class mianguanRead extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        'text': '',
-        'mediaStreamTrack': '',
-        'feat': '',
-        'video1': false,
-        'video2': false,
-        'video3': false,
-        'shot': true,
-        'pic1': '',
-        'pic2': '',
-        'pic3': '',
-        'next': false
+      text: '',
+      mediaStreamTrack: '',
+      feat: '',
+      video1: false,
+      video2: false,
+      video3: false,
+      shot: true,
+      pic1: '',
+      pic2: '',
+      pic3: '',
+      next: false,
+      deviceId: '',
+      devices: []
     };
     // this.openVideo = this.openVideo.bind(this);
     this.cutImg = this.cutImg.bind(this);
@@ -55,17 +59,36 @@ class mianguanRead extends React.Component {
           this.code = res.code;
         }
       });
+      this.getdeviceId();
   };
   next() {
     this.props.history.push(`/staff/jiandang/idInfoRead`);
   };
+  getdeviceId = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.enumerateDevices()
+          .then((devices) => {
+            this.deviceArr = [];
+            let tmpArr = devices.filter(device => device.kind === 'videoinput');
+            this.setState({
+              devices: tmpArr,
+              deviceId: tmpArr.length ? tmpArr[0].deviceId : ''
+            });
+            if (!tmpArr.length) {
+              showWarnMsg('未发现摄像头');
+            }
+          }).catch(function(err) {
+        console.log(err.name + ': ' + err.message);
+      });
+    }
+  }
   // 打开摄像头
-  openVideo1() {
+  openVideo1(deviceId) {
     console.log(this.state);
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: { deviceId },
             audio: true
         }).then((stream) => {
             this.mediaStreamTrack = typeof (stream.stop) === 'function' ? stream : stream.getTracks()[1];
@@ -98,11 +121,11 @@ class mianguanRead extends React.Component {
         });
     }
   };
-  openVideo2() {
+  openVideo2(deviceId) {
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: { deviceId },
             audio: true
         }).then((stream) => {
             this.mediaStreamTrack = typeof (stream.stop) === 'function' ? stream : stream.getTracks()[1];
@@ -135,11 +158,11 @@ class mianguanRead extends React.Component {
         });
     }
   };
-  openVideo3() {
+  openVideo3(deviceId) {
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
-            video: true,
+            video: { deviceId },
             audio: true
         }).then((stream) => {
             this.mediaStreamTrack = typeof (stream.stop) === 'function' ? stream : stream.getTracks()[1];
@@ -294,7 +317,12 @@ class mianguanRead extends React.Component {
     });
     console.log(this.state);
 };
-
+  deviceChange = (v) => {
+    this.setState({deviceId: v});
+    if (v) {
+      this.shot(this.curIdx, v);
+    }
+  }
   render() {
     return (
         <div className="id-total">
