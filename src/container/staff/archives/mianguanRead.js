@@ -54,17 +54,37 @@ class mianguanRead extends React.Component {
     this.context = this.canvas.getContext('2d');
     this.video = document.getElementById('video');
     this.mediaStreamTrack = '';
-    this.openVideo();
+    this.getdeviceId();
   };
   next() {
     this.props.history.push(`/staff/jiandang/idInfoRead`);
   };
+  getdeviceId = () => {
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.enumerateDevices()
+          .then((devices) => {
+            this.deviceArr = [];
+            let tmpArr = devices.filter(device => device.kind === 'videoinput');
+            this.setState({
+              devices: tmpArr,
+              deviceId: tmpArr.length ? tmpArr[0].deviceId : ''
+            });
+            if (tmpArr.length) {
+              this.openVideo(tmpArr[0].deviceId);
+            } else {
+              showWarnMsg('未发现摄像头');
+            }
+          }).catch(function(err) {
+        console.log(err.name + ': ' + err.message);
+      });
+    }
+  }
   // 打开摄像头
-  openVideo(argument) {
+  openVideo(deviceId) {
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { deviceId },
         audio: true
       }).then((stream) => {
         this.mediaStreamTrack = typeof (stream.stop) === 'function' ? stream : stream.getTracks()[1];
@@ -144,20 +164,24 @@ class mianguanRead extends React.Component {
     // jsonp('http://118.31.17.181/getfeature', Base64.encode(base64))
     // console.log(base64);
     // axios.post('https://feat.aijmu.com/getfeature', encodeURIComponent(base64), {
-    axios.post('https://feat.aijmu.com/getfeature', base64, {
-      withCredentials: false
-    }).then((rs) => {
-      // console.log(rs);
-      // console.log(rs.data);
-      var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(rs.data);
-      if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
-        showWarnMsg('请对准人脸');
-        this.setState({ feat: '' });
-        return;
-      };
-      this.setState({
-        feat: result[1]
-      });
+    // 暂时注释
+    // axios.post('https://feat.aijmu.com/getfeature', base64, {
+    //   withCredentials: false
+    // }).then((rs) => {
+    //   // console.log(rs);
+    //   // console.log(rs.data);
+    //   var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(rs.data);
+    //   if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
+    //     showWarnMsg('请对准人脸');
+    //     this.setState({ feat: '' });
+    //     return;
+    //   };
+    //   this.setState({
+    //     feat: result[1]
+    //   });
+    // });
+    this.setState({
+      feat: 'NOFACE'
     });
   }
   handleShotClick() {
