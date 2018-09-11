@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Spin, Tree, Modal } from 'antd';
+import { Form, Spin, Tree, Modal, Divider } from 'antd';
 import { getCompany, getBumen, deleteCompany1, deleteBumen1, getCompanyDetail } from 'api/company';
 import { setRoleMenus, getUserDetail } from 'api/user';
 import { getBumen1, getProject } from 'api/project';
@@ -36,6 +36,7 @@ class ProjectAddBumen extends React.Component {
     ]).then(([data1, data2, data3]) => {
       this.setState({
         projectName: data1.name,
+        companyName: data1.companyName,
         projectCode: this.code,
         projecCode: data2.projecCode,
         fetching: false
@@ -51,7 +52,6 @@ class ProjectAddBumen extends React.Component {
     this.getTree();
   }
   getTree() {
-    console.log(this.state);
     getBumen1({projectCode: this.state.projectCode}).then((data) => {
       this.getTree0(data);
     });
@@ -60,7 +60,6 @@ class ProjectAddBumen extends React.Component {
     let result = {};
     let companyCodeObj = {};
     data.forEach(v => {
-      console.log(v);
       v.parentCode = v.parentCode || 'ROOT';
       if (!result[v.parentCode]) {
         result[v.parentCode] = [];
@@ -75,13 +74,19 @@ class ProjectAddBumen extends React.Component {
     });
     this.companyCodeObj = companyCodeObj;
     this.result = result;
-    let tree = [
+    // let tree = [
+    //   {
+    //     title: this.state.projectName,
+    //     key: this.state.projectCode,
+    //     children: []
+    //   }];
+    let tree = data.length ? [
       {
-        title: this.state.projectName,
+        title: '项目组',
         key: this.state.projectCode,
         children: []
-      }];
-    this.getTreeNode(result['ROOT'], tree[0].children);
+      }] : [];
+    this.getTreeNode(result['ROOT'], data.length ? tree[0].children : tree);
     this.setState({ treeData: tree, fetching: false });
   }
   getTreeNode(arr, children) {
@@ -126,29 +131,31 @@ class ProjectAddBumen extends React.Component {
       if (item.children) {
         // console.log(item.children);
         return (
-            <TreeNode title={<div style={{ width: '400px' }}>{item.title}<span style={{ float: 'right' }}>{item.leader}-{item.leaderMobile}</span></div>}
+            <TreeNode title={<div style={{ width: '400px', color: '#808080' }}>{item.title}<span style={{ float: 'right', display: item.title !== '项目组' ? 'block' : 'none' }}>负责人： {item.leader}（{item.leaderMobile}）</span></div>}
                       key={item.key}
                       dataRef={item}>
               {this.renderTreeNodes(item.children)}
             </TreeNode>
         );
       }
-      return <TreeNode title={<div style={{ width: '400px' }}>{item.title}<span style={{ float: 'right' }}>{item.leader}-{item.leaderMobile}</span></div>} key={item.key}
+      return <TreeNode title={<div style={{ width: '400px', color: '#1791FF' }}>{item.title}<span style={{ float: 'right' }}>负责人：{item.leader}（{item.leaderMobile}）</span></div>}
+                       key={item.key}
                        dataRef={item} />;
     });
   };
   addBumen = () => {
-    console.log();
     if(this.state.selectKey[0] === 'D') {
-      this.props.history.push(`/newProj/companyConstruct/addBumen?projectCode=${this.code}&upperBumen=${this.state.selectKey}`);
+      // 选中了一个部门，即确定了上级部门
+      this.props.history.push(`/projectManage/project/addBumen/add?projectCode=${this.code}&upperBumen=${this.state.selectKey}`);
     } else {
-      this.props.history.push(`/newProj/companyConstruct/addBumen?projectCode=${this.code}`);
+      // 无确定的上级部门
+      this.props.history.push(`/projectManage/project/addBumen/add?projectCode=${this.code}`);
     }
   };
   editBumen = () => {
-    console.log(this.state.selectKey[0]);
     if (this.state.selectKey !== '' && this.state.selectKey[0] === 'D') {
-      this.props.history.push(`/newProj/companyConstruct/addBumen?code=${this.state.selectKey}&projectCode=${this.code}`);
+      // this.props.history.push(`/newProj/companyConstruct/addBumen?code=${this.state.selectKey}&projectCode=${this.code}`);
+      this.props.history.push(`/projectManage/project/addBumen/add?code=${this.state.selectKey}&projectCode=${this.code}`);
     } else {
       showWarnMsg('请选择一个部门');
     }
@@ -181,31 +188,39 @@ class ProjectAddBumen extends React.Component {
     this.props.history.go(-1);
   };
   render() {
-    return this.state.projectName ? (
-        <Spin spinning={this.state.fetching}>
+    const { projectName, fetching, companyName, treeData, checkedKeys } = this.state;
+    return projectName ? (
+        <Spin spinning={fetching}>
           <div className="tools-wrapper" style={{ marginTop: 8 }}>
             <button type="button" className="ant-btn" onClick={this.addBumen}><span>新增部门</span></button>
             <button type="button" className="ant-btn" onClick={this.editBumen}><span>修改部门</span></button>
             <button type="button" className="ant-btn" onClick={this.deleteBumen}><span>删除部门</span></button>
             <button type="button" className="ant-btn" onClick={this.goBack}><span>返回</span></button>
           </div>
-          <Form className="detail-form-wrapper" onSubmit={this.handleSubmit}>
-            <FormItem key='treeMenu' {...formItemLayout} >
-              {this.state.treeData.length ? (
-                  <Tree
-                      checkable={false}
-                      showLine
-                      checkStrictly={true}
-                      defaultExpandAll
-                      autoExpandParent={false}
-                      onSelect={this.onSelect}
-                      checkedKeys={this.state.checkedKeys}
-                  >
-                    {this.renderTreeNodes(this.state.treeData)}
-                  </Tree>
-              ) : null}
-            </FormItem>
-          </Form>
+          <Divider />
+          <div style={{ paddingLeft: '37px', paddingTop: '13px' }}>
+            <div>
+              <p>{companyName}</p>
+              <p>项目：{projectName} </p>
+            </div>
+            <Form className="detail-form-wrapper" onSubmit={this.handleSubmit}>
+              <FormItem key='treeMenu' {...formItemLayout} >
+                {treeData.length ? (
+                    <Tree
+                        checkable={false}
+                        showLine
+                        checkStrictly={true}
+                        defaultExpandAll
+                        autoExpandParent={false}
+                        onSelect={this.onSelect}
+                        checkedKeys={checkedKeys}
+                    >
+                      {this.renderTreeNodes(treeData)}
+                    </Tree>
+                ) : null}
+              </FormItem>
+            </Form>
+          </div>
         </Spin>
     ) : null;
   }

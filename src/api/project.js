@@ -41,6 +41,44 @@ export function getBumen1(info) {
   });
 }
 /**
+ * 新增部门
+ * @param info
+ */
+export function addBumen(info) {
+  return fetch(631030, {
+    name: info.name,
+    leader: info.leader,
+    leadeMobile: info.leadeMobile,
+    parentCode: info.parentCode || '',
+    projectCode: info.projectCode
+  });
+}
+
+/**
+ * 修改部门
+ * @param info
+ */
+export function editBumen(info) {
+  return fetch(631032, {
+    code: info.code,
+    name: info.name,
+    leader: info.leader,
+    leadeMobile: info.leadeMobile,
+    parentCode: info.parentCode || '',
+    projectCode: info.projectCode
+  });
+}
+
+/***
+ * 详情查部门
+ * @param info
+ */
+export function getBumenDetail(code) {
+  return fetch(631037, {
+    code
+  });
+}
+/**
  * 删除公司
  * @param code
  */

@@ -48,7 +48,7 @@ class ProjectStaff extends React.Component {
       title: '姓名'
     }, {
       field: 'idNo',
-      title: '证件号',
+      title: '身份证号码',
       formatter: (v, d) => {
         return d.staff.idNo;
       }
@@ -58,9 +58,6 @@ class ProjectStaff extends React.Component {
       formatter: (v, d) => {
         return d.staff.mobile;
       }
-    }, {
-      field: 'projectName',
-      title: '所在工程'
     }, {
       field: 'departmentName',
       title: '部门'
@@ -92,7 +89,7 @@ class ProjectStaff extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/staff/allStaff/weekday?code=${selectedRows[0].code}&projectCode=${selectedRows[0].projectCode}`);
+          this.props.history.push(`/projectStaff/projectStaff/weekday?code=${selectedRows[0].code}&projectCode=${selectedRows[0].projectCode}`);
         }
       },
       // 离职
@@ -102,7 +99,7 @@ class ProjectStaff extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/staff/allStaff/quit?code=${selectedRows[0].staffCode}&projectCode=${selectedRows[0].projectCode}`);
+          this.props.history.push(`/projectStaff/projectStaff/quit?code=${selectedRows[0].staffCode}&projectCode=${selectedRows[0].projectCode}`);
         }
       },
       // 详情
@@ -112,7 +109,7 @@ class ProjectStaff extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/projectStaff/projectStaff/addedit?v=1&code=${selectedRowKeys[0]}&idNo=${selectedRows[0].staff.idNo}`);
+          this.props.history.push(`/projectStaff/projectStaff/addedit?v=1&code=${selectedRowKeys[0]}&staffCode=${selectedRows[0].staffCode}`);
         }
       },
       // 重新入职

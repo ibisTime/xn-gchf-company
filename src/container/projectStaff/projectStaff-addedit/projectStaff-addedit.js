@@ -1,19 +1,12 @@
 import React from 'react';
-import './projectStaff-addedit.css';
-// import {
-//   initStates,
-//   doFetching,
-//   cancelFetching,
-//   setSelectData,
-//   setPageData,
-//   restore
-// } from '@redux/projectStaff/projectStaff-addedit';
 import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
 import { getBankNameByCode } from 'api/project';
 import { getUserId, getUserDetail, query1, getEmploy, getEmployContract, getEmployContractList } from 'api/user';
 import { getDict } from 'api/dict';
-import ShowContractMore from '../../../component/showContractMore/showContractMore';
+import { queryStaffByCode } from 'api/company';
 import { Spin } from 'antd';
+import ShowContractMore from '../../../component/showContractMore/showContractMore';
+import './projectStaff-addedit.css';
 
 class ProjectStaffAddedit extends React.Component {
   constructor(props) {
@@ -25,16 +18,17 @@ class ProjectStaffAddedit extends React.Component {
       staffType: null,
       contractPic: [], // 分页查合同
       contractMore: false,
-      contracts: [] // 列表查合同
+      contracts: [], // 列表查合同,
+      projectCodeList: []
     };
     this.code = getQueryString('code', this.props.location.search);
-    this.idNo = getQueryString('idNo', this.props.location.search);
+    this.staffCode = getQueryString('staffCode', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
   }
   componentDidMount() {
     this.setState({ fetching: true });
     Promise.all([
-      query1(this.idNo),
+      queryStaffByCode({ code: this.staffCode }),
       getEmploy(this.code),
       getDict('staff_type'),
       getEmployContract({code: this.code}),

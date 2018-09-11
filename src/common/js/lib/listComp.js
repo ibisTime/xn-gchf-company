@@ -1,6 +1,6 @@
 import React from 'react';
 import cookies from 'browser-cookies';
-import { Form, Select, DatePicker, Input, Button, Table } from 'antd';
+import { Form, Select, DatePicker, Input, Button, Table, Divider } from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import { moneyFormat, dateTimeFormat, dateFormat, tempString,
@@ -377,6 +377,8 @@ export default class ListComponent extends React.Component {
             }}>{v.name}</Button>
           ))}
         </div>
+        <Divider />
+        <div className="head">{this.options.head}</div>
         <div className="table-wrapper">
           <Table
             bordered

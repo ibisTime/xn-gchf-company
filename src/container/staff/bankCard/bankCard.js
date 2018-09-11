@@ -1,5 +1,4 @@
 import React from 'react';
-import cookies from 'browser-cookies';
 import {
   setTableData,
   setPagination,
@@ -11,7 +10,7 @@ import {
   setSearchData
 } from '@redux/staff/bankCard';
 import { listWrapper } from 'common/js/build-list';
-import { getUserId, getUserKind } from 'common/js/util';
+import { getUserId, getUserKind, showWarnMsg } from 'common/js/util';
 import { getUserDetail } from 'api/user';
 
 @listWrapper(
@@ -64,8 +63,20 @@ class BankCard extends React.Component {
       search: true,
       hidden: true
     }];
+    const btnEvent = {
+      edit: (selectedRowKeys, selectedRows) => {
+        if (!selectedRowKeys.length) {
+          showWarnMsg('请选择记录');
+        } else if (selectedRowKeys.length > 1) {
+          showWarnMsg('请选择一条记录');
+        } else {
+          this.props.history.push(`/staff/bankCard/edit?code=${selectedRowKeys[0]}&staffCode=${selectedRows[0].staffCode}&name=${selectedRows[0].staffName}`);
+        }
+      }
+    };
     return this.state.projectCode ? this.props.buildList({
       fields,
+      btnEvent,
       pageCode: 631425,
       searchParams: {
         projectCode: this.state.projectCode

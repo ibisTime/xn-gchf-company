@@ -33,6 +33,7 @@ html {
 .tools-wrapper .ant-btn {
   margin-top:  8px;
   margin-right: 8px;
+  padding: 0 35px;
 }
 
 .tools-wrapper .ant-btn:last-child {
@@ -284,4 +285,8 @@ html {
 }
 .ant-table-bordered.ant-table-empty .ant-table-placeholder {
     z-index: 0;
+}
+.ant-btn {
+    fontSize: 14px;
+    padding: 0 35px;
 }

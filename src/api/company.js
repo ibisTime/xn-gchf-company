@@ -49,3 +49,13 @@ export function deleteCompany1(code) {
 export function deleteBumen1(code) {
   return fetch(631031, { code });
 }
+
+/**
+ * 详情获取该员工的所有信息
+ * @param code
+ */
+export function queryStaffByCode(info) {
+  return fetch(631419, {
+    code: info.code
+  });
+}

@@ -1,0 +1,25 @@
+.blue-title {
+    height: 22pt;
+    background: #1791FF;
+    /*position: relative;*/
+    color: #fff;
+    position: absolute;
+    left: 24px;
+    top: 53px;
+    right: 24px;
+}
+.blue-title i {
+    width: 3px;
+    height: 11pt;
+    border-radius: 2px;
+    background: #fff;
+    position: absolute;
+    left: 9px;
+    top: 7px;
+    margin-right: 10px;
+}
+.blue-title span {
+    margin-left: 20px;
+    font-size: 11pt;
+    line-height: 22pt;
+}

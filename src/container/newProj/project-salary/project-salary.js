@@ -1,5 +1,7 @@
 import React from 'react';
 import XLSX from 'xlsx';
+import ModalDetail from 'common/js/build-modal-detail';
+import fetch from 'common/js/fetch';
 import {
   setTableData,
   setPagination,
@@ -12,12 +14,11 @@ import {
 } from '@redux/newProj/project-salary';
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg, getQueryString, dateTimeFormat, moneyFormat, getUserKind, getUserId } from 'common/js/util';
-import ModalDetail from 'common/js/build-modal-detail';
-import fetch from 'common/js/fetch';
-import { getUserDetail } from 'api/user';
+import { getUserDetail, getEmploy } from 'api/user';
 import { deleteSalaryMany } from 'api/project';
-import './project-salary.css';
 import { getDict } from 'api/dict';
+import PopUp from '../../../component/pop-up/pop-up';
+import './project-salary.css';
 
 @listWrapper(
   state => ({
@@ -37,7 +38,12 @@ class Salary extends React.Component {
       projectCode: '',
       projectName: '',
       projectCodeList: '',
-      salaryStatus: []
+      salaryStatus: [],
+      popUp: false,
+      title: '',
+      content: '',
+      mode: '',
+      positionType: {}
     };
   }
   componentDidMount() {
@@ -54,42 +60,55 @@ class Salary extends React.Component {
       });
     });
   };
+  // 弹窗事件
+  changeState = (who, value) => {
+    switch (who) {
+      case 'popUp':
+        this.setState({ popUp: value });
+        break;
+      case 'projectCurStatus':
+        this.setState({ projectCurStatus: value });
+    }
+  };
+  getPageData = () => {
+    this.props.getPageData();
+  };
   render() {
     const fields = [{
-      title: '员工姓名',
+      title: '姓名',
       field: 'staffName'
     }, {
       title: '所属月份',
       field: 'month',
       search: true
     }, {
-      title: '正常考勤天数',
+      title: '考勤(天)',
       field: 'attendanceDays'
     }, {
-      title: '请假天数',
+      title: '请假(天)',
       field: 'leavingDays'
     }, {
-      title: '迟到小时数',
+      title: '迟到(小时)',
       field: 'delayHours'
     }, {
-      title: '早退小时数',
+      title: '早退(小时)',
       field: 'earlyHours'
     }, {
-      title: '扣款金额',
+      title: '扣款(元)',
       field: 'cutAmount',
       amount: true,
       className: 'red'
     }, {
-      title: '发放奖金',
+      title: '奖金(元)',
       field: 'awardAmount',
       amount: true,
       className: 'blue'
     }, {
-      title: '应发工资',
+      title: '考勤工资(元)',
       field: 'shouldAmount',
       amount: true
     }, {
-      title: '实发工资',
+      title: '实发工资(元)',
       field: 'factAmount',
       amount: true
     }, {
@@ -98,10 +117,6 @@ class Salary extends React.Component {
       type: 'select',
       key: 'salary_status',
       search: true
-    }, {
-      title: '备注',
-      field: 'factAmountRemark',
-      nowrap: true
     }];
     const options = {
       fields: [{
@@ -187,7 +202,10 @@ class Salary extends React.Component {
                 name: '生成工资条',
                 handler: (selectedRowKeys, selectedRows) => {
                   this.setState({
-                    showMakeSalary: true
+                    popUp: true,
+                    title: '生成待结算的工资条',
+                    mode: 'makeSalary',
+                    onlyBtnText: '确认生成'
                   });
                 }
               }, {
@@ -200,7 +218,27 @@ class Salary extends React.Component {
                     showWarnMsg('请选择一条记录');
                   } else {
                     if (selectedRows[0].status === '0') {
-                      this.props.history.push(`/projectManage/project/salary/edit?code=${selectedRowKeys[0]}&projectCode=${this.state.projectCode}`);
+                      // this.props.history.push(`/projectManage/project/salary/edit?code=${selectedRowKeys[0]}&projectCode=${this.state.projectCode}`);
+                      Promise.all([
+                        getEmploy(selectedRows[0].employCode),
+                        getDict('position_type')
+                      ]).then(([res1, res2]) => {
+                        console.log(res2);
+                        res2.map((item) => {
+                          this.state.positionType[item.dkey] = item.dvalue;
+                        });
+                        this.setState({
+                          popUp: true,
+                          title: '调整工资条',
+                          mode: 'editSalary',
+                          onlyBtnText: '确认生成',
+                          saCode: selectedRowKeys[0],
+                          departmentName: res1.departmentName,
+                          staffName: res1.staffName,
+                          position: this.state.positionType[res1.position],
+                          sf: selectedRows[0].factAmount + ''
+                        });
+                      });
                     } else {
                       showWarnMsg('该状态的工资条不可调整');
                     }
@@ -213,12 +251,20 @@ class Salary extends React.Component {
                   if (!selectedRowKeys.length) {
                     showWarnMsg('请选择记录');
                   } else {
-                    // if (selectedRows[0].status === '0') {
                     this.codeList = selectedRowKeys;
-                    this.setState({ visible: true });
-                    // } else {
-                    // showWarnMsg('该状态的工资条不可审核');
-                    // }
+                    let total = 0;
+                    selectedRows.map((item) => {
+                      total += item.factAmount;
+                    });
+                    this.setState({
+                      popUp: true,
+                      title: '审核工资条',
+                      mode: 'checkSalary',
+                      onlyBtnText: '审核',
+                      contentInfo1: `选中${selectedRowKeys.length}条工资条`,
+                      contentInfo2: `共计金额${moneyFormat(total)}元`,
+                      codeList: this.codeList
+                    });
                   }
                 }
               }, {
@@ -276,6 +322,23 @@ class Salary extends React.Component {
               visible={this.state.showMakeSalary}
               hideModal={() => this.setState({ showMakeSalary: false })}
               options={makeSalaryOptions} />
+          <PopUp popUpVisible={this.state.popUp}
+                 title={this.state.title}
+                 content={this.state.content}
+                 onlyBtnText={this.state.onlyBtnText}
+                 changeState={this.changeState}
+                 mode={this.state.mode}
+                 projectCode={this.state.projectCode}
+                 getPageData={this.getPageData}
+                 contentInfo1={this.state.contentInfo1}
+                 contentInfo2={this.state.contentInfo2}
+                 codeList={this.state.codeList}
+                 saCode={this.state.saCode}
+                 departmentName={this.state.departmentName}
+                 staffName={this.state.staffName}
+                 position={this.state.position}
+                 sf={this.state.sf}
+          />
         </div>
     ) : null;
   }

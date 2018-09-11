@@ -2,10 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import originJsonp from 'jsonp';
 import './jiandang.css';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Select, DatePicker } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout } from 'common/js/config';
 import { jiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
 import { showWarnMsg, showSucMsg } from 'common/js/util';
+import locale from 'common/js/lib/date-locale';
 import Avatar from './touxiang.png';
 
 const FormItem = Form.Item;
@@ -105,7 +106,6 @@ class Jiandang extends React.Component {
         this.setState({ spanText: '读取中...' });
         jsonp('http://127.0.0.1:8080/readidcard')
         .then((data) => {
-          // console.log('1111' + data);
           this.setState({ spanText: '读取身份证' });
             if(data.resultCode === '-101' || data.resultCode === '-102') {
                 jsonp('http://127.0.0.1:9081/readidcard')
@@ -283,7 +283,7 @@ class Jiandang extends React.Component {
               document.getElementById('getCard').removeAttribute('disabled');
             }
         });
-    }
+    };
     // 获取特征值
     // getFeat() {
     //     document.getElementById('getFeat').setAttribute('disabled', true).getElementsByTagName('span').innerHTML = '获取中...';
@@ -362,7 +362,7 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.realName,
                                         value: this.state.realName
                                     })(
-                                        <Input value={this.state.realName} disabled/>
+                                        <Input value={this.state.realName}/>
                                     )}
                                 </FormItem>
                                 <FormItem label="性别" {...jiandangFormItemLayout}>
@@ -374,7 +374,11 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.sex,
                                         value: this.state.sex
                                     })(
-                                        <Input value={this.state.sex} disabled/>
+                                        <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
+                                        style={{ width: '400px' }}>
+                                          <Option key='男' value='男'>男</Option>
+                                          <Option key='女' value='女'>女</Option>
+                                        </Select>
                                     )}
                                 </FormItem>
                                 <FormItem label="民族" {...jiandangFormItemLayout}>
@@ -386,7 +390,7 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idNation,
                                         value: this.state.idNation
                                     })(
-                                        <Input value={this.state.idNation} disabled/>
+                                        <Input value={this.state.idNation} />
                                     )}
                                 </FormItem>
                                 <FormItem label="出生日期" {...jiandangFormItemLayout}>
@@ -398,7 +402,11 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.birthday,
                                         value: this.state.birthday
                                     })(
-                                        <Input value={this.state.birthday} disabled/>
+                                        <DatePicker
+                                            allowClear={false}
+                                            locale={locale}
+                                            placeholder="请选择出生日期"
+                                            format='YYYY-MM-DD' />
                                     )}
                                 </FormItem>
                                 <FormItem label="身份证号码" {...jiandangFormItemLayout}>
@@ -410,7 +418,7 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idNo,
                                         value: this.state.idNo
                                     })(
-                                        <Input value={this.state.idNo} disabled/>
+                                        <Input value={this.state.idNo} />
                                     )}
                                 </FormItem>
                                 <FormItem label="地址" {...jiandangFormItemLayout}>
@@ -422,7 +430,7 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idAddress,
                                         value: this.state.idAddress
                                     })(
-                                        <Input value={this.state.idAddress} disabled/>
+                                        <Input value={this.state.idAddress} />
                                     )}
                                 </FormItem>
                                 <FormItem label="有效开始日期" {...jiandangFormItemLayout}>
@@ -434,7 +442,11 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idStartDate,
                                         value: this.state.idStartDate
                                     })(
-                                        <Input value={this.state.idStartDate} disabled/>
+                                        <DatePicker
+                                            allowClear={false}
+                                            locale={locale}
+                                            placeholder="请选择有效开始日期"
+                                            format='YYYY-MM-DD' />
                                     )}
                                 </FormItem>
                                 <FormItem label="有效截止日期" {...jiandangFormItemLayout}>
@@ -446,7 +458,13 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idEndDate,
                                         value: this.state.idEndDate
                                     })(
-                                        <Input value={this.state.idEndDate} disabled/>
+                                        <DatePicker
+                                            allowClear={false}
+                                            locale={locale}
+                                            placeholder="请选择有效截止日期"
+                                            format='YYYY-MM-DD'
+                                            style={{ width: '300px' }}
+                                        />
                                     )}
                                 </FormItem>
                                 <FormItem label="签发机关" {...jiandangFormItemLayout}>
@@ -458,7 +476,7 @@ class Jiandang extends React.Component {
                                         initialValue: this.state.idPolice,
                                         value: this.state.idPolice
                                     })(
-                                        <Input value={this.state.idPolice} disabled/>
+                                        <Input value={this.state.idPolice} />
                                     )}
                                 </FormItem>
                                 <FormItem key='btns' {...tailFormItemLayout}>

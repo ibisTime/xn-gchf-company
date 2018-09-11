@@ -16,6 +16,7 @@ import { getUserKind, getUserId, dateTimeFormat, showSucMsg, showWarnMsg } from 
 import { Form, Input, Select, Button } from 'antd';
 import { UPLOAD_URL, ruzhiFormItemLayout } from 'common/js/config';
 import fetch from 'common/js/fetch';
+import './../../../common/css/blueTitle.css';
 import './account.css';
 
 const rule0 = {
@@ -105,49 +106,59 @@ class Account extends React.Component {
   };
   render() {
     const { getFieldDecorator } = this.props.form;
-    return this.state.projectName ? (
-        <div className="big">
-          <div className="title">{this.state.projectName}账户信息</div>
-          <Form>
-            <FormItem label="工资专户户名" {...ruzhiFormItemLayout}>
-              {getFieldDecorator('accountName', {
-                rules: [rule0]
-              })(
-                  this.state.disabled
-                      ? <span>{this.state.accountName}</span>
-                      : <Input style={{ width: '280px' }} placeholder="请输入工资专户户名"/>
-              )}
-            </FormItem>
-            <FormItem label="工资专户账户" {...ruzhiFormItemLayout}>
-              {getFieldDecorator('bankcardNumber', {
-                rules: [rule0]
-              })(
-                  this.state.disabled
-                      ? <span>{this.state.bankcardNumber}</span>
-                      : <Input style={{ width: '280px' }} placeholder="请输入工资专户账户"/>
-              )}
-            </FormItem>
-            <FormItem label="工资专户开户行" {...ruzhiFormItemLayout}>
-              {getFieldDecorator('bankSubbranch', {
-                rules: [rule0]
-              })(
-                  this.state.disabled
-                      ? <span>{this.state.bankSubbranch}</span>
-                      : <Select style={{ width: '280px' }} placeholder="请选择工资专户开户行">
-                        {this.state.zhihang.map((item) => <Option key={item.code} value={item.code}>{item.bankSubbranchName}</Option>)}
-                      </Select>
-              )}
-            </FormItem>
-          </Form>
-          <div className="updateDateTime">更新时间:{dateTimeFormat(this.state.updateDatetime)}</div>
-          <div style={{ textAlign: 'center' }}>
-            {this.state.disabled
-                ? <Button style={{background: '#74c363'}} onClick={this.edit}>修改账户信息</Button>
-                : <Button style={{background: '#74c363'}} onClick={this.save}>保存</Button>
-            }
+    const { projectName, disabled, accountName, bankcardNumber, bankSubbranch, zhihang } = this.state;
+    return (
+      <div>
+        <div className="blue-title"><i></i><span>专户信息</span></div>
+          <div>
+            <div>
+              <div>
+                <div className="account-content">
+                  <div className="title">{projectName}账户信息</div>
+                  <div className="updateDateTime">更新时间:{dateTimeFormat(this.state.updateDatetime)}</div>
+                  <Form>
+                    <FormItem label="工资专户户名" {...ruzhiFormItemLayout}>
+                      {getFieldDecorator('accountName', {
+                        rules: [rule0]
+                      })(
+                          disabled
+                              ? <span>{accountName}</span>
+                              : <Input style={{ width: '280px' }} placeholder="请输入工资专户户名"/>
+                      )}
+                    </FormItem>
+                    <FormItem label="工资专户账户" {...ruzhiFormItemLayout}>
+                      {getFieldDecorator('bankcardNumber', {
+                        rules: [rule0]
+                      })(
+                          disabled
+                              ? <span>{bankcardNumber}</span>
+                              : <Input style={{ width: '280px' }} placeholder="请输入工资专户账户"/>
+                      )}
+                    </FormItem>
+                    <FormItem label="工资专户开户行" {...ruzhiFormItemLayout}>
+                      {getFieldDecorator('bankSubbranch', {
+                        rules: [rule0]
+                      })(
+                          disabled
+                              ? <span>{bankSubbranch}</span>
+                              : <Select style={{ width: '280px' }} placeholder="请选择工资专户开户行">
+                                {zhihang.map((item) => <Option key={item.code} value={item.code}>{item.bankSubbranchName}</Option>)}
+                              </Select>
+                      )}
+                    </FormItem>
+                    <div className="account-buttons">
+                      {disabled
+                          ? <Button onClick={this.edit}>修改账户信息</Button>
+                          : <Button onClick={this.save}>保存</Button>
+                      }
+                    </div>
+                  </Form>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-    ) : null;
+      </div>
+    );
   }
 }
 

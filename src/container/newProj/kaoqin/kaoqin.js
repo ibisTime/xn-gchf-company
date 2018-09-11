@@ -16,6 +16,7 @@ import ModalDetail from 'common/js/build-modal-detail';
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg, getQueryString, dateTimeFormat, getUserId, getUserKind } from 'common/js/util';
 import { getUserDetail } from 'api/user';
+import PopUp from '../../../component/pop-up/pop-up';
 
 @listWrapper(
   state => ({
@@ -32,7 +33,12 @@ class Kaoqin extends React.Component {
     super(props);
     this.state = {
       projectCode: '',
-      projectName: ''
+      projectName: '',
+      popUp: false,
+      title: '',
+      content: '打卡后，将以正常出工的出工状态计工资，且不可更改，是否进行手动打卡？',
+      mode: '',
+      okText: ''
     };
     this.code = getQueryString('code', this.props.location.search);
   }
@@ -40,7 +46,20 @@ class Kaoqin extends React.Component {
     getUserDetail(getUserId()).then((data) => {
       this.setState({ projectCode: data.projectCode, projectName: data.projectName });
     });
-  }
+  };
+  // 弹窗事件
+  changeState = (who, value) => {
+    switch (who) {
+      case 'popUp':
+        this.setState({ popUp: value });
+        break;
+      case 'projectCurStatus':
+        this.setState({ projectCurStatus: value });
+    }
+  };
+  getPageData = () => {
+    this.props.getPageData();
+  };
   render() {
     const fields = [{
       field: 'projectName',
@@ -88,11 +107,16 @@ class Kaoqin extends React.Component {
     }];
     const shangbanOptions = {
       fields: [{
-        field: 'startDatetime',
-        title: '上班时间',
+        field: 'attendanceStartDatetime',
+        title: '开始时间',
         type: 'datetime',
         required: true
-      }],
+      }, {
+          field: 'attendanceEndDatetime',
+          title: '结束时间',
+          type: 'datetime',
+          required: true
+        }],
       addCode: 631390,
       beforeSubmit: (param) => {
         param.codeList = this.kaoqinCode;
@@ -104,8 +128,13 @@ class Kaoqin extends React.Component {
     };
     const xiabanOptions = {
       fields: [{
-        field: 'endDatetime',
-        title: '下班时间',
+        field: 'attendanceStartDatetime',
+        title: '开始时间',
+        type: 'datetime',
+        required: true
+      }, {
+        field: 'attendanceEndDatetime',
+        title: '结束时间',
         type: 'datetime',
         required: true
       }],
@@ -172,7 +201,10 @@ class Kaoqin extends React.Component {
                     showWarnMsg('请选择记录');
                   } else {
                     this.setState({
-                      showShangban: true
+                      popUp: true,
+                      title: '进行上班打卡',
+                      mode: 'shangban',
+                      okText: '确认打卡'
                     });
                     this.kaoqinCode = selectedRowKeys;
                   }
@@ -186,7 +218,10 @@ class Kaoqin extends React.Component {
                     showWarnMsg('请选择记录');
                   } else {
                     this.setState({
-                      showXiaban: true
+                      popUp: true,
+                      title: '进行下班打卡',
+                      mode: 'xiaban',
+                      okText: '确认打卡'
                     });
                     this.kaoqinCode = selectedRowKeys;
                   }
@@ -204,6 +239,15 @@ class Kaoqin extends React.Component {
               visible={this.state.showXiaban}
               hideModal={() => this.setState({showXiaban: false})}
               options={xiabanOptions} />
+          <PopUp popUpVisible={this.state.popUp}
+                 title={this.state.title}
+                 content={this.state.content}
+                 okText={this.state.okText}
+                 changeState={this.changeState}
+                 mode={this.state.mode}
+                 projectCode={this.state.projectCode}
+                 kaoqinCode={this.kaoqinCode}
+                 getPageData={this.getPageData}/>
             </div>
           ) : null;
   }

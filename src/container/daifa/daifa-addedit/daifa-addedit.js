@@ -130,8 +130,7 @@ class DaifaAddEdit extends React.Component {
         }
       }]
     };
-    if (getUserKind() === 'O') {
-      return this.state.projectCode ? (
+    return this.state.projectCode ? (
         <div>
           {
             this.props.buildList({
@@ -160,36 +159,19 @@ class DaifaAddEdit extends React.Component {
                 projectCode: this.state.projectCode,
                 kind: 'O'
               },
-              pageCode: 631445
+              pageCode: 631445,
+              head: (
+                  <a href="f">aaaa</a>
+              )
             })
           }
           <ModalDetail
-            title='审核'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
+              title='审核'
+              visible={this.state.visible}
+              hideModal={() => this.setState({ visible: false })}
+              options={options} />
         </div>
-      ) : null;
-    } else {
-      return (
-        <div>
-          {
-            this.state.projectCodeList ? this.props.buildList({
-              fields,
-              singleSelect: false,
-              buttons: [],
-              searchParams: { messageCode: this.code },
-              pageCode: 631445
-            }) : null
-          }
-          <ModalDetail
-            title='审核'
-            visible={this.state.visible}
-            hideModal={() => this.setState({ visible: false })}
-            options={options} />
-        </div>
-      );
-    }
+    ) : null;
   }
 }
 

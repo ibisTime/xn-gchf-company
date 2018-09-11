@@ -56,8 +56,6 @@ class RuzhiInfo extends React.Component {
       position: [],
       departmentCode: ''
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleTypeChange = this.handleTypeChange.bind(this);
     this.code = getQueryString('code', this.props.location.search);
     this.idNo = getQueryString('idNo', this.props.location.search);
     this.reruzhi = getQueryString('reruzhi', this.props.location.search);
@@ -127,7 +125,7 @@ class RuzhiInfo extends React.Component {
     }
   }
   // 员工source change事件
-  handleTypeChange(value) {
+  handleTypeChange = (value) => {
     this.setState({
       selectSource: value
     });
@@ -155,7 +153,7 @@ class RuzhiInfo extends React.Component {
           });
   };
   // 最终提交
-  handleSubmit() {
+  handleSubmit = () => {
     this.props.form.validateFieldsAndScroll((err, params) => {
       if (!err) {
         let format = 'YYYY-MM-DD';
@@ -198,7 +196,7 @@ class RuzhiInfo extends React.Component {
         console.log(err);
       }
     });
-  }
+  };
   setUploadFileUrl(fileList) {
     fileList.forEach(f => {
       if (!f.url && f.status === 'done' && f.response) {

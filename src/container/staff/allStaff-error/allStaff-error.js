@@ -13,6 +13,7 @@ import {
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg, getQueryString, getUserKind, getUserId, moneyFormat } from 'common/js/util';
 import { getUserDetail } from 'api/user';
+import './allStaff-error.css';
 
 @listWrapper(
   state => ({
@@ -113,7 +114,12 @@ class AllStaffError extends React.Component {
         code: 'detail',
         name: '详情'
       }],
-      pageCode: 631445
+      pageCode: 631445,
+      head: (
+          <div style={{ height: '15px' }}>
+            <div className="blue-title"><span>发生异常事件请及时处理，相关监管单位可实时查看您的处理进度，请详细填写跟进的过程。</span></div>
+          </div>
+      )
     }) : null;
   }
 }

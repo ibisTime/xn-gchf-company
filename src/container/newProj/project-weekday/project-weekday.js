@@ -1,64 +1,129 @@
 import React from 'react';
-import {
-  initStates,
-  doFetching,
-  cancelFetching,
-  setSelectData,
-  setPageData,
-  restore
-} from '@redux/newProj/project-weekday';
-import { getQueryString, getUserKind, getUserId } from 'common/js/util';
+import { Form, Button, DatePicker } from 'antd';
+import { getQueryString, getUserKind, getUserId, showSucMsg, showWarnMsg } from 'common/js/util';
 import { getUserDetail } from 'api/user';
-import { DetailWrapper } from 'common/js/build-detail';
+import './../../../common/css/blueTitle.css';
+import './project-weekday.css';
+import { weekdayItemLayout } from 'common/js/config';
+import locale from 'common/js/lib/date-locale';
+import { askWeekday } from 'api/staff';
+import warning from './warning.png';
 
-@DetailWrapper(
-  state => state.newProjProjectWeekday,
-  { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
-)
+const FormItem = Form.Item;
+
 class ProjectWeekday extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      companyCode: ''
-    };
+    this.state = {};
     this.code = getQueryString('code', this.props.location.search);
     this.projectCode = getQueryString('projectCode', this.props.location.search);
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((data) => {
-      console.log(data);
-      this.setState({ companyCode: data.companyCode });
+  };
+  handleSubmit = () => {
+    this.props.form.validateFieldsAndScroll((err, params) => {
+      if (!err) {
+        let format = 'YYYY-MM-DD';
+        params.projectCode = this.projectCode;
+        params.employCode = this.code;
+        params.startDatetime = params.startDatetime.format(format);
+        params.endDatetime = params.endDatetime.format(format);
+        askWeekday(params).then((res) => {
+          if(res.code) {
+            showSucMsg('请假成功！');
+            setTimeout(() => {
+              this.props.history.go(-1);
+            }, 500);
+          } else {
+            showWarnMsg('请假失败！');
+          }
+        });
+      } else {
+        console.log(err);
+      }
     });
   };
+  back = () => {
+    this.props.history.go(-1);
+  };
   render() {
-    const fields = [{
-      title: '项目名称',
-      field: 'projectCode',
-      value: this.projectCode,
-      hidden: true
-    }, {
-      field: 'employCode',
-      value: this.code,
-      hidden: true
-    }, {
-      title: '开始时间',
-      field: 'startDatetime',
+    const { getFieldDecorator } = this.props.form;
+    const rule0 = {
       required: true,
-      type: 'date'
-    }, {
-      title: '结束时间',
-      field: 'endDatetime',
-      required: true,
-      type: 'date'
-    }, {
-      title: '备注',
-      field: 'remark'
-    }];
-    return this.props.buildDetail({
-      fields,
-      addCode: 631461
-    });
+      message: '必填字段'
+    };
+    return (
+        <div>
+          <div className="blue-title"><i></i><span>请假</span></div>
+          <div>
+            <div style={{ verticalAlign: 'middle', width: '100%' }}>
+              <div>
+                <div className="weekday-content">
+                  <Form>
+                    <FormItem label="开始时间" {...weekdayItemLayout}>
+                      {getFieldDecorator('startDatetime', {
+                        rules: [rule0]
+                      })(
+                          <DatePicker
+                              allowClear={false}
+                              locale={locale}
+                              placeholder="请选择开始时间"
+                              format='YYYY-MM-DD' />
+                      )}
+                    </FormItem>
+                    <FormItem label="销假时间" {...weekdayItemLayout}>
+                      {getFieldDecorator('endDatetime', {
+                        rules: [rule0]
+                      })(
+                          <DatePicker
+                              allowClear={false}
+                              locale={locale}
+                              placeholder="请选择销假时间"
+                              format='YYYY-MM-DD' />
+                      )}
+                    </FormItem>
+                    <div className="weekday-tips">
+                      <img src={warning} alt=""/><span>请假期间不计算薪资</span>
+                    </div>
+                    <div className="weekday-buttons">
+                      <Button type="primary" onClick={ this.handleSubmit }>保存</Button>
+                      <Button onClick={ this.back }>返回</Button>
+                    </div>
+                  </Form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    );
+    // const fields = [{
+    //   title: '项目名称',
+    //   field: 'projectCode',
+    //   value: this.projectCode,
+    //   hidden: true
+    // }, {
+    //   field: 'employCode',
+    //   value: this.code,
+    //   hidden: true
+    // }, {
+    //   title: '开始时间',
+    //   field: 'startDatetime',
+    //   required: true,
+    //   type: 'date'
+    // }, {
+    //   title: '结束时间',
+    //   field: 'endDatetime',
+    //   required: true,
+    //   type: 'date'
+    // }, {
+    //   title: '备注',
+    //   field: 'remark'
+    // }];
+    // return this.props.buildDetail({
+    //   fields,
+    //   addCode: 631461
+    // });
   }
 }
 
-export default ProjectWeekday;
+export default Form.create()(ProjectWeekday);

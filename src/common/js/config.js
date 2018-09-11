@@ -85,3 +85,33 @@ export const popUpLayout = {
     sm: { span: 12 }
   }
 };
+export const monthLayout = {
+  labelCol: {
+    xs: { span: 9 },
+    sm: { span: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 12 }
+  }
+};
+export const weekdayItemLayout = {
+  labelCol: {
+    xs: { span: 22 },
+    sm: { span: 8 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 14 }
+  }
+};
+export const bumenItemLayout = {
+  labelCol: {
+    xs: { span: 22 },
+    sm: { span: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 18 },
+    sm: { span: 14 }
+  }
+};

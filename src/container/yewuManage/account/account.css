@@ -3,12 +3,56 @@
     background: #7fb2d9;
     text-align: center;
 }
-.big .title {
-    text-align: center;
-    font-size: 20px;
-    margin-bottom: 30px;
-}
 .big .updateDateTime {
     text-align: center;
     margin-bottom: 30px;
+}
+.account-content {
+    width: 450px;
+    margin: 98px auto;
+}
+.account-content .title {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 7px;
+}
+.account-content .updateDateTime {
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 14px;
+    color: #666;
+}
+.account-content input {
+    width: 220px;
+    height: 28px;
+}
+.account-content .ant-form-item {
+    margin-top: 0;
+    margin-bottom: 20px;
+    height: 20px;
+}
+/*.account-content .ant-form-item:first-child{*/
+    /*margin-bottom: 2px;*/
+/*}*/
+/*.account-content .ant-form-item:last-child{*/
+    /*margin-bottom: 23px;*/
+/*}*/
+.account-content .quit-tips {
+    text-align: center;
+    margin-top: 29px;
+    margin-bottom: 73px;
+    color: #3c91f7;
+}
+.account-content .quit-tips img{
+    margin-right: 4px;
+}
+.account-content .account-buttons {
+    margin-top: 57px;
+    text-align: center;
+}
+.account-content .account-buttons .ant-btn{
+    width: 340px;
+    height: 46px;
+    color: #1791FF;
+    border-color: #1791FF;
 }

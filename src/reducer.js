@@ -24,7 +24,6 @@ import { generalTextParam } from './redux/general/text-param';
 import { generalTextParamAddEdit } from './redux/general/text-param-addedit';
 import { newProjCompanyConstruct } from './redux/newProj/companyConstruct';
 import { newProjBumenConstruct } from './redux/newProj/bumenConstruct';
-import { newProjAddCompany } from './redux/newProj/addCompany';
 import { newIdAddCompany } from './redux/newId/addCompany';
 import { newProjAddBumen } from './redux/newProj/addBumen';
 import { newProjProject } from './redux/newProj/project';
@@ -90,7 +89,7 @@ import { newIdSuperviseAddEdit } from './redux/newId/supervise-addedit';
 import { newIdCompanyConstruct1 } from './redux/newId/companyConstruct1';
 import { projectStaff } from './redux/projectStaff/projectStaff';
 import { projectStaffAddEdit } from './redux/projectStaff/projectStaff-addedit';
-import { projectStaffAddBankCard } from './redux/projectStaff/projectStaff-addBankCard';
+// import { projectStaffAddBankCard } from './redux/projectStaff/projectStaff-addBankCard';
 import { waitListAlreadyQuest } from './redux/waitList/alreadyQuest';
 import { waitListAlreadyQuestAddedit } from './redux/waitList/alreadyQuest-addedit';
 
@@ -121,7 +120,6 @@ export default combineReducers({
   generalTextParamAddEdit,
   newProjCompanyConstruct,
   newProjBumenConstruct,
-  newProjAddCompany,
   newIdAddCompany,
   newProjAddBumen,
   newProjProject,
@@ -186,7 +184,7 @@ export default combineReducers({
   newIdCompanyConstruct1,
   projectStaff,
   projectStaffAddEdit,
-  projectStaffAddBankCard,
+  // projectStaffAddBankCard,
   waitListAlreadyQuest,
   waitListAlreadyQuestAddedit
 });

@@ -19,14 +19,23 @@
     background: url("./background.png") no-repeat;
     background-size: 100% 100%;
     padding: 30pt;
+    position: relative;
 }
 .pop-up-title {
     width: 100%;
     height: 25pt;
     color: #fff;
-    font-size: 18pt;
+    font-size: 18px;
     text-align: center;
     margin-bottom: 20pt;
+}
+.pop-up-close {
+    position: absolute;
+    top: 21px;
+    right: 21px;
+}
+.pop-up-close:hover {
+    cursor: pointer;
 }
 .content {
     margin-bottom: 20pt;
@@ -38,6 +47,32 @@
     color: #fff;
     font-size: 14pt;
     text-align: left;
+}
+.contentInfo {
+    width: 153px;
+    height: 49px;
+    display: inline-block;
+    margin-bottom: 20pt;
+}
+.contentInfo p {
+    color: #fff;
+    font-size: 14px;
+}
+.editSalary{
+    color: #fff;
+    font-size: 14px;
+    text-align: left;
+}
+.editSalary p{
+    text-align: left;
+    padding-left: 69px;
+}
+.editSalary input {
+    background: transparent;
+    color: #fff;
+}
+.editSalary .ant-form-item-label {
+    width: 110px;
 }
 .my-modal-pop-up label {
     color: #fff;
@@ -55,6 +90,21 @@
     padding-top: 9pt;
 }
 .buttons div:hover {
+    cursor: pointer;
+}
+.oneBtn {
+    margin-top: 20pt;
+    height: 38pt;
+}
+.oneBtn div {
+    display: inline-block;
+    width: 104pt;
+    height: 100%;
+    background-size: 100% 100%;
+    font-size: 14pt;
+    padding-top: 9pt;
+}
+.oneBtn div:hover {
     cursor: pointer;
 }
 .cancel {
