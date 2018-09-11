@@ -136,17 +136,7 @@ class Jiandang extends React.Component {
                     idEndDate: this.state.idEndDate,
                     idPolice: this.state.idPolice
                   });
-                  getStaffDetail(this.state.idNo).then((res) => {
-                    if (!res.idNo) {
-                      this.setState({new: true});
-                    }
-                    if (res.pic1 || res.pict1) {
-                      this.setState({
-                        next: true
-                      });
-                    }
-                    document.getElementById('nextBtn').removeAttribute('disabled');
-                  });
+                  this.isNew();
                 }).catch(() => {
                     this.setState({ spanText: '读取身份证' });
                     showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
@@ -178,17 +168,7 @@ class Jiandang extends React.Component {
               idEndDate: this.state.idEndDate,
               idPolice: this.state.idPolice
             });
-            getStaffDetail(this.state.idNo).then((res) => {
-              if(!res.idNo) {
-                this.setState({ new: true });
-              }
-              if(res.pic1 || res.pict1) {
-                this.setState({
-                  next: true
-                });
-              }
-              document.getElementById('nextBtn').removeAttribute('disabled');
-            });
+            this.isNew();
         }).catch((e) => {
             // debugger;
             // alert(e);
@@ -224,23 +204,26 @@ class Jiandang extends React.Component {
                     idEndDate: this.state.idEndDate,
                     idPolice: this.state.idPolice
                   });
-                  getStaffDetail(this.state.idNo).then((res) => {
-                    if (!res.idNo) {
-                      this.setState({new: true});
-                    }
-                    if (res.pic1 || res.pict1) {
-                      this.setState({
-                        next: true
-                      });
-                    }
-                    document.getElementById('nextBtn').removeAttribute('disabled');
-                  });
+                  this.isNew();
                 }).catch(() => {
                     this.setState({ spanText: '读取身份证' });
                     showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
                     document.getElementById('getCard').removeAttribute('disabled');
                 });
         });
+    };
+    isNew = () => {
+      getStaffDetail(this.state.idNo).then((res) => {
+        if (!res.idNo) {
+          this.setState({new: true});
+        }
+        if (res.pic1 || res.pict1) {
+          this.setState({
+            next: true
+          });
+        }
+        document.getElementById('nextBtn').removeAttribute('disabled');
+      });
     };
     // 提交
     handleSubmit = (e) => {
@@ -252,33 +235,35 @@ class Jiandang extends React.Component {
         }
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                jiandang(
-                    values.birthday,
-                    values.idAddress,
-                    values.idEndDate,
-                    values.idNation,
-                    values.idNo,
-                    this.state.idPic,
-                    values.idPolice,
-                    values.idStartDate,
-                    values.realName,
-                    this.state.sex,
-                    getUserId(),
-                    this.companyCode
-                    ).then((res) => {
-                        if(res.code) {
-                            if(this.state.new) {
-                              showSucMsg('建档成功');
-                            } else {
-                              showSucMsg('您已建过档');
-                            }
-                            setTimeout(() => {
-                                this.props.history.push(`/staff/jiandang/mianguanRead?ruzhi=1&code=${res.code}&idNo=${this.state.idNo}`);
-                            }, 300);
-                        }else {
-                            showWarnMsg('建档失败');
-                        }
-                    });
+              this.setState({idNo: values.idNo});
+              this.isNew();
+              jiandang(
+                  values.birthday,
+                  values.idAddress,
+                  values.idEndDate,
+                  values.idNation,
+                  values.idNo,
+                  this.state.idPic,
+                  values.idPolice,
+                  values.idStartDate,
+                  values.realName,
+                  this.state.sex || values.sex,
+                  getUserId(),
+                  this.companyCode
+                  ).then((res) => {
+                      if(res.code) {
+                          if(this.state.new) {
+                            showSucMsg('建档成功');
+                          } else {
+                            showSucMsg('您已建过档');
+                          }
+                          setTimeout(() => {
+                              this.props.history.push(`/staff/jiandang/mianguanRead?ruzhi=1&code=${res.code}&idNo=${this.state.idNo}`);
+                          }, 300);
+                      }else {
+                          showWarnMsg('建档失败');
+                      }
+                  });
             } else {
               document.getElementById('getCard').removeAttribute('disabled');
             }

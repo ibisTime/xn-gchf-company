@@ -1,6 +1,4 @@
 import React from 'react';
-import cookies from 'browser-cookies';
-import XLSX from 'xlsx';
 import {
   setTableData,
   setPagination,
@@ -14,8 +12,8 @@ import {
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg, getUserKind, getUserId, getQueryString, dateTimeFormat, moneyFormat } from 'common/js/util';
 import { getUserDetail } from 'api/user';
-import ModalDetail from 'common/js/build-modal-detail';
-import fetch from 'common/js/fetch';
+import { detailDate } from 'api/downLoad';
+import './daifa-addedit.css';
 
 @listWrapper(
   state => ({
@@ -32,19 +30,29 @@ class DaifaAddEdit extends React.Component {
     this.state = {
       visible: false,
       projectCode: '',
-      projectCodeList: ''
+      projectCodeList: '',
+      month: '',
+      number: '',
+      totalAmount: ''
     };
     this.code = getQueryString('code', this.props.location.search);
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((data) => {
+    Promise.all([
+      getUserDetail(getUserId()),
+      detailDate(this.code)
+    ]).then(([res1, res2]) => {
       this.setState({
-        projectCode: data.projectCode,
-        projectCodeList: data.projectCodeList
+        projectCode: res1.projectCode,
+        projectCodeList: res1.projectCodeList,
+        month: res2.month,
+        number: res2.number,
+        totalAmount: res2.totalAmount
       });
     });
   };
   render() {
+    const { month, number, totalAmount, projectCode } = this.state;
     const fields = [{
       title: '员工姓名',
       field: 'staffName'
@@ -92,45 +100,7 @@ class DaifaAddEdit extends React.Component {
       field: 'factAmountRemark',
       nowrap: true
     }];
-    const options = {
-      fields: [{
-        field: 'codeList',
-        title: '编号',
-        value: this.codeList,
-        hidden: true
-      }, {
-        field: 'approveNote',
-        title: '审核备注'
-      }],
-      buttons: [{
-        title: '通过',
-        check: true,
-        handler: (param) => {
-          param.approver = getUserId();
-          param.result = '1';
-          this.props.doFetching();
-          fetch(631443, param).then(() => {
-            showSucMsg('操作成功');
-            this.props.cancelFetching();
-            this.setState({ visible: false });
-          }).catch(this.props.cancelFetching);
-        }
-      }, {
-        title: '不通过',
-        check: true,
-        handler: (param) => {
-          param.approver = getUserId();
-          param.result = '0';
-          this.props.doFetching();
-          fetch(631443, param).then(() => {
-            showSucMsg('操作成功');
-            this.props.cancelFetching();
-            this.setState({ visible: false });
-          }).catch(this.props.cancelFetching);
-        }
-      }]
-    };
-    return this.state.projectCode ? (
+    return (
         <div>
           {
             this.props.buildList({
@@ -156,22 +126,19 @@ class DaifaAddEdit extends React.Component {
               }],
               searchParams: {
                 messageCode: this.code,
-                projectCode: this.state.projectCode,
+                projectCode: projectCode,
                 kind: 'O'
               },
               pageCode: 631445,
               head: (
-                  <a href="f">aaaa</a>
+                  <div className="daifa-addedit-tip">
+                    <span>工资月份：{month}</span><span>人数：{number}人</span><span>实发金额：{moneyFormat(totalAmount)}元</span>
+                  </div>
               )
             })
           }
-          <ModalDetail
-              title='审核'
-              visible={this.state.visible}
-              hideModal={() => this.setState({ visible: false })}
-              options={options} />
         </div>
-    ) : null;
+    );
   }
 }
 

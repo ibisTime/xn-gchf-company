@@ -18,7 +18,7 @@ import { getUserDetail } from 'api/user';
 import { getProject, getZhiHang } from 'api/project';
 import { getOwnerBtns } from 'api/menu';
 import { getDict } from 'api/dict';
-import { UPLOAD_URL, projectLayout } from 'common/js/config';
+import { projectLayout } from 'common/js/config';
 import cityData from 'common/js/lib/city';
 import Moment from 'moment';
 import locale from '../../../common/js/lib/date-locale';

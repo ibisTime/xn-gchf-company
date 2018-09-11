@@ -22,7 +22,10 @@ export function getjinduList(projectCodeList, companyCode, kind) {
 }
 
 export function getUserErrorInfo(salaryCode) {
-  return fetch(631456, { salaryCode });
+  return fetch(631456, {
+    salaryCode,
+    orderColumn: 'handle_datetime',
+    orderDir: 'desc'});
 }
 
 export function query(idNo, projectCodeList) {
@@ -33,8 +36,13 @@ export function query1(idNo) {
   return fetch(631418, { idNo });
 }
 
-export function senderrInfo(salaryCode, handleNote, handler) {
-  return fetch(631450, { salaryCode, handleNote, handler });
+export function senderrInfo(info) {
+  return fetch(631450, {
+    salaryCode: info.salaryCode,
+    handleNote: info.handleNote,
+    handlePicList: info.handlePicList || [],
+    handler: getUserId()
+  });
 }
 
 export function getUserWagesInfo(code) {

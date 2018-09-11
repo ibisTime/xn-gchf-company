@@ -44,10 +44,10 @@ class AlreadyQuest extends React.Component {
         projectCodeList: data.projectCodeList,
         projectCode: data.projectCode
       });
-      console.log(data);
     });
   }
   render() {
+    const { projectCode } = this.state;
     const fields = [{
       title: '项目名称',
       field: 'projectName'
@@ -83,17 +83,15 @@ class AlreadyQuest extends React.Component {
       field: 'handleDatetime',
       type: 'datetime'
     }];
-    return this.state.projectCode
-        ? this.props.buildList({
+    return this.props.buildList({
           fields,
           searchParams: {
             statusList: ['1', '2', '3'],
-            projectCode: this.state.projectCode,
+            projectCode: projectCode,
             kind: 'O'
           },
           pageCode: 631435
-        })
-        : null;
+        });
   }
 }
 
