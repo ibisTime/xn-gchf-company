@@ -1,4 +1,6 @@
 import React from 'react';
+import fetch from 'common/js/fetch';
+import XLSX from 'xlsx';
 import {
   setTableData,
   setPagination,
@@ -28,7 +30,11 @@ class BankCard extends React.Component {
     super(props);
     this.state = {
       projectCodeList: '',
-      projectCode: ''
+      projectCode: '',
+      positionObj: {
+        0: '普工',
+        1: '主管'
+      }
     };
   }
   componentDidMount() {
@@ -43,25 +49,46 @@ class BankCard extends React.Component {
       hidden: true
     }, {
       field: 'staffName',
-      title: '真实姓名'
+      title: '姓名'
     }, {
-      field: 'projectName',
-      title: '项目名称'
+      field: 'idNo',
+      title: '身份证号'
+    }, {
+      field: 'staffMobile',
+      title: '手机号'
+    }, {
+      field: 'departmentName',
+      title: '部门'
+    }, {
+      field: 'position',
+      title: '职位',
+      formatter: (v, d) => {
+        return this.state.positionObj[d.position];
+      }
     }, {
       field: 'bankSubbranchName',
       title: '开户行'
     }, {
       field: 'bankcardNumber',
-      title: '银行账号'
-    }, {
-      field: 'remark',
-      title: '备注'
+      title: '卡号'
     }, {
       field: 'keyword',
-      title: '关键字',
-      placeholder: '银行/姓名/卡号',
+      title: '关键字查询',
+      placeholder: '姓名/手机号',
       search: true,
       hidden: true
+    }, {
+      field: 'status',
+      title: '现状',
+      key: 'bankcard_number_status',
+      type: 'select'
+    }, {
+      field: 'status',
+      placeholder: '现状',
+      key: 'bankcard_number_status',
+      search: true,
+      hidden: true,
+      type: 'select'
     }];
     const btnEvent = {
       edit: (selectedRowKeys, selectedRows) => {
@@ -72,6 +99,38 @@ class BankCard extends React.Component {
         } else {
           this.props.history.push(`/staff/bankCard/edit?code=${selectedRowKeys[0]}&staffCode=${selectedRows[0].staffCode}&name=${selectedRows[0].staffName}`);
         }
+      },
+      export: (selectedRowKeys, selectedRows) => {
+        console.log(1);
+        this.props.doFetching();
+        fetch(631425, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
+          this.props.cancelFetching();
+          let tableData = [];
+          let title = [];
+          fields.map((item) => {
+            if (item.title !== '员工编号' && item.title !== '关键字查询' && item.title !== '现状') {
+              title.push(item.title);
+            }
+          });
+          tableData.push(title);
+          data.list.map((item) => {
+            let temp = [];
+            temp.push(
+                item.staffName,
+                item.idNo,
+                item.staffMobile,
+                item.departmentName,
+                this.state.positionObj[item.position],
+                item.bankSubbranchName,
+                item.bankcardNumber
+            );
+            tableData.push(temp);
+          });
+          const ws = XLSX.utils.aoa_to_sheet(tableData);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
+          XLSX.writeFile(wb, '工资卡信息.xlsx');
+        });
       }
     };
     return this.state.projectCode ? this.props.buildList({

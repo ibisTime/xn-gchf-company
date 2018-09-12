@@ -75,6 +75,15 @@ export default class ListComponent extends React.Component {
           };
           this.addRender(f, dateFormat);
         }
+      } else if (f.type === 'month') {
+        if (f.render) {
+          obj.render = f.render;
+        } else {
+          obj.render = (v) => {
+            return f.nowrap ? <span style={{whiteSpace: 'nowrap'}}>{dateFormat(v)}</span> : dateFormat(v);
+          };
+          this.addRender(f, dateFormat);
+        }
       } else if (f.type === 'select' || f.type === 'provSelect') {
         if (f.key) {
           f.keyName = f.keyName || 'dkey';
@@ -436,7 +445,7 @@ export default class ListComponent extends React.Component {
             optionFilterProp="children"
             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             style={{ width: 200 }}
-            placeholder="请选择">
+            placeholder={item.placeholder}>
             {item.data ? item.data.map(d => (
               <Option key={d[item.keyName]} value={d[item.keyName]}>
                 {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
@@ -452,7 +461,7 @@ export default class ListComponent extends React.Component {
             onSearch={v => this.searchSelectChange(v, item)}
             optionLabelProp="children"
             style={{ width: 200 }}
-            placeholder="请输入关键字搜索">
+            placeholder={item.placeholder}>
             {item.data ? item.data.map(d => (
               <Option key={d[item.keyName]} value={d[item.keyName]}>
                 {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}

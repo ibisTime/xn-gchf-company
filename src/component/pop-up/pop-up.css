@@ -58,6 +58,10 @@
     color: #fff;
     font-size: 14px;
 }
+.checkSalaryTips {
+    color: #26D9FF;
+    font-size: 12px;
+}
 .editSalary{
     color: #fff;
     font-size: 14px;
@@ -115,4 +119,7 @@
 .ok {
     background: url("./ok.png") no-repeat;
     color: #fff;
+}
+#month .ant-calendar-picker-input {
+    background: transparent;
 }

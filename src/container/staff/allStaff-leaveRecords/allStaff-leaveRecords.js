@@ -1,4 +1,6 @@
 import React from 'react';
+import fetch from 'common/js/fetch';
+import XLSX from 'xlsx';
 import {
   setTableData,
   setPagination,
@@ -10,7 +12,7 @@ import {
   setSearchData
 } from '@redux/staff/allStaff-leaveRecords';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, showSucMsg, getUserKind, getUserId, formatDate, getQueryString } from 'common/js/util';
+import { showWarnMsg, showSucMsg, getUserKind, getUserId, formatDate, getQueryString, dateTimeFormat } from 'common/js/util';
 import { getUserDetail } from 'api/user';
 
 @listWrapper(
@@ -39,36 +41,95 @@ class AllStaffLeaveRecords extends React.Component {
   }
   render() {
     const fields = [{
-      field: 'projectName',
-      title: '项目名称'
-    }, {
       field: 'staffName',
-      title: '员工姓名'
+      title: '姓名'
     }, {
       field: 'startDatetime',
-      title: '请假开始时间',
+      title: '请假时间',
       type: 'date'
     }, {
       field: 'endDatetime',
-      title: '请假结束时间',
+      title: '销假时间',
       type: 'date'
     }, {
       field: 'leaveDays',
       title: '请假天数'
+    }, {
+      field: 'updateDatetime',
+      title: '更新时间',
+      type: 'datetime'
+    }, {
+      field: 'keyword',
+      title: '关键字查询',
+      search: true,
+      hidden: true,
+      placeholder: '姓名'
+    }, {
+      field: 'departmentCode',
+      placeholder: '部门',
+      listCode: '631036',
+      params: {
+        projectCode: this.state.projectCode
+      },
+      keyName: 'code',
+      valueName: 'name',
+      type: 'select',
+      search: true,
+      hidden: true
+    }, {
+      field: 'position',
+      placeholder: '职位',
+      type: 'select',
+      data: [{
+        dkey: '0',
+        dvalue: '普工'
+      }, {
+        dkey: '1',
+        dvalue: '主管'
+      }],
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      search: true,
+      hidden: true
+    }, {
+      field: 'employStatus',
+      placeholder: '状态',
+      key: 'staff_status',
+      search: true,
+      type: 'select',
+      hidden: true
     }];
     return this.state.projectCode ? this.props.buildList({
       fields,
       buttons: [{
-        code: 'detail',
-        name: '详情',
+        code: 'export',
+        name: '导出',
         handler: (selectedRowKeys, selectedRows) => {
-          if (!selectedRowKeys.length) {
-            showWarnMsg('请选择记录');
-          } else if (selectedRowKeys.length > 1) {
-            showWarnMsg('请选择一条记录');
-          } else {
-            this.props.history.push(`/staff/allStaff/leaveRecords-detail?code=${selectedRowKeys[0]}`);
-          }
+          fetch(631468, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
+            let tableData = [];
+            let title = [];
+            fields.map((item) => {
+              if (item.title !== '关键字查询' && item.title !== '部门' && item.title !== '职位' && item.title !== '状态') {
+                title.push(item.title);
+              }
+            });
+            tableData.push(title);
+            data.list.map((item) => {
+              let temp = [];
+              temp.push(
+                  item.staffName,
+                  item.startDatetime ? formatDate(item.startDatetime) : '',
+                  item.endDatetime ? formatDate(item.endDatetime) : '',
+                  item.leaveDays,
+                  item.updateDatetime ? dateTimeFormat(item.updateDatetime) : ''
+              );
+              tableData.push(temp);
+            });
+            const ws = XLSX.utils.aoa_to_sheet(tableData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
+            XLSX.writeFile(wb, '请假明细.xlsx');
+          });
         }
       }],
       searchParams: {

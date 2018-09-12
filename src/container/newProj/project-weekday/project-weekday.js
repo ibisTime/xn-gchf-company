@@ -96,33 +96,6 @@ class ProjectWeekday extends React.Component {
           </div>
         </div>
     );
-    // const fields = [{
-    //   title: '项目名称',
-    //   field: 'projectCode',
-    //   value: this.projectCode,
-    //   hidden: true
-    // }, {
-    //   field: 'employCode',
-    //   value: this.code,
-    //   hidden: true
-    // }, {
-    //   title: '开始时间',
-    //   field: 'startDatetime',
-    //   required: true,
-    //   type: 'date'
-    // }, {
-    //   title: '结束时间',
-    //   field: 'endDatetime',
-    //   required: true,
-    //   type: 'date'
-    // }, {
-    //   title: '备注',
-    //   field: 'remark'
-    // }];
-    // return this.props.buildDetail({
-    //   fields,
-    //   addCode: 631461
-    // });
   }
 }
 

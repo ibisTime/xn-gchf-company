@@ -357,6 +357,10 @@ const ROUTES = [
     path: '/staff/ruzhiInfo',
     component: asyncComponent(() => import('container/staff/archives/ruzhiInfo'))
   },
+  {
+    path: '/projectStaff/projectStaff/ruzhiInfo',
+    component: asyncComponent(() => import('container/staff/archives/ruzhiInfo'))
+  },
   // { path: '/staff/allStaff/addBankCard',
   //   component: asyncComponent(() => import('container/staff/allStaff-addBankCard/allStaff-addBankCard'))
   // },

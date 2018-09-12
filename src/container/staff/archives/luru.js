@@ -48,7 +48,6 @@ class RuzhiInfo extends React.Component {
   handleSubmit() {
     this.props.form.validateFieldsAndScroll((err, params) => {
       if (!err) {
-        console.log(params);
         params.code = this.code;
         params.updater = getUserId();
         if(params.subbranch) {

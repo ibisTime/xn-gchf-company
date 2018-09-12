@@ -54,40 +54,39 @@ class DaifaAddEdit extends React.Component {
   render() {
     const { month, number, totalAmount, projectCode } = this.state;
     const fields = [{
-      title: '员工姓名',
+      title: '姓名',
       field: 'staffName'
     }, {
       title: '所属月份',
-      field: 'month',
-      search: true
+      field: 'month'
     }, {
-      title: '正常考勤天数',
+      title: '考勤（天）',
       field: 'attendanceDays'
     }, {
-      title: '请假天数',
+      title: '请假（天）',
       field: 'leavingDays'
     }, {
-      title: '迟到小时数',
+      title: '迟到（小时）',
       field: 'delayHours'
     }, {
-      title: '早退小时数',
+      title: '早退（小时）',
       field: 'earlyHours'
     }, {
-      title: '扣款金额',
+      title: '扣款（元）',
       field: 'cutAmount',
       amount: true,
       className: 'red'
     }, {
-      title: '发放奖金',
+      title: '奖金（元）',
       field: 'awardAmount',
       amount: true,
       className: 'blue'
     }, {
-      title: '应发工资',
+      title: '考勤工资（元）',
       field: 'shouldAmount',
       amount: true
     }, {
-      title: '实发工资',
+      title: '实发工资（元）',
       field: 'factAmount',
       amount: true
     }, {
@@ -95,10 +94,6 @@ class DaifaAddEdit extends React.Component {
       field: 'status',
       type: 'select',
       key: 'salary_status'
-    }, {
-      title: '备注',
-      field: 'factAmountRemark',
-      nowrap: true
     }];
     return (
         <div>
@@ -106,21 +101,9 @@ class DaifaAddEdit extends React.Component {
             this.props.buildList({
               fields,
               buttons: [{
-                code: 'detail',
-                name: '详情',
-                handler: (selectedRowKeys, selectedRows) => {
-                  if (!selectedRowKeys.length) {
-                    showWarnMsg('请选择记录');
-                  } else if (selectedRowKeys.length > 1) {
-                    showWarnMsg('请选择一条记录');
-                  } else {
-                    this.props.history.push(`/daifa/daifa/addedit/edit?v=1&code=${selectedRowKeys[0]}&projectCode=${this.projectCode}`);
-                  }
-                }
-              }, {
                 code: 'goback',
                 name: '返回',
-                handler: (param) => {
+                handler: () => {
                   this.props.history.go(-1);
                 }
               }],

@@ -50,35 +50,35 @@ class AllStaffError extends React.Component {
       title: '项目编号',
       hidden: true
     }, {
-      field: 'projectName',
-      title: '工程名称'
-    }, {
       title: '姓名',
       field: 'staffName'
     }, {
       field: 'month',
-      title: '发放工资月份'
-    }, {
-      field: 'salaryCode',
-      title: '工资条编号',
-      hidden: true
+      title: '工资月份'
     }, {
       field: 'factAmount',
-      title: '应发工资',
-      formatter: (v, data) => {
-        return moneyFormat(v);
-      }
+      title: '工资单金额（元）',
+      amount: true
     }, {
       field: 'payAmount',
-      title: '发放工资',
-      formatter: (v, data) => {
-        return moneyFormat(v);
-      }
+      title: '实发金额（元）',
+      amount: true
+    }, {
+      field: 'delayAmount',
+      title: '欠薪金额（元）',
+      amount: true
     }, {
       title: '状态',
       field: 'status',
       type: 'select',
       key: 'salary_status'
+    }, {
+      title: '处理人',
+      field: 'handler'
+    }, {
+      title: '更新时间',
+      field: 'handleDatetime',
+      type: 'datetime'
     }];
     const btnEvent = {
       error: (selectedRowKeys, selectedRows) => {

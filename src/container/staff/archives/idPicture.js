@@ -280,7 +280,7 @@ class IdPicture extends React.Component {
     idPicture3(info).then((res) => {
       if(res.isSuccess) {
         showSucMsg('提交成功');
-        this.props.history.push(`/staff/jiandang/luru?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
+        this.props.history.push(`/staff/ruzhiInfo?ruzhi=${this.ruzhi}&staffCode=${this.code}&idNo=${this.idNo}`);
       }
     });
     // console.log(this.state);

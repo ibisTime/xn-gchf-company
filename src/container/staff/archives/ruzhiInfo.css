@@ -95,3 +95,33 @@ html, body {
     -webkit-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
 }
+.ruzhi-title {
+    font-size: 16px;
+    color: #4d4d4d;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.ant-form-item-children input, .ant-form-item-children .ant-select, .ant-form-item-children .ant-select-selection,#joinDatetime, .ruzhi-item{
+    width: 273px;
+    height: 34px;
+}
+.comparison-main2 .ant-form-item-children .ant-btn {
+    color: #1791FF;
+    border: 1px solid #1791FF;
+    padding: 0 10px;
+}
+#bankcardNumber {
+    width: 206px;
+    margin-right: 10px;
+}
+.ruzhi-btns {
+    text-align: center;
+}
+.ruzhi-btns button {
+    width: 340px;
+    height: 46px;
+}
+#salary::-ms-input-placeholder{text-align: right;}
+#salary::-webkit-input-placeholder{text-align: right;}
+#cutAmount::-ms-input-placeholder{text-align: right;}
+#cutAmount::-webkit-input-placeholder{text-align: right;}

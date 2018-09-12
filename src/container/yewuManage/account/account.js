@@ -1,20 +1,10 @@
 import React from 'react';
-import {
-  setTableData,
-  setPagination,
-  setBtnList,
-  setSearchParam,
-  clearSearchParam,
-  doFetching,
-  cancelFetching,
-  setSearchData
-} from '@redux/yewuManage/account';
 import { listWrapper } from 'common/js/build-list';
 import { getUserDetail } from 'api/user';
 import { getZhiHang } from 'api/project';
 import { getUserKind, getUserId, dateTimeFormat, showSucMsg, showWarnMsg } from 'common/js/util';
 import { Form, Input, Select, Button } from 'antd';
-import { UPLOAD_URL, ruzhiFormItemLayout } from 'common/js/config';
+import { ruzhiFormItemLayout } from 'common/js/config';
 import fetch from 'common/js/fetch';
 import './../../../common/css/blueTitle.css';
 import './account.css';

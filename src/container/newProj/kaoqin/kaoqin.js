@@ -1,6 +1,5 @@
 import React from 'react';
 import fetch from 'common/js/fetch';
-import { Modal } from 'antd';
 import XLSX from 'xlsx';
 import {
   setTableData,
@@ -12,7 +11,6 @@ import {
   cancelFetching,
   setSearchData
 } from '@redux/newProj/kaoqin';
-import ModalDetail from 'common/js/build-modal-detail';
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg, getQueryString, dateTimeFormat, getUserId, getUserKind } from 'common/js/util';
 import { getUserDetail } from 'api/user';
@@ -46,6 +44,20 @@ class Kaoqin extends React.Component {
     getUserDetail(getUserId()).then((data) => {
       this.setState({ projectCode: data.projectCode, projectName: data.projectName });
     });
+    this.monthData = [];
+    for(let i = 1; i <= 12; i++) {
+      this.monthData.push({
+        dkey: i,
+        dvalue: i + '月'
+      });
+    }
+    this.dayData = [];
+    for(let i = 1; i <= 31; i++) {
+      this.dayData.push({
+        dkey: i,
+        dvalue: i + '日'
+      });
+    }
   };
   // 弹窗事件
   changeState = (who, value) => {
@@ -62,11 +74,8 @@ class Kaoqin extends React.Component {
   };
   render() {
     const fields = [{
-      field: 'projectName',
-      title: '工程名称'
-    }, {
       field: 'staffName',
-      title: '员工姓名'
+      title: '姓名'
     }, {
       field: 'startDatetime',
       title: '上班时间',
@@ -79,8 +88,8 @@ class Kaoqin extends React.Component {
       field: 'status',
       title: '出工状态',
       type: 'select',
-      key: 'attendance_status',
-      search: true
+      search: true,
+      key: 'attendance_status'
     }, {
       field: 'settleDatetime',
       title: '结算时间',
@@ -95,58 +104,27 @@ class Kaoqin extends React.Component {
     }, {
       field: 'createDatetime',
       title: '考勤生成日期',
-      search: true,
       type: 'date',
       hidden: true
     }, {
-      field: 'keyword',
-      title: '关键字',
-      placeholder: '姓名',
+      field: 'createMonth',
+      title: '考勤生成月份',
+      type: 'select',
+      data: this.monthData,
+      keyName: 'dkey',
+      valueName: 'dvalue',
       search: true,
       hidden: true
+    }, {
+      field: 'createDay',
+      title: '考勤生成日期',
+      type: 'select',
+      search: true,
+      data: this.dayData,
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      hidden: true
     }];
-    const shangbanOptions = {
-      fields: [{
-        field: 'attendanceStartDatetime',
-        title: '开始时间',
-        type: 'datetime',
-        required: true
-      }, {
-          field: 'attendanceEndDatetime',
-          title: '结束时间',
-          type: 'datetime',
-          required: true
-        }],
-      addCode: 631390,
-      beforeSubmit: (param) => {
-        param.codeList = this.kaoqinCode;
-        return param;
-      },
-      onOk: () => {
-        this.props.getPageData();
-      }
-    };
-    const xiabanOptions = {
-      fields: [{
-        field: 'attendanceStartDatetime',
-        title: '开始时间',
-        type: 'datetime',
-        required: true
-      }, {
-        field: 'attendanceEndDatetime',
-        title: '结束时间',
-        type: 'datetime',
-        required: true
-      }],
-      addCode: 631391,
-      beforeSubmit: (param) => {
-        param.codeList = this.kaoqinCode;
-        return param;
-      },
-      onOk: () => {
-        this.props.getPageData();
-      }
-    };
     return this.state.projectCode ? (
         <div>
           {this.props.buildList({
@@ -154,46 +132,7 @@ class Kaoqin extends React.Component {
             searchParams: {projectCode: this.state.projectCode},
             pageCode: 631395,
             singleSelect: false,
-            buttons: [
-              {
-                code: 'export',
-                name: '导出',
-                handler: (selectedRowKeys, selectedRows) => {
-                  fetch(631395, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
-                    let tableData = [];
-                    let title = [];
-                    fields.map((item) => {
-                      if (item.title !== '关键字' && item.title !== '开始时间' && item.title !== '结束时间' && item.title !== '考勤生成日期') {
-                        title.push(item.title);
-                      }
-                    });
-                    tableData.push(title);
-                    data.list.map((item) => {
-                      let temp = [];
-                      this.props.searchData.status.map((v) => {
-                        if (v.dkey === item.status) {
-                          item.status = v.dvalue;
-                        }
-                      });
-                      temp.push(item.projectName,
-                          item.staffName,
-                          item.startDatetime ? dateTimeFormat(item.startDatetime) : '',
-                          item.endDatetime ? dateTimeFormat(item.endDatetime) : '',
-                          item.status,
-                          item.settleDatetime ? dateTimeFormat(item.settleDatetime) : '',
-                          item.createDatetime ? dateTimeFormat(item.createDatetime) : '',
-                          item.remark
-                      );
-                      tableData.push(temp);
-                    });
-                    const ws = XLSX.utils.aoa_to_sheet(tableData);
-                    const wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
-                    XLSX.writeFile(wb, this.state.projectName + '考勤记录.xlsx');
-                  });
-                }
-              },
-              {
+            buttons: [{
                 code: 'shangbandaka',
                 name: '上班打卡',
                 handler: (selectedRowKeys, selectedRows) => {
@@ -226,19 +165,48 @@ class Kaoqin extends React.Component {
                     this.kaoqinCode = selectedRowKeys;
                   }
                 }
-              }
-              ]
+              },
+              {
+                code: 'export',
+                name: '导出',
+                handler: (selectedRowKeys, selectedRows) => {
+                  this.props.doFetching();
+                  fetch(631395, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
+                    this.props.cancelFetching();
+                    let tableData = [];
+                    let title = [];
+                    fields.map((item) => {
+                      if (item.title !== '关键字' && item.title !== '考勤生成日期' && item.title !== '考勤生成月份') {
+                        title.push(item.title);
+                      }
+                    });
+                    tableData.push(title);
+                    data.list.map((item) => {
+                      let temp = [];
+                      this.props.searchData.status.map((v) => {
+                        if (v.dkey === item.status) {
+                          item.status = v.dvalue;
+                        }
+                      });
+                      temp.push(
+                          item.staffName,
+                          item.startDatetime ? dateTimeFormat(item.startDatetime) : '',
+                          item.endDatetime ? dateTimeFormat(item.endDatetime) : '',
+                          item.status,
+                          item.settleDatetime ? dateTimeFormat(item.settleDatetime) : '',
+                          item.createDatetime ? dateTimeFormat(item.createDatetime) : '',
+                          item.remark
+                      );
+                      tableData.push(temp);
+                    });
+                    const ws = XLSX.utils.aoa_to_sheet(tableData);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
+                    XLSX.writeFile(wb, this.state.projectName + '考勤记录.xlsx');
+                  });
+                }
+              }]
           })}
-          < ModalDetail
-              title='上班时间'
-              visible={this.state.showShangban}
-              hideModal={() => this.setState({showShangban: false})}
-              options={shangbanOptions} />
-          <ModalDetail
-              title='下班时间'
-              visible={this.state.showXiaban}
-              hideModal={() => this.setState({showXiaban: false})}
-              options={xiabanOptions} />
           <PopUp popUpVisible={this.state.popUp}
                  title={this.state.title}
                  content={this.state.content}

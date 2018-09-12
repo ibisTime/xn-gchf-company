@@ -1,5 +1,4 @@
 import React from 'react';
-import cookies from 'browser-cookies';
 import {
   setTableData,
   setPagination,
@@ -47,39 +46,46 @@ class AllStaffError extends React.Component {
       title: '编号',
       hidden: true
     }, {
+      field: 'salaryCode',
+      title: '工资条编号',
+      hidden: true
+    }, {
       field: 'projectCode',
       title: '项目编号',
       hidden: true
-    }, {
-      field: 'projectName',
-      title: '工程名称'
     }, {
       title: '姓名',
       field: 'staffName'
     }, {
       field: 'month',
-      title: '发放工资月份'
-    }, {
-      field: 'salaryCode',
-      title: '工资条编号',
-      hidden: true
+      title: '工资月份'
     }, {
       field: 'factAmount',
-      title: '应发工资',
-      formatter: (v, data) => {
-        return moneyFormat(v);
-      }
+      title: '工资单金额（元）',
+      amount: true
     }, {
       field: 'payAmount',
-      title: '发放工资',
-      formatter: (v, data) => {
-        return moneyFormat(v);
-      }
+      title: '实发金额（元）',
+      amount: true
     }, {
-      title: '状态',
+      field: 'delayAmount',
+      title: '欠薪金额（元）',
+      amount: true
+    }, {
+      title: '异常类型',
       field: 'status',
       type: 'select',
       key: 'salary_status'
+    }, {
+      title: '最新处理反馈详情',
+      field: 'handleNote'
+    }, {
+      title: '发言人',
+      field: 'handler'
+    }, {
+      title: '更新时间',
+      field: 'handleDatetime',
+      type: 'datetime'
     }];
     const btnEvent = {
       error: (selectedRowKeys, selectedRows) => {
@@ -110,10 +116,6 @@ class AllStaffError extends React.Component {
         projectCode: this.state.projectCode,
         statusList: ['4', '6', '7']
       },
-      buttons: [{
-        code: 'detail',
-        name: '详情'
-      }],
       pageCode: 631445,
       head: (
           <div style={{ height: '15px' }}>

@@ -39,11 +39,21 @@ class ProjectStaff extends React.Component {
     });
   }
   render() {
-    const fields = [{
-      field: 'companyName',
-      title: '公司名称',
-      hidden: true
+    const featStatusData = [{
+      dkey: '0',
+      dvalue: '无效'
     }, {
+      dkey: '1',
+      dvalue: '有效'
+    }];
+    const pict1StatusData = [{
+      dkey: '0',
+      dvalue: '未拍摄'
+    }, {
+      dkey: '1',
+      dvalue: '已拍摄'
+    }];
+    const fields = [{
       field: 'staffName',
       title: '姓名'
     }, {
@@ -59,6 +69,9 @@ class ProjectStaff extends React.Component {
         return d.staff.mobile;
       }
     }, {
+      field: 'projectName',
+      title: '所在工程'
+    }, {
       field: 'departmentName',
       title: '部门'
     }, {
@@ -67,17 +80,51 @@ class ProjectStaff extends React.Component {
       type: 'select',
       key: 'position_type'
     }, {
-      field: 'status',
-      title: '状态',
-      key: 'staff_status',
-      type: 'select'
+      field: 'pict1Status',
+      title: '图片信息',
+      data: pict1StatusData,
+      keyName: 'dkey',
+      valueName: 'dvalue'
     }, {
-      field: 'remark',
-      title: '备注'
+      field: 'featStatus',
+      title: '特征值状态',
+      data: featStatusData,
+      keyName: 'dkey',
+      valueName: 'dvalue'
     }, {
       field: 'keyword',
       title: '关键字查询',
-      placeholder: '名字/手机号',
+      placeholder: '姓名/手机号',
+      hidden: true,
+      search: true
+    }, {
+      field: 'projectCode',
+      placeholder: '部门',
+      listCode: '631036',
+      params: {
+        projectCode: this.state.projectCode
+      },
+      keyName: 'code',
+      valueName: 'name',
+      type: 'select',
+      hidden: true,
+      search: true
+    }, {
+      field: 'pict1Status',
+      placeholder: '图片信息',
+      data: pict1StatusData,
+      type: 'select',
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      hidden: true,
+      search: true
+    }, {
+      field: 'featStatus',
+      placeholder: '特征值状态',
+      data: featStatusData,
+      type: 'select',
+      keyName: 'dkey',
+      valueName: 'dvalue',
       hidden: true,
       search: true
     }];
@@ -119,7 +166,7 @@ class ProjectStaff extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/staff/ruzhiInfo?code=${selectedRows[0].code}&reruzhi=1&staffCode=${selectedRows[0].staffCode}`);
+          this.props.history.push(`/projectStaff/projectStaff/ruzhiInfo?code=${selectedRows[0].code}&reruzhi=1&staffCode=${selectedRows[0].staffCode}`);
         }
       },
       // 补录合同

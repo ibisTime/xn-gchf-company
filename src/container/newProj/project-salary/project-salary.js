@@ -59,6 +59,13 @@ class Salary extends React.Component {
         this.state.salaryStatus[item.dkey] = item.dvalue;
       });
     });
+    this.monthData = [];
+    for(let i = 1; i <= 12; i++) {
+      this.monthData.push({
+        dkey: i,
+        dvalue: i + '月'
+      });
+    }
   };
   // 弹窗事件
   changeState = (who, value) => {
@@ -76,11 +83,11 @@ class Salary extends React.Component {
   render() {
     const fields = [{
       title: '姓名',
-      field: 'staffName'
+      field: 'staffName',
+      search: true
     }, {
       title: '所属月份',
-      field: 'month',
-      search: true
+      field: 'month'
     }, {
       title: '考勤(天)',
       field: 'attendanceDays'
@@ -111,6 +118,15 @@ class Salary extends React.Component {
       title: '实发工资(元)',
       field: 'factAmount',
       amount: true
+    }, {
+      title: '所属月份',
+      field: 'month',
+      type: 'select',
+      data: this.monthData,
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      search: true,
+      hidden: true
     }, {
       title: '状态',
       field: 'status',
@@ -199,7 +215,7 @@ class Salary extends React.Component {
               singleSelect: false,
               buttons: [{
                 code: 'makeSalary',
-                name: '生成工资条',
+                name: '生成待结算的工资条',
                 handler: (selectedRowKeys, selectedRows) => {
                   this.setState({
                     popUp: true,
@@ -210,7 +226,7 @@ class Salary extends React.Component {
                 }
               }, {
                 code: 'edit',
-                name: '手工调整',
+                name: '调整工资条',
                 handler: (selectedRowKeys, selectedRows) => {
                   if (!selectedRowKeys.length) {
                     showWarnMsg('请选择记录');
@@ -270,7 +286,7 @@ class Salary extends React.Component {
               }, {
                 code: 'delete',
                 name: '删除',
-                handler: (selectedRowKeys, selectedRows) => {
+                handler: (selectedRowKeys) => {
                   if (!selectedRowKeys.length) {
                     showWarnMsg('请选择记录');
                   } else {
@@ -285,17 +301,17 @@ class Salary extends React.Component {
               }, {
                 code: 'export',
                 name: '导出',
-                handler: (selectedRowKeys, selectedRows) => {
+                handler: () => {
                   fetch(631446, {
                     projectCode: this.state.projectCode,
                     companyCode: this.state.companyCode,
                     kind: 'O'
                   }).then((data) => {
                     let payroll1 = [
-                      ['员工姓名', '所属月份', '正常考勤天数', '请假天数', '迟到小时数', '早退小时数', '扣款金额', '发放奖金', '应发工资', '实发工资', '状态', '备注']
+                      ['姓名', '所属月份', '考勤（天）', '请假（天）', '迟到（小时）', '早退（小时）', '扣款（元）', '奖金（元）', '考勤工资（元）', '实发工资（元）', '状态']
                     ];
                     let payroll2 = data.map((d, i) => {
-                      return [d.staffName, d.month, d.attendanceDays, d.leavingDays, d.delayHours, d.earlyHours, moneyFormat(d.cutAmount), moneyFormat(d.awardAmount), moneyFormat(d.factAmount), moneyFormat(d.factAmount), this.state.salaryStatus[d.status], d.factAmountRemark];
+                      return [d.staffName, d.month, d.attendanceDays, d.leavingDays, d.delayHours, d.earlyHours, moneyFormat(d.cutAmount), moneyFormat(d.awardAmount), moneyFormat(d.factAmount), moneyFormat(d.factAmount), this.state.salaryStatus[d.status]];
                     });
                     payroll1 = payroll1.concat(payroll2);
                     const ws = XLSX.utils.aoa_to_sheet(payroll1);

@@ -138,7 +138,7 @@ class AddBumen extends React.Component {
                     {getFieldDecorator('parentCode', {
                       initialValue: this.state.parentCode
                     })(
-                        <Select placeholder="请选择上级部门">
+                        <Select style={{ width: '280px' }} placeholder="请选择上级部门">
                           {bumen.map((item) => <Option key={item.code} value={item.code}>{item.name}</Option>)}
                         </Select>
                     )}

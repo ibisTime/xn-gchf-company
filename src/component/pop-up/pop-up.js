@@ -299,7 +299,13 @@ class PopUp extends React.Component {
                       )}
                     </FormItem>
                     : this.props.mode === 'checkSalary'
-                    ? <div className="contentInfo"><p>{this.props.contentInfo1}</p><p>{this.props.contentInfo2}</p></div>
+                    ? <div>
+                          <div className="contentInfo">
+                            <p>{this.props.contentInfo1}</p>
+                            <p>{this.props.contentInfo2}</p>
+                          </div>
+                          <p className="checkSalaryTips">请仔细核对金额，审核后将发送请求给银行</p>
+                        </div>
                     : this.props.mode === 'editSalary'
                     ? <div className="editSalary">
                         <p>姓名：{this.props.staffName}</p>
@@ -308,7 +314,7 @@ class PopUp extends React.Component {
                         <FormItem label="扣款" {...monthLayout}>
                           {getFieldDecorator('cutAmount', {
                             rules: [rule0],
-                            initialValue: 0
+                            initialValue: ''
                           })(
                               <Input placeholder="输入金额"/>
                           )}
@@ -316,7 +322,7 @@ class PopUp extends React.Component {
                         <FormItem label="奖金" {...monthLayout}>
                           {getFieldDecorator('awardAmount', {
                             rules: [rule0],
-                            initialValue: 0
+                            initialValue: ''
                           })(
                               <Input placeholder="输入金额"/>
                           )}
@@ -330,7 +336,8 @@ class PopUp extends React.Component {
                           )}
                         </FormItem>
                       </div>
-                    : <div>
+                    : this.props.mode === 'shangban' || this.props.mode === 'xiaban'
+                    ? <div>
                         <FormItem label='开始时间' {...monthLayout}>
                           {getFieldDecorator('attendanceStartDatetime', {
                             rules: [rule0]
@@ -356,6 +363,7 @@ class PopUp extends React.Component {
                           )}
                         </FormItem>
                       </div>
+                    : ''
               }
             </Form>
             <div className="buttons" style={{ display: this.props.okText ? 'block' : 'none' }}>
