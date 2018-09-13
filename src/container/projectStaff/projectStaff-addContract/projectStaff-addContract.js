@@ -80,9 +80,10 @@ class ProjectStaffAddContract extends React.Component {
         console.log(err.name + ': ' + err.message);
       });
     }
-  }
+  };
   // 打开摄像头
   openVideo(deviceId) {
+    console.log(deviceId);
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({

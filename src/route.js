@@ -449,8 +449,16 @@ const ROUTES = [
   //   component: asyncComponent(() => import('container/projectStaff/projectStaff-addBankCard/projectStaff-addBankCard'))
   // },
   {
-    path: '/projectStaff/addContract',
+    path: '/projectStaff/projectStaff/addContract',
     component: asyncComponent(() => import('container/projectStaff/projectStaff-addContract/projectStaff-addContract'))
+  },
+  {
+    path: '/projectStaff/projectStaff/takePhoto',
+    component: asyncComponent(() => import('container/projectStaff/projectStaff-takePhoto/projectStaff-takePhoto'))
+  },
+  {
+    path: '/projectStaff/projectStaff/checkFeat',
+    component: asyncComponent(() => import('container/projectStaff/projectStaff-checkFeat/projectStaff-checkFeat'))
   },
   {
     path: '/waitList/alreadyQuest',

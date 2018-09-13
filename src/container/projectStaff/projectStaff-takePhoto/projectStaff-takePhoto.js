@@ -2,12 +2,12 @@ import React from 'react';
 import { Base64 } from 'js-base64';
 import axios from 'axios';
 import originJsonp from 'jsonp';
-import { Select } from 'antd';
-import './mianguanRead.css';
+import { Select, Spin } from 'antd';
+import './../../staff/archives/mianguanRead.css';
 import Photo from './touxiang.png';
 import Figure from './figure.png';
 import { getQueryString, getUserId, showWarnMsg, showSucMsg } from 'common/js/util';
-import { mianguanPicture, getFeatInfo } from 'api/user';
+import { mianguanPicture, getFeatInfo, getStaffDetail } from 'api/user';
 
 const {Option} = Select;
 
@@ -25,7 +25,7 @@ function jsonp(url, data, option) {
   });
 }
 
-class mianguanRead extends React.Component {
+class mianguanRead2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,17 +35,22 @@ class mianguanRead extends React.Component {
       vedio: false,
       imgFlag: true,
       shot: false,
+      pict1: '',
+      next: false,
+      reshot: false, // reshot为true则是重拍过的
       deviceId: '',
-      devices: []
+      devices: [],
+      fetching: false
     };
     this.openVideo = this.openVideo.bind(this);
+    this.cutImg = this.cutImg.bind(this);
     this.getFeat = this.getFeat.bind(this);
     this.handleShotClick = this.handleShotClick.bind(this);
-    this.next = this.next.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.code = getQueryString('code', this.props.location.search);
-    this.ruzhi = getQueryString('ruzhi', this.props.location.search);
+    this.pict1 = getQueryString('pict1', this.props.location.search);
     this.idNo = getQueryString('idNo', this.props.location.search);
+    this.ruzhi = getQueryString('ruzhi', this.props.location.search);
+    this.staffCode = getQueryString('staffCode', this.props.location.search);
   }
   componentDidMount() {
     // 获取媒体方法（旧方法）
@@ -55,9 +60,23 @@ class mianguanRead extends React.Component {
     this.video = document.getElementById('video');
     this.mediaStreamTrack = '';
     this.getdeviceId();
-  };
-  next() {
-    this.props.history.push(`/staff/jiandang/idInfoRead`);
+    this.setState({ fetching: true });
+    getStaffDetail(this.idNo).then((res) => {
+      this.setState({ fetching: false });
+      if(res.pict1) {
+        this.setState({
+          pict1: res.pict1,
+          feat: res.feat,
+          vedio: false,
+          shot: false
+        });
+      } else {
+        this.setState({
+          vedio: true,
+          shot: true
+        });
+      }
+    }).catch(() => { this.setState({ fetching: false }); });
   };
   getdeviceId = () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -118,16 +137,13 @@ class mianguanRead extends React.Component {
     }
   };
   // 截取图像
-  cutImg = () => {
+  cutImg() {
     this.setState({
       vedio: false,
       imgFlag: false,
       shot: false
     });
     this.context = this.canvas.getContext('2d');
-    // this.context.scale(0.5, 0.5);
-    // this.context.drawImage(this.video, 340, 0, 600, 790, 0, 0, 1020, 1350);
-    // this.context = this.canvas.getContext('2d');
     this.canvas.width = 338 * 3;
     this.canvas.height = 408 * 3;
     let scaleH = this.video.videoHeight / 408;
@@ -151,72 +167,55 @@ class mianguanRead extends React.Component {
   };
   getFeat() {
     let base64 = this.canvas.toDataURL('image/jpeg');
-    // getFeatInfo(base64).then((res) => {
-    //   var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(res);
-    //   if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
-    //       showWarnMsg('请对准人脸');
-    //       return;
-    //   };
-    //   this.setState({
-    //       feat: result[1]
-    //   });
-    // });
-    // jsonp('http://118.31.17.181/getfeature', Base64.encode(base64))
-    // console.log(base64);
-    // axios.post('https://feat.aijmu.com/getfeature', encodeURIComponent(base64), {
-    // 暂时注释
-    // axios.post('https://feat.aijmu.com/getfeature', base64, {
-    //   withCredentials: false
-    // }).then((rs) => {
-    //   // console.log(rs);
-    //   // console.log(rs.data);
-    //   var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(rs.data);
-    //   if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
-    //     showWarnMsg('请对准人脸');
-    //     this.setState({ feat: '' });
-    //     return;
-    //   };
-    //   this.setState({
-    //     feat: result[1]
-    //   });
-    // });
-    this.setState({
-      feat: 'NOFACE'
+    axios.post('https://feat.aijmu.com/getfeature', base64, {
+      withCredentials: false
+    }).then((rs) => {
+      let result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(rs.data);
+      if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
+        showWarnMsg('请对准人脸');
+        this.setState({ feat: '' });
+        return;
+      }
+      this.setState({
+        feat: result[1]
+      });
     });
   }
   handleShotClick() {
+    this.setState({
+      reshot: true
+    });
     this.state.shot === true ? this.shot() : this.cancel();
   }
   shot() {
     this.cutImg();
-    this.getFeat();
+    // this.getFeat();
   }
   cancel() {
     this.setState({
       vedio: true,
-      shot: true
+      shot: true,
+      feat: ''
     });
   };
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     var info = {};
     // if (this.state.feat) {
-    info.feat = this.state.feat;
-    //     info.feat = 'NOFACE';
+    // info.feat = this.state.feat;
+    info.feat = 'NOFACE';
     info.pic1 = this.canvas.toDataURL('image/jpeg');
     this.upload(info);
-    // } else if (!this.state.feat) {
-    //     showWarnMsg('请重新拍摄');
-    // };
   };
   upload(info) {
-    info.code = this.code;
+    info.code = this.staffCode;
     info.updater = getUserId();
     if(info.feat) {
+      console.log(info);
       mianguanPicture(info).then(rs => {
         if (rs.isSuccess) {
           showSucMsg('提交成功');
-          this.props.history.push(`/staff/jiandang/idPicture?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
+          this.props.history.push(`/projectStaff/projectStaff`);
         } else {
           showWarnMsg(rs.errorInfo || '提交失败');
         }
@@ -224,9 +223,6 @@ class mianguanRead extends React.Component {
     } else {
       showWarnMsg('请拍摄免冠照');
     }
-  };
-  next = () => {
-    this.props.history.push(`/staff/jiandang/idPicture?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
   };
   deviceChange = (v) => {
     this.setState({deviceId: v});
@@ -237,45 +233,51 @@ class mianguanRead extends React.Component {
   }
   render() {
     return (
-        <div>
-          <div className="mianguan-title"><i></i><span>人脸采集</span></div>
+        <Spin spinning={this.state.fetching}>
           <div>
-            <label>摄像头</label>
-            <Select style={{
-              marginTop: 20,
-              marginLeft: 20,
-              width: 300
-            }} onChange={this.deviceChange}
-                    value={this.state.deviceId}>
-              {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
-            </Select>
-          </div>
-          <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }} onClick={ this.handleShotClick }>
-            <div className="figure"><img src={Figure} alt=""/></div>
-            <video id="video" className="video3"></video>
-          </div>
-          <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }} onClick={ this.handleShotClick }>
-            <div className="border">
-              <span></span><span></span><span></span><span></span>
-              <img src={Photo} className="userImg3" id="userImg" style={{ display: this.state.imgFlag ? 'inline-block' : 'none' }}/>
+            <div className="mianguan-title"><i></i><span>人脸采集</span></div>
+            <div>
+              <label>摄像头</label>
+              <Select style={{
+                marginTop: 20,
+                marginLeft: 20,
+                width: 300
+              }} onChange={this.deviceChange}
+                      value={this.state.deviceId}>
+                {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
+              </Select>
             </div>
-            <div className="tips">
-              <span>点击拍摄</span>
-              <span>请保持正脸在线框之内</span>
+            <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }} onClick={ this.handleShotClick }>
+              <div className="figure"><img src={Figure} alt=""/></div>
+              <video id="video" className="video3"></video>
             </div>
-            <canvas id="canvas" className="inner-item" style={{ width: '340px', height: '410px' }} width="1020" height="1230"></canvas>
-          </div>
-          <div style={{ paddingTop: 20 }}>
-            <div className="mianguan-btns" style={{ textAlign: 'center' }}>
-              <div>
-                <button className="ant-btn ant-btn-primary " onClick={ this.handleSubmit }>下一步</button>
-                <button className="ant-btn " onClick={ this.next }>跳过</button>
+            <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }} onClick={ this.handleShotClick }>
+              <div style={{ display: this.state.pict1 ? 'none' : 'block' }}>
+                <div className="border">
+                  <span></span><span></span><span></span><span></span>
+                  <img src={Photo} className="userImg3" id="userImg" style={{ display: this.state.imgFlag ? 'inline-block' : 'none' }}/>
+                </div>
+                <div className="tips">
+                  <span>点击拍摄</span>
+                  <span>请保持正脸在线框之内</span>
+                </div>
+              </div>
+              <div style={{ display: this.state.pict1 ? 'block' : 'none' }}>
+                <img src={this.state.pict1} className="haveUserImg" alt=""/>
+              </div>
+              <canvas id="canvas" className="inner-item" style={{ width: '340px', height: '410px' }} width="1020" height="1230"></canvas>
+            </div>
+            <div style={{ paddingTop: 20 }}>
+              <div className="btn-item3" style={{ textAlign: 'center' }}>
+                <div>
+                  <button className="ant-btn ant-btn-primary ant-btn-lg" style={{ width: 250 }} id="cut" onClick={ this.handleSubmit }>确定</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Spin>
     );
   }
 }
 
-export default mianguanRead;
+export default mianguanRead2;

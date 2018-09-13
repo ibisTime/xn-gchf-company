@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import originJsonp from 'jsonp';
 import './jiandang.css';
-import { Form, Input, Button, Select, DatePicker } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Spin } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout } from 'common/js/config';
 import { jiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
 import { queryStaffDetail } from 'api/staff';
@@ -44,15 +44,18 @@ class Jiandang extends React.Component {
       spanText: '',
       spanTi: '',
       next: false,
-      new: false
+      new: true,
+      fetching: false
     };
     this.openVideo = this.openVideo.bind(this);
     this.getCard = this.getCard.bind(this);
     this.upload = this.upload.bind(this);
   }
   componentDidMount() {
-    // 获取媒体方法（旧方法）
+    // 获取媒体方法（旧方法)
+    this.setState({ fetching: true });
     getUserDetail(getUserId()).then((data) => {
+      this.setState({ fetching: false });
       this.companyCode = data.companyCode;
       navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
       this.canvas = document.getElementById('canvas');
@@ -61,7 +64,7 @@ class Jiandang extends React.Component {
       // this.feat = '';
       this.mediaStreamTrack = '';
       // this.openVideo();
-    });
+    }).catch(() => { this.setState({ fetching: false }); });
   };
   // 打开摄像头
   openVideo(argument) {
@@ -141,7 +144,6 @@ class Jiandang extends React.Component {
                     idPolice: this.state.idPolice
                   });
                   document.getElementById('nextBtn').removeAttribute('disabled');
-                  // this.isNew();
                 }).catch(() => {
               this.setState({ spanText: '读取身份证' });
               showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
@@ -177,7 +179,6 @@ class Jiandang extends React.Component {
             idPolice: this.state.idPolice
           });
           document.getElementById('nextBtn').removeAttribute('disabled');
-          // this.isNew();
         }).catch((e) => {
           jsonp('http://127.0.0.1:9081/readidcard')
               .then((res) => {
@@ -210,7 +211,6 @@ class Jiandang extends React.Component {
                   idPolice: this.state.idPolice
                 });
                 document.getElementById('nextBtn').removeAttribute('disabled');
-                // this.isNew();
               }).catch(() => {
             this.setState({ spanText: '读取身份证' });
             showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
@@ -230,13 +230,16 @@ class Jiandang extends React.Component {
     //   }
     //   document.getElementById('nextBtn').removeAttribute('disabled');
     // });
+    this.setState({ fetching: true });
     queryStaffDetail(code).then((res) => {
+      this.setState({ fetching: false });
       if (res.pic1 || res.pict1) {
         this.setState({
+          new: false,
           next: true
         });
       }
-    });
+    }).catch(() => { this.setState({ fetching: false }); });
   };
   // 提交
   handleSubmit = (e) => {
@@ -249,7 +252,6 @@ class Jiandang extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.setState({idNo: values.idNo});
-        // this.isNew(res.code);
         let format = 'YYYY-MM-DD';
         jiandang(
             values.birthday.format(format),
@@ -330,152 +332,154 @@ class Jiandang extends React.Component {
     const { idPic } = this.state;
     const { getFieldDecorator } = this.props.form;
     return (
-        <div className="SectionContainer">
-          <div className="section">
-            <div style={{ display: 'table-cell', verticalAlign: 'middle', width: '100%' }}>
-              <div className="comparison-main">
-                <div className="left-wrapper">
-                  <div className="left-top">
-                    <div className="head-wrap"><i></i>身份证头像</div>
-                    <div className="left-cont">
-                      <div className={idPic ? 'active' : 'left-inner'} id="leftInner">
-                        {
-                          idPic
-                              ? <img className="idImg" id="idPicImg" src={idPic} style={{ margin: '0 100px' }}/>
-                              : <div id="idPicSlib">
-                                <div className="img"><img src={Avatar}/></div>
-                                <div>上传身份证</div>
-                              </div>
-                        }
+        <Spin spinning={this.state.fetching}>
+          <div className="SectionContainer">
+            <div className="section">
+              <div style={{ display: 'table-cell', verticalAlign: 'middle', width: '100%' }}>
+                <div className="comparison-main">
+                  <div className="left-wrapper">
+                    <div className="left-top">
+                      <div className="head-wrap"><i></i>身份证头像</div>
+                      <div className="left-cont">
+                        <div className={idPic ? 'active' : 'left-inner'} id="leftInner">
+                          {
+                            idPic
+                                ? <img className="idImg" id="idPicImg" src={idPic} style={{ margin: '0 100px' }}/>
+                                : <div id="idPicSlib">
+                                  <div className="img"><img src={Avatar}/></div>
+                                  <div>上传身份证</div>
+                                </div>
+                          }
+                        </div>
                       </div>
+                      <button id="getCard" className="ant-btn ant-btn-primary ant-btn-lg" onClick={ this.getCard }><span>{ this.state.spanText || '读取身份证' }</span></button>
                     </div>
-                    <button id="getCard" className="ant-btn ant-btn-primary ant-btn-lg" onClick={ this.getCard }><span>{ this.state.spanText || '读取身份证' }</span></button>
                   </div>
-                </div>
-                <div className="right-wrapper">
-                  <div className="head-wrap"><i></i>人脸信息采集</div>
-                  <div className="right-bottom">
-                    <Form className="ant-form ant-form-horizontal" id="formId" onSubmit={this.submitBtn}>
-                      <FormItem label="姓名" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('realName', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }],
-                          initialValue: this.state.realName
-                        })(
-                            <Input value={this.state.realName}/>
-                        )}
-                      </FormItem>
-                      <FormItem label="性别" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('sex', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }],
-                          initialValue: this.state.sex
-                        })(
-                            <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
-                                    style={{ width: '400px' }}>
-                              <Option key='男' value='男'>男</Option>
-                              <Option key='女' value='女'>女</Option>
-                            </Select>
-                        )}
-                      </FormItem>
-                      <FormItem label="民族" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idNation', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <Input value={this.state.idNation} />
-                        )}
-                      </FormItem>
-                      <FormItem label="出生日期" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('birthday', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <DatePicker
-                                allowClear={false}
-                                locale={locale}
-                                placeholder="请选择出生日期"
-                                format='YYYY-MM-DD' />
-                        )}
-                      </FormItem>
-                      <FormItem label="身份证号码" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idNo', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <Input value={this.state.idNo} />
-                        )}
-                      </FormItem>
-                      <FormItem label="地址" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idAddress', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <Input value={this.state.idAddress} />
-                        )}
-                      </FormItem>
-                      <FormItem label="有效开始日期" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idStartDate', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <DatePicker
-                                allowClear={false}
-                                locale={locale}
-                                placeholder="请选择有效开始日期"
-                                format='YYYY-MM-DD' />
-                        )}
-                      </FormItem>
-                      <FormItem label="有效截止日期" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idEndDate', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <DatePicker
-                                allowClear={false}
-                                locale={locale}
-                                placeholder="请选择有效截止日期"
-                                format='YYYY-MM-DD'
-                                style={{ width: '300px' }}
-                            />
-                        )}
-                      </FormItem>
-                      <FormItem label="签发机关" {...jiandangFormItemLayout}>
-                        {getFieldDecorator('idPolice', {
-                          rules: [{
-                            required: true,
-                            message: '必填字段'
-                          }]
-                        })(
-                            <Input value={this.state.idPolice} />
-                        )}
-                      </FormItem>
-                      <FormItem key='btns' {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit" id="nextBtn" onClick={this.handleSubmit} >下一步</Button>
-                      </FormItem>
-                    </Form>
+                  <div className="right-wrapper">
+                    <div className="head-wrap"><i></i>人脸信息采集</div>
+                    <div className="right-bottom">
+                      <Form className="ant-form ant-form-horizontal" id="formId" onSubmit={this.submitBtn}>
+                        <FormItem label="姓名" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('realName', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }],
+                            initialValue: this.state.realName
+                          })(
+                              <Input value={this.state.realName}/>
+                          )}
+                        </FormItem>
+                        <FormItem label="性别" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('sex', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }],
+                            initialValue: this.state.sex
+                          })(
+                              <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
+                                      style={{ width: '400px' }}>
+                                <Option key='男' value='男'>男</Option>
+                                <Option key='女' value='女'>女</Option>
+                              </Select>
+                          )}
+                        </FormItem>
+                        <FormItem label="民族" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idNation', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <Input value={this.state.idNation} />
+                          )}
+                        </FormItem>
+                        <FormItem label="出生日期" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('birthday', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <DatePicker
+                                  allowClear={false}
+                                  locale={locale}
+                                  placeholder="请选择出生日期"
+                                  format='YYYY-MM-DD' />
+                          )}
+                        </FormItem>
+                        <FormItem label="身份证号码" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idNo', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <Input value={this.state.idNo} />
+                          )}
+                        </FormItem>
+                        <FormItem label="地址" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idAddress', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <Input value={this.state.idAddress} />
+                          )}
+                        </FormItem>
+                        <FormItem label="有效开始日期" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idStartDate', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <DatePicker
+                                  allowClear={false}
+                                  locale={locale}
+                                  placeholder="请选择有效开始日期"
+                                  format='YYYY-MM-DD' />
+                          )}
+                        </FormItem>
+                        <FormItem label="有效截止日期" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idEndDate', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <DatePicker
+                                  allowClear={false}
+                                  locale={locale}
+                                  placeholder="请选择有效截止日期"
+                                  format='YYYY-MM-DD'
+                                  style={{ width: '300px' }}
+                              />
+                          )}
+                        </FormItem>
+                        <FormItem label="签发机关" {...jiandangFormItemLayout}>
+                          {getFieldDecorator('idPolice', {
+                            rules: [{
+                              required: true,
+                              message: '必填字段'
+                            }]
+                          })(
+                              <Input value={this.state.idPolice} />
+                          )}
+                        </FormItem>
+                        <FormItem key='btns' {...tailFormItemLayout}>
+                          <Button type="primary" htmlType="submit" id="nextBtn" onClick={this.handleSubmit} >下一步</Button>
+                        </FormItem>
+                      </Form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Spin>
     );
   }
 }

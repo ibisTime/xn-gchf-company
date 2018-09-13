@@ -242,3 +242,12 @@ html, body {
     -webkit-transform: translate(-50%, -50%);
     -o-transform: translate(-50%, -50%);
 }
+.button button {
+    width: 200px;
+    height: 40px;
+    padding: 10px 20px;
+}
+
+.button button:first-child {
+    margin-right: 30px;
+}

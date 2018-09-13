@@ -49,7 +49,7 @@ class Daifa extends React.Component {
     }, {
       field: 'companyName',
       title: '公司名称',
-      hidden: getUserKind() === 'O'
+      hidden: true
     }, {
       field: 'month',
       title: '月份'

@@ -290,7 +290,10 @@ class IdPicture extends React.Component {
     if (v) {
       this.shot(this.curIdx, v);
     }
-  }
+  };
+  next = () => {
+    this.props.history.push(`/staff/ruzhiInfo?ruzhi=${this.ruzhi}&staffCode=${this.code}&idNo=${this.idNo}`);
+  };
   render() {
     return (
         <div className="id-total">
@@ -364,7 +367,8 @@ class IdPicture extends React.Component {
               </div>
             </div>
             <div className="button">
-              <Button type="primary" style={{ width: 340, height: 46 }} id="cut" onClick={ this.handleSubmit }>下一步</Button>
+              <Button type="primary" onClick={ this.handleSubmit }>下一步</Button>
+              <Button onClick={ this.next }>跳过</Button>
             </div>
           </div>
         </div>

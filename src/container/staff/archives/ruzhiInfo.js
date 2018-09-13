@@ -55,7 +55,9 @@ class RuzhiInfo extends React.Component {
       zhihang: [],
       bank: [],
       position: [],
-      departmentCode: ''
+      departmentCode: '',
+      salary: 0,
+      cutAmount: 0
     };
     this.code = getQueryString('code', this.props.location.search);
     this.idNo = getQueryString('idNo', this.props.location.search);
@@ -75,6 +77,10 @@ class RuzhiInfo extends React.Component {
         }
         this.setState({ departmentList: data });
         this.getTree(data);
+        this.props.form.setFieldsValue({
+          cutAmount: this.state.cutAmount,
+          salary: this.state.salary
+        });
         if(this.reruzhi) {
           fetch(631467, { code: this.code }).then((data) => {
             data.joinDatetime = dateFormat(data.joinDatetime);
@@ -140,7 +146,6 @@ class RuzhiInfo extends React.Component {
         this.setState({ spanText: '读取中...' });
         jsonp('http://127.0.0.1:8080/readbankcard')
           .then((res) => {
-            console.log(res);
             if(res.resultCode !== '-101') {
               this.setState({
                 bankcardNumber: res.CardNo
@@ -159,7 +164,6 @@ class RuzhiInfo extends React.Component {
   // 最终提交
   handleSubmit = () => {
     this.props.form.validateFieldsAndScroll((err, params) => {
-      console.log(params);
       if (!err) {
         let format = 'YYYY-MM-DD';
         if(params.subbranch) {
