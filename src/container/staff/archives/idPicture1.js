@@ -1,11 +1,6 @@
 import React from 'react';
-import axios from 'axios';
-import { Button, Select } from 'antd';
+import { Button, Select, Spin } from 'antd';
 import './idPicture.css';
-import Figure from './figure.png';
-import Hold from './hold.png';
-import IDFRONT from './id-front.png';
-import IDBACK from './id-back.png';
 import { getQueryString, getUserId, showWarnMsg } from 'common/js/util';
 import { idPicture3, getStaffDetail } from 'api/user';
 import { showSucMsg } from '../../../common/js/util';
@@ -28,7 +23,8 @@ class mianguanRead extends React.Component {
       pic3: '',
       next: false,
       deviceId: '',
-      devices: []
+      devices: [],
+      fetching: false
     };
     // this.openVideo = this.openVideo.bind(this);
     this.cutImg = this.cutImg.bind(this);
@@ -45,7 +41,9 @@ class mianguanRead extends React.Component {
       navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
       this.context = this.canvas1.getContext('2d');
       this.mediaStreamTrack = '';
+      this.setState({ fetching: true });
       getStaffDetail(this.idNo).then((res) => {
+        this.setState({ fetching: false });
         this.setState({
           pic1: res.pic2 || res.pict2,
           pic2: res.pic3 || res.pict3,
@@ -58,7 +56,7 @@ class mianguanRead extends React.Component {
         } else {
           this.code = res.code;
         }
-      });
+      }).catch(() => { this.setState({ fetching: false }); });
       this.getdeviceId();
   };
   next() {
@@ -299,7 +297,7 @@ class mianguanRead extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     if(this.state.next) {
-      this.props.history.push(`/staff/jiandang/luru1?ruzhi=${this.ruzhi}&idNo=${this.idNo}`);
+      this.props.history.push(`/staff/ruzhiInfo?ruzhi=${this.ruzhi}&idNo=${this.idNo}`);
       return;
     }
     var info = {
@@ -312,7 +310,7 @@ class mianguanRead extends React.Component {
     idPicture3(info).then((res) => {
         if(res.isSuccess) {
             showSucMsg('提交成功');
-            this.props.history.push(`/staff/jiandang/luru?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
+            this.props.history.push(`/staff/ruzhiInfo?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
         }
     });
     console.log(this.state);
@@ -325,49 +323,51 @@ class mianguanRead extends React.Component {
   }
   render() {
     return (
-        <div className="id-total">
-          <div className="id-title"><i></i><span>证件采集</span></div>
-          <div className="out">
-            <div className="left">
-              <div className="top">
-                <div className="id-video-box" style={{ display: this.state.video1 ? 'block' : 'none' }}>
-                  <div className="border">
-                    <span></span><span></span><span></span><span></span>
+        <Spin spinning={this.state.fetching}>
+          <div className="id-total">
+            <div className="id-title"><i></i><span>证件采集</span></div>
+            <div className="out">
+              <div className="left">
+                <div className="top">
+                  <div className="id-video-box" style={{ display: this.state.video1 ? 'block' : 'none' }}>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <video ref={video => this.video1 = video} className="id-video"></video>
                   </div>
-                  <video ref={video => this.video1 = video} className="id-video"></video>
-                </div>
-                <div className="id-img-box" style={{ display: this.state.video1 ? 'none' : 'block' }}>
-                  <img src={this.state.pic1} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
-                  <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
-                </div>
-              </div>
-              <div className="bottom">
-                <div className="id-video-box" style={{ display: this.state.video2 ? 'block' : 'none' }}>
-                  <div className="border">
-                    <span></span><span></span><span></span><span></span>
+                  <div className="id-img-box" style={{ display: this.state.video1 ? 'none' : 'block' }}>
+                    <img src={this.state.pic1} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                    <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
                   </div>
-                  <video ref={video => this.video2 = video} className="id-video"></video>
                 </div>
-                <div className="id-img-box" style={{ display: this.state.video2 ? 'none' : 'block' }}>
-                  <img src={this.state.pic2} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
-                  <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                <div className="bottom">
+                  <div className="id-video-box" style={{ display: this.state.video2 ? 'block' : 'none' }}>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <video ref={video => this.video2 = video} className="id-video"></video>
+                  </div>
+                  <div className="id-img-box" style={{ display: this.state.video2 ? 'none' : 'block' }}>
+                    <img src={this.state.pic2} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                    <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="right">
-              <div className="id-video-box" style={{ display: this.state.video3 ? 'block' : 'none' }}>
-                <video ref={video => this.video3 = video} className="id-video"></video>
+              <div className="right">
+                <div className="id-video-box" style={{ display: this.state.video3 ? 'block' : 'none' }}>
+                  <video ref={video => this.video3 = video} className="id-video"></video>
+                </div>
+                <div className="id-img-box" style={{ display: this.state.video3 ? 'none' : 'block' }}>
+                  <img src={this.state.pic3} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
+                  <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" style={{ width: '340px', height: '512px' }} width="1020" height="1536"></canvas>
+                </div>
               </div>
-              <div className="id-img-box" style={{ display: this.state.video3 ? 'none' : 'block' }}>
-                <img src={this.state.pic3} className="haveUserImg1" id="userImg" style={{ display: !this.state.pic3 ? 'none' : 'inline-block' }}/>
-                <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" style={{ width: '340px', height: '512px' }} width="1020" height="1536"></canvas>
+              <div className="button">
+                <Button type="primary" style={{ width: 340, height: 46 }} id="cut" onClick={ this.handleSubmit }>下一步</Button>
               </div>
-            </div>
-            <div className="button">
-              <Button type="primary" style={{ width: 340, height: 46 }} id="cut" onClick={ this.handleSubmit }>下一步</Button>
             </div>
           </div>
-        </div>
+        </Spin>
     );
   }
 }

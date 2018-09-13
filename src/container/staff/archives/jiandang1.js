@@ -2,10 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import originJsonp from 'jsonp';
 import './jiandang.css';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Select, DatePicker } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout } from 'common/js/config';
 import { jiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
+import { queryStaffDetail } from 'api/staff';
 import { showWarnMsg, showSucMsg } from 'common/js/util';
+import locale from 'common/js/lib/date-locale';
 import Avatar from './touxiang.png';
 
 const FormItem = Form.Item;
@@ -105,7 +107,6 @@ class Jiandang extends React.Component {
     this.setState({ spanText: '读取中...' });
     jsonp('http://127.0.0.1:8080/readidcard')
         .then((data) => {
-          // console.log('1111' + data);
           this.setState({ spanText: '读取身份证' });
           if(data.resultCode === '-101' || data.resultCode === '-102') {
             jsonp('http://127.0.0.1:9081/readidcard')
@@ -136,17 +137,7 @@ class Jiandang extends React.Component {
                     idEndDate: this.state.idEndDate,
                     idPolice: this.state.idPolice
                   });
-                  getStaffDetail(this.state.idNo).then((res) => {
-                    if (!res.idNo) {
-                      this.setState({new: true});
-                    }
-                    if (res.pic1 || res.pict1) {
-                      this.setState({
-                        next: true
-                      });
-                    }
-                    document.getElementById('nextBtn').removeAttribute('disabled');
-                  });
+                  // this.isNew();
                 }).catch(() => {
               this.setState({ spanText: '读取身份证' });
               showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
@@ -178,80 +169,76 @@ class Jiandang extends React.Component {
             idEndDate: this.state.idEndDate,
             idPolice: this.state.idPolice
           });
-          getStaffDetail(this.state.idNo).then((res) => {
-            if(!res.idNo) {
-              this.setState({ new: true });
-            }
-            if(res.pic1 || res.pict1) {
-              this.setState({
-                next: true
-              });
-            }
-            document.getElementById('nextBtn').removeAttribute('disabled');
-          });
+          // this.isNew();
         }).catch((e) => {
-      // debugger;
-      // alert(e);
-      // document.getElementById('getCard').setAttribute('disabled', false);
-      // this.setState({ spanText: '读取身份证' });
-      // showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
-      // document.getElementById('getCard').removeAttribute('disabled');
-      jsonp('http://127.0.0.1:9081/readidcard')
-          .then((res) => {
-            this.setState({ spanText: '读取身份证' });
-            // console.log(res);
-            this.setState({
-              realName: res.m_name,
-              sex: res.m_sex,
-              idNation: res.m_nation,
-              birthday: res.m_birth,
-              idNo: res.m_idcode,
-              idAddress: res.m_addr,
-              idStartDate: res.StartDate || res.m_termday.split('-')[0],
-              idEndDate: res.EndDate || res.m_termday.split('-')[1],
-              idPolice: res.m_depart,
-              idPic: res.pic,
-              isIdpic: true
-            });
-            this.props.form.setFieldsValue({
-              realName: this.state.realName,
-              sex: this.state.sex,
-              idNation: this.state.idNation,
-              birthday: this.state.birthday,
-              idNo: this.state.idNo,
-              idAddress: this.state.idAddress,
-              idStartDate: this.state.idStartDate,
-              idEndDate: this.state.idEndDate,
-              idPolice: this.state.idPolice
-            });
-            getStaffDetail(this.state.idNo).then((res) => {
-              if (!res.idNo) {
-                this.setState({new: true});
-              }
-              if (res.pic1 || res.pict1) {
+          jsonp('http://127.0.0.1:9081/readidcard')
+              .then((res) => {
+                this.setState({ spanText: '读取身份证' });
                 this.setState({
-                  next: true
+                  realName: res.m_name,
+                  sex: res.m_sex,
+                  idNation: res.m_nation,
+                  birthday: res.m_birth,
+                  idNo: res.m_idcode,
+                  idAddress: res.m_addr,
+                  idStartDate: res.StartDate || res.m_termday.split('-')[0],
+                  idEndDate: res.EndDate || res.m_termday.split('-')[1],
+                  idPolice: res.m_depart,
+                  idPic: res.pic,
+                  isIdpic: true
                 });
-              }
-              document.getElementById('nextBtn').removeAttribute('disabled');
-            });
-          }).catch(() => {
-        this.setState({ spanText: '读取身份证' });
-        showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
-        document.getElementById('getCard').removeAttribute('disabled');
-      });
+                this.props.form.setFieldsValue({
+                  realName: this.state.realName,
+                  sex: this.state.sex,
+                  idNation: this.state.idNation,
+                  birthday: this.state.birthday,
+                  idNo: this.state.idNo,
+                  idAddress: this.state.idAddress,
+                  idStartDate: this.state.idStartDate,
+                  idEndDate: this.state.idEndDate,
+                  idPolice: this.state.idPolice
+                });
+                // this.isNew();
+              }).catch(() => {
+            this.setState({ spanText: '读取身份证' });
+            showWarnMsg('身份证信息读取失败，请把身份证放置准确后再次读取');
+            document.getElementById('getCard').removeAttribute('disabled');
+          });
+    });
+  };
+  isNew = (code) => {
+    // getStaffDetail(this.state.idNo).then((res) => {
+    //   if (!res.idNo) {
+    //     this.setState({new: true});
+    //   }
+    //   if (res.pic1 || res.pict1) {
+    //     this.setState({
+    //       next: true
+    //     });
+    //   }
+    //   document.getElementById('nextBtn').removeAttribute('disabled');
+    // });
+    queryStaffDetail(code).then((res) => {
+      console.log(res);
+      if (res.pic1 || res.pict1) {
+        this.setState({
+          next: true
+        });
+      }
     });
   };
   // 提交
   handleSubmit = (e) => {
     e.preventDefault();
-    if(this.state.next) {
-      showSucMsg('您已建过档');
-      this.props.history.push(`/staff/jiandang/mianguanRead1?ruzhi=1&pict1=true&idNo=${this.state.idNo}`);
-      return;
-    }
+    // if(this.state.next) {
+    //   showSucMsg('您已建过档');
+    //   this.props.history.push(`/staff/jiandang/mianguanRead1?ruzhi=1&pict1=true&idNo=${this.state.idNo}`);
+    //   return;
+    // }
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.setState({idNo: values.idNo});
+        // this.isNew(res.code);
         jiandang(
             values.birthday,
             values.idAddress,
@@ -262,19 +249,23 @@ class Jiandang extends React.Component {
             values.idPolice,
             values.idStartDate,
             values.realName,
-            this.state.sex,
+            this.state.sex || values.sex,
             getUserId(),
             this.companyCode
         ).then((res) => {
+          this.isNew(res.code);
           if(res.code) {
             if(this.state.new) {
               showSucMsg('建档成功');
+              setTimeout(() => {
+                this.props.history.push(`/staff/jiandang/mianguanRead?ruzhi=1&code=${res.code}&idNo=${this.state.idNo}`);
+              }, 300);
             } else {
               showSucMsg('您已建过档');
+              setTimeout(() => {
+                this.props.history.push(`/staff/jiandang/mianguanRead1?ruzhi=1&pict1=true&idNo=${this.state.idNo}`);
+              }, 300);
             }
-            setTimeout(() => {
-              this.props.history.push(`/staff/jiandang/mianguanRead?ruzhi=1&code=${res.code}&idNo=${this.state.idNo}`);
-            }, 300);
           }else {
             showWarnMsg('建档失败');
           }
@@ -283,7 +274,7 @@ class Jiandang extends React.Component {
         document.getElementById('getCard').removeAttribute('disabled');
       }
     });
-  }
+  };
   // 获取特征值
   // getFeat() {
   //     document.getElementById('getFeat').setAttribute('disabled', true).getElementsByTagName('span').innerHTML = '获取中...';
@@ -362,7 +353,7 @@ class Jiandang extends React.Component {
                           initialValue: this.state.realName,
                           value: this.state.realName
                         })(
-                            <Input value={this.state.realName} disabled/>
+                            <Input value={this.state.realName}/>
                         )}
                       </FormItem>
                       <FormItem label="性别" {...jiandangFormItemLayout}>
@@ -374,7 +365,11 @@ class Jiandang extends React.Component {
                           initialValue: this.state.sex,
                           value: this.state.sex
                         })(
-                            <Input value={this.state.sex} disabled/>
+                            <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
+                                    style={{ width: '400px' }}>
+                              <Option key='男' value='男'>男</Option>
+                              <Option key='女' value='女'>女</Option>
+                            </Select>
                         )}
                       </FormItem>
                       <FormItem label="民族" {...jiandangFormItemLayout}>
@@ -386,7 +381,7 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idNation,
                           value: this.state.idNation
                         })(
-                            <Input value={this.state.idNation} disabled/>
+                            <Input value={this.state.idNation} />
                         )}
                       </FormItem>
                       <FormItem label="出生日期" {...jiandangFormItemLayout}>
@@ -398,7 +393,11 @@ class Jiandang extends React.Component {
                           initialValue: this.state.birthday,
                           value: this.state.birthday
                         })(
-                            <Input value={this.state.birthday} disabled/>
+                            <DatePicker
+                                allowClear={false}
+                                locale={locale}
+                                placeholder="请选择出生日期"
+                                format='YYYY-MM-DD' />
                         )}
                       </FormItem>
                       <FormItem label="身份证号码" {...jiandangFormItemLayout}>
@@ -410,7 +409,7 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idNo,
                           value: this.state.idNo
                         })(
-                            <Input value={this.state.idNo} disabled/>
+                            <Input value={this.state.idNo} />
                         )}
                       </FormItem>
                       <FormItem label="地址" {...jiandangFormItemLayout}>
@@ -422,7 +421,7 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idAddress,
                           value: this.state.idAddress
                         })(
-                            <Input value={this.state.idAddress} disabled/>
+                            <Input value={this.state.idAddress} />
                         )}
                       </FormItem>
                       <FormItem label="有效开始日期" {...jiandangFormItemLayout}>
@@ -434,7 +433,11 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idStartDate,
                           value: this.state.idStartDate
                         })(
-                            <Input value={this.state.idStartDate} disabled/>
+                            <DatePicker
+                                allowClear={false}
+                                locale={locale}
+                                placeholder="请选择有效开始日期"
+                                format='YYYY-MM-DD' />
                         )}
                       </FormItem>
                       <FormItem label="有效截止日期" {...jiandangFormItemLayout}>
@@ -446,7 +449,13 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idEndDate,
                           value: this.state.idEndDate
                         })(
-                            <Input value={this.state.idEndDate} disabled/>
+                            <DatePicker
+                                allowClear={false}
+                                locale={locale}
+                                placeholder="请选择有效截止日期"
+                                format='YYYY-MM-DD'
+                                style={{ width: '300px' }}
+                            />
                         )}
                       </FormItem>
                       <FormItem label="签发机关" {...jiandangFormItemLayout}>
@@ -458,7 +467,7 @@ class Jiandang extends React.Component {
                           initialValue: this.state.idPolice,
                           value: this.state.idPolice
                         })(
-                            <Input value={this.state.idPolice} disabled/>
+                            <Input value={this.state.idPolice} />
                         )}
                       </FormItem>
                       <FormItem key='btns' {...tailFormItemLayout}>

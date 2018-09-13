@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Input, Divider, Spin, Form, Table, Timeline, Modal, Upload, Icon } from 'antd';
-import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg } from 'common/js/util';
+import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
 import { getBankNameByCode } from 'api/project';
 import { getDict } from 'api/dict';
@@ -158,9 +158,9 @@ class AllStaffAddEdit extends React.Component {
       key: '1',
       name: data.staffName,
       month: data.month,
-      payAmount: data.payAmount,
-      factAmount: data.factAmount,
-      delayAmount: data.delayAmount,
+      factAmount: moneyFormat(data.factAmount),
+      payAmount: moneyFormat(data.payAmount),
+      delayAmount: moneyFormat(data.delayAmount),
       status: type
     }];
     const columns = [{
@@ -173,12 +173,12 @@ class AllStaffAddEdit extends React.Component {
       key: 'month'
     }, {
       title: '工资单金额（元）',
-      dataIndex: 'payAmount',
-      key: 'payAmount'
-    }, {
-      title: '实发金额（元）',
       dataIndex: 'factAmount',
       key: 'factAmount'
+    }, {
+      title: '实发金额（元）',
+      dataIndex: 'payAmount',
+      key: 'payAmount'
     }, {
       title: '欠薪金额（元）',
       dataIndex: 'delayAmount',

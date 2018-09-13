@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Select, Button, Form, Modal, TreeSelect } from 'antd';
+import { Input, Select, Button, Form, Modal, TreeSelect, Spin } from 'antd';
 import { getProjectListForO, getZhiHang, luru } from 'api/project';
 import { getUserDetail, getUserId, ruzhi, getStaffDetail } from 'api/user';
 import { getDict } from 'api/dict';
@@ -22,7 +22,8 @@ class RuzhiInfo extends React.Component {
     super(props);
     this.state = {
       zhihang: [],
-      mobile: ''
+      mobile: '',
+      fetching: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -31,19 +32,24 @@ class RuzhiInfo extends React.Component {
     this.ruzhi = getQueryString('ruzhi', this.props.location.search);
   }
   componentDidMount() {
-    getZhiHang().then(data => {
-      this.setState({ zhihang: data });
-    }).catch(() => {});
-    getStaffDetail(this.idNo).then((res) => {
+    this.setState({ fetching: true });
+    Promise.all([
+      getZhiHang(),
+      getStaffDetail(this.idNo)
+    ]).then(([res1, res2]) => {
+      this.setState({
+        zhihang: res1,
+        fetching: false
+      });
       this.props.form.setFieldsValue({
-        mobile: res.mobile,
-        contacts: res.contacts,
-        contactsMobile: res.contactsMobile,
+        mobile: res2.mobile,
+        contacts: res2.contacts,
+        contactsMobile: res2.contactsMobile,
         // bankcardNumber: res.bankCard.bankcardNumber,
         // subbranch: res.bankCard.bankSubbranchName,
-        remark: res.remark
+        remark: res2.remark
       });
-    });
+    }).catch(() => { this.setState({ fetching: false }); });
   }
   // 员工source change事件
   handleTypeChange(value) {
@@ -109,53 +115,55 @@ class RuzhiInfo extends React.Component {
       message: '手机格式不对'
     };
     return (
-        <div className='SectionContainer2' style={{ border: '2px solid #096dd9' }}>
-          <div className='section2'>
-            <div style={{ verticalAlign: 'middle', width: '100%' }}>
-              <div className="comparison-main2 comparison-mains2">
-                <div className="head-wrap2"><i></i>建档信息</div>
-                <div style={{ width: 300, padding: '30px 0', margin: '0 auto' }}>
-                  <Form>
-                    <div style={{ fontWeight: 700, marginBottom: 10 }}>联系方式（必填）</div>
-                    <FormItem onChange={(e) => { this.mobileChange(e); }}>
-                      {getFieldDecorator('mobile', {
-                        rules: [rule1]
-                      })(
-                          <Input placeholder="请输入本人手机号" disabled/>
-                      )}
-                    </FormItem>
-                    <FormItem>
-                      {getFieldDecorator('contacts', {
-                        rules: [rule0]
-                      })(
-                          <Input placeholder="请输入紧急联系人姓名" disabled/>
-                      )}
-                    </FormItem>
-                    <FormItem>
-                      {getFieldDecorator('contactsMobile', {
-                        rules: [rule1]
-                      })(
-                          <Input placeholder="请输入紧急联系人手机号" disabled/>
-                      )}
-                    </FormItem>
-                    <div style={{ fontWeight: 700, marginBottom: 10 }}>备注（选填）</div>
-                    <FormItem>
-                      {getFieldDecorator('remark')(
-                          <Input placeholder="请输入备注" disabled/>
-                      )}
-                    </FormItem>
-                    <div>
-                      <Button type="primary" style={{ width: 300 }} onClick={ this.handleSubmit }>完成</Button>
-                    </div>
-                  </Form>
+        <Spin spinning={this.state.fetching}>
+          <div className='SectionContainer2' style={{ border: '2px solid #096dd9' }}>
+            <div className='section2'>
+              <div style={{ verticalAlign: 'middle', width: '100%' }}>
+                <div className="comparison-main2 comparison-mains2">
+                  <div className="head-wrap2"><i></i>建档信息</div>
+                  <div style={{ width: 300, padding: '30px 0', margin: '0 auto' }}>
+                    <Form>
+                      <div style={{ fontWeight: 700, marginBottom: 10 }}>联系方式（必填）</div>
+                      <FormItem onChange={(e) => { this.mobileChange(e); }}>
+                        {getFieldDecorator('mobile', {
+                          rules: [rule1]
+                        })(
+                            <Input placeholder="请输入本人手机号" disabled/>
+                        )}
+                      </FormItem>
+                      <FormItem>
+                        {getFieldDecorator('contacts', {
+                          rules: [rule0]
+                        })(
+                            <Input placeholder="请输入紧急联系人姓名" disabled/>
+                        )}
+                      </FormItem>
+                      <FormItem>
+                        {getFieldDecorator('contactsMobile', {
+                          rules: [rule1]
+                        })(
+                            <Input placeholder="请输入紧急联系人手机号" disabled/>
+                        )}
+                      </FormItem>
+                      <div style={{ fontWeight: 700, marginBottom: 10 }}>备注（选填）</div>
+                      <FormItem>
+                        {getFieldDecorator('remark')(
+                            <Input placeholder="请输入备注" disabled/>
+                        )}
+                      </FormItem>
+                      <div>
+                        <Button type="primary" style={{ width: 300 }} onClick={ this.handleSubmit }>完成</Button>
+                      </div>
+                    </Form>
+                  </div>
                 </div>
               </div>
             </div>
+            <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
+              <img alt="图片" style={{ width: '100%' }} src={previewImage} />
+            </Modal>
           </div>
-          <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
-            <img alt="图片" style={{ width: '100%' }} src={previewImage} />
-          </Modal>
-        </div>
+        </Spin>
     );
   }
 }

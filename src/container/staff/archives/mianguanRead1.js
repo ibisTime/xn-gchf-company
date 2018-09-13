@@ -1,13 +1,12 @@
 import React from 'react';
 import { Base64 } from 'js-base64';
-import axios from 'axios';
 import originJsonp from 'jsonp';
+import { Spin } from 'antd';
 import './mianguanRead.css';
 import Photo from './touxiang.png';
 import Figure from './figure.png';
 import { getQueryString, getUserId, showWarnMsg, showSucMsg } from 'common/js/util';
 import { mianguanPicture, getFeatInfo, getStaffDetail } from 'api/user';
-// import { resolve } from 'dns';
 
 function jsonp(url, data, option) {
     return new Promise((resolve, reject) => {
@@ -27,14 +26,15 @@ class mianguanRead extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        'text': '',
-        'mediaStreamTrack': '',
-        'feat': '',
-        'vedio': false,
-        'imgFlag': true,
-        'shot': true,
-        'pict1': '',
-        'next': false
+      text: '',
+      mediaStreamTrack: '',
+      feat: '',
+      vedio: false,
+      imgFlag: true,
+      shot: true,
+      pict1: '',
+      next: false,
+      fetching: false
     };
     this.openVideo = this.openVideo.bind(this);
     this.cutImg = this.cutImg.bind(this);
@@ -48,24 +48,26 @@ class mianguanRead extends React.Component {
   }
   componentDidMount() {
   // 获取媒体方法（旧方法）
-      navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
-      this.canvas = document.getElementById('canvas');
-      this.context = this.canvas.getContext('2d');
-      this.video = document.getElementById('video');
-      this.mediaStreamTrack = '';
+    navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
+    this.canvas = document.getElementById('canvas');
+    this.context = this.canvas.getContext('2d');
+    this.video = document.getElementById('video');
+    this.mediaStreamTrack = '';
     //   this.openVideo();
-      getStaffDetail(this.idNo).then((res) => {
-        this.setState({
-          pict1: res.pict1 || res.pic1
-        });
-        if(res.pic2 || res.pict2) {
-          this.setState({
-            next: true
-          });
-        } else {
-          this.code = res.code;
-        }
+    this.setState({ fetching: true });
+    getStaffDetail(this.idNo).then((res) => {
+      this.setState({ fetching: false });
+      this.setState({
+        pict1: res.pict1 || res.pic1
       });
+      if(res.pic2 || res.pict2) {
+        this.setState({
+          next: true
+        });
+      } else {
+        this.code = res.code;
+      }
+    }).catch(() => { this.setState({ fetching: false }); });
   };
   // 打开摄像头
   openVideo(argument) {
@@ -188,36 +190,38 @@ class mianguanRead extends React.Component {
 
   render() {
     return (
-        <div>
-          <div className="mianguan-title"><i></i><span>人脸采集</span></div>
-          <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }}>
-            <div className="figure"><img src={Figure} alt=""/></div>
-            <video id="video" className="video3"></video>
-          </div>
-          <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }}>
-            <div style={{ display: this.state.pict1 ? 'none' : 'block' }}>
-              <div className="border">
-                <span></span><span></span><span></span><span></span>
-                <img src={Photo} className="userImg3" id="userImg" style={{ display: this.state.imgFlag ? 'inline-block' : 'none' }}/>
+        <Spin spinning={this.state.fetching}>
+          <div>
+            <div className="mianguan-title"><i></i><span>人脸采集</span></div>
+            <div className="mianguan-video-box" style={{ display: this.state.vedio ? 'block' : 'none' }}>
+              <div className="figure"><img src={Figure} alt=""/></div>
+              <video id="video" className="video3"></video>
+            </div>
+            <div className="mianguan-img-box" style={{ display: this.state.vedio ? 'none' : 'block' }}>
+              <div style={{ display: this.state.pict1 ? 'none' : 'block' }}>
+                <div className="border">
+                  <span></span><span></span><span></span><span></span>
+                  <img src={Photo} className="userImg3" id="userImg" style={{ display: this.state.imgFlag ? 'inline-block' : 'none' }}/>
+                </div>
+                <div className="tips">
+                  <span>点击拍摄</span>
+                  <span>请保持正脸在线框之内</span>
+                </div>
               </div>
-              <div className="tips">
-                <span>点击拍摄</span>
-                <span>请保持正脸在线框之内</span>
+              <div style={{ display: this.state.pict1 ? 'block' : 'none' }}>
+                <img src={this.state.pict1} className="haveUserImg" alt=""/>
+              </div>
+              <canvas id="canvas" className="inner-item" style={{ width: '340px', height: '410px' }} width="1020" height="1230"></canvas>
+            </div>
+            <div style={{ paddingTop: 20 }}>
+              <div className="btn-item3" style={{ textAlign: 'center' }}>
+                <div>
+                  <button className="ant-btn ant-btn-primary ant-btn-lg" style={{ width: 250 }} id="cut" onClick={ this.handleSubmit }>下一步</button>
+                </div>
               </div>
             </div>
-            <div style={{ display: this.state.pict1 ? 'block' : 'none' }}>
-              <img src={this.state.pict1} className="haveUserImg" alt=""/>
-            </div>
-            <canvas id="canvas" className="inner-item" style={{ width: '340px', height: '410px' }} width="1020" height="1230"></canvas>
           </div>
-          <div style={{ paddingTop: 20 }}>
-            <div className="btn-item3" style={{ textAlign: 'center' }}>
-              <div>
-                <button className="ant-btn ant-btn-primary ant-btn-lg" style={{ width: 250 }} id="cut" onClick={ this.handleSubmit }>下一步</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        </Spin>
     );
   }
 }

@@ -40,3 +40,10 @@ export function queryBankCardDetail(code) {
     code
   });
 }
+
+// 详情查询务工人员
+export function queryStaffDetail(code) {
+  return fetch(631417, {
+    code
+  });
+}
