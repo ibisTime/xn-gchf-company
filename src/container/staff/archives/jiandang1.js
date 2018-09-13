@@ -6,9 +6,10 @@ import { Form, Input, Button, Select, DatePicker } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout } from 'common/js/config';
 import { jiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
 import { queryStaffDetail } from 'api/staff';
-import { showWarnMsg, showSucMsg } from 'common/js/util';
+import { showWarnMsg, showSucMsg, dateFormat } from 'common/js/util';
 import locale from 'common/js/lib/date-locale';
 import Avatar from './touxiang.png';
+import Moment from 'moment';
 
 const FormItem = Form.Item;
 function jsonp(url, data, option) {
@@ -59,7 +60,7 @@ class Jiandang extends React.Component {
       this.video = document.getElementById('video');
       // this.feat = '';
       this.mediaStreamTrack = '';
-      this.openVideo();
+      // this.openVideo();
     });
   };
   // 打开摄像头
@@ -112,7 +113,6 @@ class Jiandang extends React.Component {
             jsonp('http://127.0.0.1:9081/readidcard')
                 .then((res) => {
                   this.setState({ spanText: '读取身份证' });
-                  // console.log(res);
                   this.setState({
                     realName: res.m_name,
                     sex: res.m_sex,
@@ -126,17 +126,21 @@ class Jiandang extends React.Component {
                     idPic: res.pic,
                     isIdpic: true
                   });
+                  let birthday = Moment(this.state.birthday);// 参数换成毫秒的变量就OK
+                  let idStartDate = Moment(this.state.idStartDate);
+                  let idEndDate = Moment(this.state.idEndDate);
                   this.props.form.setFieldsValue({
                     realName: this.state.realName,
                     sex: this.state.sex,
                     idNation: this.state.idNation,
-                    birthday: this.state.birthday,
+                    birthday: birthday,
                     idNo: this.state.idNo,
                     idAddress: this.state.idAddress,
-                    idStartDate: this.state.idStartDate,
-                    idEndDate: this.state.idEndDate,
+                    idStartDate: idStartDate,
+                    idEndDate: idEndDate,
                     idPolice: this.state.idPolice
                   });
+                  document.getElementById('nextBtn').removeAttribute('disabled');
                   // this.isNew();
                 }).catch(() => {
               this.setState({ spanText: '读取身份证' });
@@ -158,17 +162,21 @@ class Jiandang extends React.Component {
             isIdpic: true
           });
           // 重置input的值
+          let birthday = Moment(this.state.birthday);// 参数换成毫秒的变量就OK
+          let idStartDate = Moment(this.state.idStartDate);
+          let idEndDate = Moment(this.state.idEndDate);
           this.props.form.setFieldsValue({
             realName: this.state.realName,
             sex: this.state.sex,
             idNation: this.state.idNation,
-            birthday: this.state.birthday,
+            birthday: birthday,
             idNo: this.state.idNo,
             idAddress: this.state.idAddress,
-            idStartDate: this.state.idStartDate,
-            idEndDate: this.state.idEndDate,
+            idStartDate: idStartDate,
+            idEndDate: idEndDate,
             idPolice: this.state.idPolice
           });
+          document.getElementById('nextBtn').removeAttribute('disabled');
           // this.isNew();
         }).catch((e) => {
           jsonp('http://127.0.0.1:9081/readidcard')
@@ -187,17 +195,21 @@ class Jiandang extends React.Component {
                   idPic: res.pic,
                   isIdpic: true
                 });
+                let birthday = Moment(this.state.birthday);// 参数换成毫秒的变量就OK
+                let idStartDate = Moment(this.state.idStartDate);
+                let idEndDate = Moment(this.state.idEndDate);
                 this.props.form.setFieldsValue({
                   realName: this.state.realName,
                   sex: this.state.sex,
                   idNation: this.state.idNation,
-                  birthday: this.state.birthday,
+                  birthday: birthday,
                   idNo: this.state.idNo,
                   idAddress: this.state.idAddress,
-                  idStartDate: this.state.idStartDate,
-                  idEndDate: this.state.idEndDate,
+                  idStartDate: idStartDate,
+                  idEndDate: idEndDate,
                   idPolice: this.state.idPolice
                 });
+                document.getElementById('nextBtn').removeAttribute('disabled');
                 // this.isNew();
               }).catch(() => {
             this.setState({ spanText: '读取身份证' });
@@ -219,7 +231,6 @@ class Jiandang extends React.Component {
     //   document.getElementById('nextBtn').removeAttribute('disabled');
     // });
     queryStaffDetail(code).then((res) => {
-      console.log(res);
       if (res.pic1 || res.pict1) {
         this.setState({
           next: true
@@ -239,15 +250,16 @@ class Jiandang extends React.Component {
       if (!err) {
         this.setState({idNo: values.idNo});
         // this.isNew(res.code);
+        let format = 'YYYY-MM-DD';
         jiandang(
-            values.birthday,
+            values.birthday.format(format),
             values.idAddress,
-            values.idEndDate,
+            values.idEndDate.format(format),
             values.idNation,
             values.idNo,
             this.state.idPic,
             values.idPolice,
-            values.idStartDate,
+            values.idStartDate.format(format),
             values.realName,
             this.state.sex || values.sex,
             getUserId(),
@@ -350,8 +362,7 @@ class Jiandang extends React.Component {
                             required: true,
                             message: '必填字段'
                           }],
-                          initialValue: this.state.realName,
-                          value: this.state.realName
+                          initialValue: this.state.realName
                         })(
                             <Input value={this.state.realName}/>
                         )}
@@ -362,8 +373,7 @@ class Jiandang extends React.Component {
                             required: true,
                             message: '必填字段'
                           }],
-                          initialValue: this.state.sex,
-                          value: this.state.sex
+                          initialValue: this.state.sex
                         })(
                             <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
                                     style={{ width: '400px' }}>
@@ -377,9 +387,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idNation,
-                          value: this.state.idNation
+                          }]
                         })(
                             <Input value={this.state.idNation} />
                         )}
@@ -389,9 +397,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.birthday,
-                          value: this.state.birthday
+                          }]
                         })(
                             <DatePicker
                                 allowClear={false}
@@ -405,9 +411,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idNo,
-                          value: this.state.idNo
+                          }]
                         })(
                             <Input value={this.state.idNo} />
                         )}
@@ -417,9 +421,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idAddress,
-                          value: this.state.idAddress
+                          }]
                         })(
                             <Input value={this.state.idAddress} />
                         )}
@@ -429,9 +431,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idStartDate,
-                          value: this.state.idStartDate
+                          }]
                         })(
                             <DatePicker
                                 allowClear={false}
@@ -445,9 +445,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idEndDate,
-                          value: this.state.idEndDate
+                          }]
                         })(
                             <DatePicker
                                 allowClear={false}
@@ -463,9 +461,7 @@ class Jiandang extends React.Component {
                           rules: [{
                             required: true,
                             message: '必填字段'
-                          }],
-                          initialValue: this.state.idPolice,
-                          value: this.state.idPolice
+                          }]
                         })(
                             <Input value={this.state.idPolice} />
                         )}
