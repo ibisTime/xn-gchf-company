@@ -2,7 +2,7 @@ import React from 'react';
 import { Base64 } from 'js-base64';
 import axios from 'axios';
 import originJsonp from 'jsonp';
-import { Select } from 'antd';
+import { Select, Spin } from 'antd';
 import './mianguanRead.css';
 import Photo from './touxiang.png';
 import Figure from './figure.png';
@@ -36,7 +36,10 @@ class mianguanRead extends React.Component {
       imgFlag: true,
       shot: false,
       deviceId: '',
-      devices: []
+      devices: [],
+      label: '',
+      fetching: false,
+      pict1: ''
     };
     this.openVideo = this.openVideo.bind(this);
     this.getFeat = this.getFeat.bind(this);
@@ -67,7 +70,8 @@ class mianguanRead extends React.Component {
             let tmpArr = devices.filter(device => device.kind === 'videoinput');
             this.setState({
               devices: tmpArr,
-              deviceId: tmpArr.length ? tmpArr[0].deviceId : ''
+              deviceId: tmpArr.length ? tmpArr[0].deviceId : '',
+              label: tmpArr.length ? tmpArr[0].label : ''
             });
             if (tmpArr.length) {
               this.openVideo(tmpArr[0].deviceId);
@@ -78,6 +82,25 @@ class mianguanRead extends React.Component {
         console.log(err.name + ': ' + err.message);
       });
     }
+  }
+  // 直接调取高拍仪服务进行拍照
+  getPicDirectly = (url) => {
+    this.mediaStreamTrack && this.mediaStreamTrack.stop();
+    this.setState({ fetching: true });
+    axios.post(url).then((rs) => {
+      let result = /"pic":"([^"]+)"}\)/.exec(rs.data);
+      let context = this.canvas.getContext('2d');
+      let canvas = this.canvas;
+      let img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0);
+      };
+      img.src = result[1];
+      this.setState({ pict1: result[1] });
+      this.setState({ fetching: false });
+    }).catch(() => { showWarnMsg('网络异常'); this.setState({ fetching: false }); });
   }
   // 打开摄像头
   openVideo(deviceId) {
@@ -124,10 +147,14 @@ class mianguanRead extends React.Component {
       imgFlag: false,
       shot: false
     });
+    if(this.state.label.toUpperCase().indexOf('E1100') !== -1) {
+      this.getPicDirectly('http://127.0.0.1:8080/getmainpic');
+      return;
+    } else if(this.state.label.toUpperCase().indexOf('S520-2') !== -1) {
+      this.getPicDirectly('http://127.0.0.1:8080/getauxpic');
+      return;
+    }
     this.context = this.canvas.getContext('2d');
-    // this.context.scale(0.5, 0.5);
-    // this.context.drawImage(this.video, 340, 0, 600, 790, 0, 0, 1020, 1350);
-    // this.context = this.canvas.getContext('2d');
     this.canvas.width = 338 * 3;
     this.canvas.height = 408 * 3;
     let scaleH = this.video.videoHeight / 408;
@@ -196,6 +223,7 @@ class mianguanRead extends React.Component {
       vedio: true,
       shot: true
     });
+    this.openVideo(this.state.deviceId);
   };
   handleSubmit(e) {
     e.preventDefault();
@@ -203,7 +231,11 @@ class mianguanRead extends React.Component {
     // if (this.state.feat) {
     info.feat = this.state.feat;
     //     info.feat = 'NOFACE';
-    info.pic1 = this.canvas.toDataURL('image/jpeg');
+    if(this.state.pict1) {
+      info.pic1 = this.state.pict1;
+    } else {
+      info.pic1 = this.canvas.toDataURL('image/jpeg');
+    }
     this.upload(info);
     // } else if (!this.state.feat) {
     //     showWarnMsg('请重新拍摄');
@@ -228,15 +260,17 @@ class mianguanRead extends React.Component {
   next = () => {
     this.props.history.push(`/staff/jiandang/idPicture?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
   };
-  deviceChange = (v) => {
-    this.setState({deviceId: v});
-    if (v) {
+  deviceChange = (deviceId) => {
+    let device = this.state.devices.find(v => v.deviceId === deviceId);
+    this.setState({deviceId, label: device.label});
+    if (deviceId) {
       this.cancel();
-      this.openVideo(v);
+      this.openVideo(deviceId);
     }
   }
   render() {
     return (
+      <Spin spinning={this.state.fetching}>
         <div>
           <div className="mianguan-title"><i></i><span>人脸采集</span></div>
           <div>
@@ -274,6 +308,7 @@ class mianguanRead extends React.Component {
             </div>
           </div>
         </div>
+      </Spin>
     );
   }
 }

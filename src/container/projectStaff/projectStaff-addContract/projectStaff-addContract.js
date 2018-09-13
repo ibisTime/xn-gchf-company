@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import './projectStaff-addContract.css';
 import {
   initStates,
@@ -8,12 +9,9 @@ import {
   setPageData,
   restore
 } from '@redux/projectStaff/projectStaff-addedit';
-import { Pagination, Select } from 'antd';
-import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
-import { DetailWrapper } from 'common/js/build-detail';
-import { getBankNameByCode } from 'api/project';
-import { getUserId, getUserDetail, query1, getEmploy, getEmployContract, getEmployContractList, uploadContract } from 'api/user';
-import { getDict } from 'api/dict';
+import { Pagination, Select, Spin } from 'antd';
+import { getQueryString, showSucMsg, formatImg } from 'common/js/util';
+import { getUserId, getEmployContractList, uploadContract } from 'api/user';
 import { getQiniuToken } from 'api/general';
 import request from 'superagent-bluebird-promise';
 import {Base64} from 'js-base64';
@@ -33,7 +31,9 @@ class ProjectStaffAddContract extends React.Component {
       page: 1,
       pageSize: 8,
       deviceId: '',
-      devices: []
+      devices: [],
+      label: '',
+      fetching: false
     };
     this.code = getQueryString('code', this.props.location.search);
     this.projectCode = getQueryString('projectCode', this.props.location.search);
@@ -64,26 +64,53 @@ class ProjectStaffAddContract extends React.Component {
   getdeviceId = () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.enumerateDevices()
-          .then((devices) => {
-            this.deviceArr = [];
-            let tmpArr = devices.filter(device => device.kind === 'videoinput');
-            this.setState({
-              devices: tmpArr,
-              deviceId: tmpArr.length ? tmpArr[0].deviceId : ''
-            });
-            if (tmpArr.length) {
-              this.openVideo(tmpArr[0].deviceId);
-            } else {
-              showWarnMsg('未发现摄像头');
-            }
-          }).catch(function(err) {
-        console.log(err.name + ': ' + err.message);
-      });
+        .then((devices) => {
+          this.deviceArr = [];
+          let tmpArr = devices.filter(device => device.kind === 'videoinput');
+          this.setState({
+            devices: tmpArr,
+            deviceId: tmpArr.length ? tmpArr[0].deviceId : '',
+            label: tmpArr.length ? tmpArr[0].label : ''
+          });
+          if (tmpArr.length) {
+            this.openVideo(tmpArr[0].deviceId);
+          } else {
+            showWarnMsg('未发现摄像头');
+          }
+        }).catch(function(err) {
+          console.log(err.name + ': ' + err.message);
+        });
     }
   };
+  // 直接调取高拍仪服务进行拍照
+  getPicDirectly = (url) => {
+    this.mediaStreamTrack && this.mediaStreamTrack.stop();
+    this.canvas.height = this.canvas.height;
+    this.setState({ fetching: true });
+    axios.post(url).then((rs) => {
+      let result = /"pic":"([^"]+)"}\)/.exec(rs.data);
+      this.contractPics = this.state.contractPics;
+      this.contractPics.push({
+        url: result[1],
+        isOrigin: false
+      });
+      let context = this.canvas.getContext('2d');
+      let canvas = this.canvas;
+      let img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        context.drawImage(img, 0, 0);
+      };
+      img.src = result[1];
+      this.setState({
+        fetching: false,
+        contractPics: this.contractPics
+      });
+    }).catch(() => { showWarnMsg('网络异常'); this.setState({ fetching: false }); });
+  }
   // 打开摄像头
   openVideo(deviceId) {
-    console.log(deviceId);
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
@@ -132,14 +159,21 @@ class ProjectStaffAddContract extends React.Component {
       video: true,
       shot: true
     });
+    this.openVideo(this.state.deviceId);
   };
   // 截取图像
   cutImg = () => {
     this.setState({
       video: false,
-      imgFlag: false,
       shot: false
     });
+    if(this.state.label.toUpperCase().indexOf('E1100') !== -1) {
+      this.getPicDirectly('http://127.0.0.1:8080/getmainpic');
+      return;
+    } else if(this.state.label.toUpperCase().indexOf('S520-2') !== -1) {
+      this.getPicDirectly('http://127.0.0.1:8080/getauxpic');
+      return;
+    }
     this.context = this.canvas.getContext('2d');
     this.canvas.width = 340 * 3;
     this.canvas.height = 440 * 3;
@@ -221,15 +255,15 @@ class ProjectStaffAddContract extends React.Component {
       .send(base64)
       .promise();
   };
-  deviceChange = (v) => {
-    this.setState({deviceId: v});
-    if (v) {
-      this.cancel();
-      this.openVideo(v);
-    }
+  deviceChange = (deviceId) => {
+    let device = this.state.devices.find(v => v.deviceId === deviceId);
+    this.setState({deviceId, label: device.label});
+    this.cancel();
+    this.openVideo(deviceId);
   }
   render() {
     return (
+      <Spin spinning={this.state.fetching}>
         <div className="contract-total">
           <div className="addContract-title"><i></i><span>证件补录</span></div>
           <div className="addContract-select">
@@ -240,7 +274,7 @@ class ProjectStaffAddContract extends React.Component {
               width: 300
             }} onChange={this.deviceChange}
                     value={this.state.deviceId}>
-              {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
+              {this.state.devices.map(v => <Option key={v.deviceId} value={v.deviceId}>{v.label}</Option>)}
             </Select>
           </div>
           <div className="addContract-content">
@@ -278,6 +312,7 @@ class ProjectStaffAddContract extends React.Component {
             </div>
           </div>
         </div>
+      </Spin>
     );
   }
 }
