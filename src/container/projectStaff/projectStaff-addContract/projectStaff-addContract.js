@@ -89,23 +89,52 @@ class ProjectStaffAddContract extends React.Component {
     axios.post(url).then((rs) => {
       let result = /"pic":"([^"]+)"}\)/.exec(rs.data);
       this.contractPics = this.state.contractPics;
-      this.contractPics.push({
-        url: result[1],
-        isOrigin: false
-      });
-      let context = this.canvas.getContext('2d');
-      let canvas = this.canvas;
-      let img = new Image();
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        context.drawImage(img, 0, 0);
-      };
-      img.src = result[1];
-      this.setState({
-        fetching: false,
-        contractPics: this.contractPics
-      });
+      if(url === 'http://127.0.0.1:8080/getmainpic') {
+        // this.contractPics.push({
+        //   url: result[1],
+        //   isOrigin: false
+        // });
+        let context = this.canvas.getContext('2d');
+        let canvas = this.canvas;
+        let img = new Image();
+        img.onload = () => {
+          canvas.width = img.height;
+          canvas.height = img.width;
+          let degree = 270;
+          let drawWidth = -img.width;
+          let drawHeight = img.height;
+          context.rotate(degree * Math.PI / 180);
+          context.drawImage(img, 0, 0, drawWidth, drawHeight);
+          let rotatePic = canvas.toDataURL('image/jpeg');
+          this.contractPics.push({
+            url: rotatePic,
+            isOrigin: false
+          });
+          this.setState({
+            fetching: false,
+            contractPics: this.contractPics
+          });
+        };
+        img.src = result[1];
+      } else {
+        this.contractPics.push({
+          url: result[1],
+          isOrigin: false
+        });
+        let context = this.canvas.getContext('2d');
+        let canvas = this.canvas;
+        let img = new Image();
+        img.onload = () => {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0);
+        };
+        img.src = result[1];
+        this.setState({
+          fetching: false,
+          contractPics: this.contractPics
+        });
+      }
     }).catch(() => { showWarnMsg('网络异常'); this.setState({ fetching: false }); });
   }
   // 打开摄像头
