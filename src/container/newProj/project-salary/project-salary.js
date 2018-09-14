@@ -234,12 +234,10 @@ class Salary extends React.Component {
                     showWarnMsg('请选择一条记录');
                   } else {
                     if (selectedRows[0].status === '0') {
-                      // this.props.history.push(`/projectManage/project/salary/edit?code=${selectedRowKeys[0]}&projectCode=${this.state.projectCode}`);
                       Promise.all([
                         getEmploy(selectedRows[0].employCode),
                         getDict('position_type')
                       ]).then(([res1, res2]) => {
-                        console.log(res2);
                         res2.map((item) => {
                           this.state.positionType[item.dkey] = item.dvalue;
                         });
@@ -252,8 +250,9 @@ class Salary extends React.Component {
                           departmentName: res1.departmentName,
                           staffName: res1.staffName,
                           position: this.state.positionType[res1.position],
-                          sf: selectedRows[0].factAmount + ''
+                          sf: selectedRows[0].shouldAmount + ''
                         });
+                        console.log(this.state.sf);
                       });
                     } else {
                       showWarnMsg('该状态的工资条不可调整');

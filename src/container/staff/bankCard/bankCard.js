@@ -78,12 +78,12 @@ class BankCard extends React.Component {
       search: true,
       hidden: true
     }, {
-      field: 'status',
+      field: 'numberStatus',
       title: '现状',
       key: 'bankcard_number_status',
       type: 'select'
     }, {
-      field: 'status',
+      field: 'numberStatus',
       placeholder: '现状',
       key: 'bankcard_number_status',
       search: true,

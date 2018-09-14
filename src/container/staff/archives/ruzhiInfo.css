@@ -101,11 +101,11 @@ html, body {
     text-align: center;
     margin-bottom: 24px;
 }
-.ant-form-item-children input, .ant-form-item-children .ant-select, .ant-form-item-children .ant-select-selection,#joinDatetime, .ruzhi-item{
+.ruzhi-content .ant-form-item-children input, .ruzhi-content .ant-form-item-children .ant-select, .ruzhi-content .ant-form-item-children .ant-select-selection,#joinDatetime, .ruzhi-item{
     width: 273px;
     height: 34px;
 }
-.comparison-main2 .ant-form-item-children .ant-btn {
+.comparison-main2.ruzhi-content .ant-form-item-children .ant-btn {
     color: #1791FF;
     border: 1px solid #1791FF;
     padding: 0 10px;

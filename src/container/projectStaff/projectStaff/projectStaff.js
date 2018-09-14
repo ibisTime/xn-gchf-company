@@ -79,9 +79,6 @@ class ProjectStaff extends React.Component {
         return d.staff.mobile;
       }
     }, {
-      field: 'projectName',
-      title: '所在工程'
-    }, {
       field: 'departmentName',
       title: '部门'
     }, {
@@ -89,6 +86,11 @@ class ProjectStaff extends React.Component {
       title: '职位',
       type: 'select',
       key: 'position_type'
+    }, {
+      field: 'status',
+      title: '雇佣状态',
+      type: 'select',
+      key: 'staff_status'
     }, {
       field: 'pict1Status',
       title: '图片信息',
@@ -226,7 +228,11 @@ class ProjectStaff extends React.Component {
         } else if (selectedRowKeys.length > 1) {
           showWarnMsg('请选择一条记录');
         } else {
-          this.props.history.push(`/projectStaff/projectStaff/checkFeat?staffCode=${selectedRows[0].staffCode}&idNo=${selectedRows[0].staff.idNo}`);
+          if(selectedRows[0].staff.featStatus === '1') {
+            this.props.history.push(`/projectStaff/projectStaff/checkFeat?staffCode=${selectedRows[0].staffCode}&idNo=${selectedRows[0].staff.idNo}`);
+          } else {
+            showWarnMsg('特征值无效，无法进行验证');
+          }
         }
       }
     };

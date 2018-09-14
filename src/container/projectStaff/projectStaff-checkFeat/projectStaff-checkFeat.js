@@ -196,6 +196,7 @@ class mianguanRead extends React.Component {
       } else {
         if(+result[1] >= 70) {
           showSucMsg('验证特征值成功');
+          this.props.history.go(-1);
         } else {
           showWarnMsg('验证特征值失败');
         }
@@ -208,6 +209,9 @@ class mianguanRead extends React.Component {
       this.cancel();
       this.openVideo(v);
     }
+  };
+  back = () => {
+    this.props.history.go(-1);
   };
   render() {
     return (
@@ -249,6 +253,7 @@ class mianguanRead extends React.Component {
               <div className="checkFeat-btns" style={{ textAlign: 'center' }}>
                 <div>
                   <button className="ant-btn ant-btn-primary " onClick={ this.handleSubmit }>确定</button>
+                  <button className="ant-btn" onClick={ this.back }>返回</button>
                 </div>
               </div>
             </div>

@@ -25,7 +25,7 @@ export function getUserErrorInfo(salaryCode) {
   return fetch(631456, {
     salaryCode,
     orderColumn: 'handle_datetime',
-    orderDir: 'desc'});
+    orderDir: 'asc'});
 }
 
 export function query(idNo, projectCodeList) {

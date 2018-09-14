@@ -59,11 +59,7 @@ class Jiandang extends React.Component {
       this.companyCode = data.companyCode;
       navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
       this.canvas = document.getElementById('canvas');
-      // this.context = this.canvas.getContext('2d');
-      this.video = document.getElementById('video');
-      // this.feat = '';
       this.mediaStreamTrack = '';
-      // this.openVideo();
     }).catch(() => { this.setState({ fetching: false }); });
   };
   // 打开摄像头
@@ -251,7 +247,7 @@ class Jiandang extends React.Component {
     // }
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.setState({idNo: values.idNo});
+        this.setState({ idNo: values.idNo, fetching: true });
         let format = 'YYYY-MM-DD';
         jiandang(
             values.birthday.format(format),
@@ -267,6 +263,7 @@ class Jiandang extends React.Component {
             getUserId(),
             this.companyCode
         ).then((res) => {
+          this.setState({ fetching: false });
           this.isNew(res.code);
           if(res.code) {
             if(this.state.new) {
@@ -283,7 +280,7 @@ class Jiandang extends React.Component {
           }else {
             showWarnMsg('建档失败');
           }
-        });
+        }).catch(() => { this.setState({ fetching: false }); });
       } else {
         document.getElementById('getCard').removeAttribute('disabled');
       }
@@ -333,7 +330,7 @@ class Jiandang extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
         <Spin spinning={this.state.fetching}>
-          <div className="SectionContainer">
+          <div className="SectionContainer jiandang">
             <div className="section">
               <div style={{ display: 'table-cell', verticalAlign: 'middle', width: '100%' }}>
                 <div className="comparison-main">

@@ -321,10 +321,10 @@ const ROUTES = [
     path: '/staff/bankCard/addedit',
     component: asyncComponent(() => import('container/staff/bankCard-addedit/bankCard-addedit'))
   },
-  {
-    path: '/staff/jiandang',
-    component: asyncComponent(() => import('container/staff/archives/jiandang'))
-  },
+  // {
+  //   path: '/staff/jiandang',
+  //   component: asyncComponent(() => import('container/staff/archives/jiandang'))
+  // },
   {
     path: '/staff/jiandang1',
     component: asyncComponent(() => import('container/staff/archives/jiandang1'))
@@ -353,8 +353,12 @@ const ROUTES = [
     path: '/staff/jiandang/luru2',
     component: asyncComponent(() => import('container/staff/archives/luru2'))
   },
+  // {
+  //   path: '/staff/ruzhiInfo',
+  //   component: asyncComponent(() => import('container/staff/archives/ruzhiInfo'))
+  // },
   {
-    path: '/staff/ruzhiInfo',
+    path: '/staff/jiandang1/ruzhiInfo',
     component: asyncComponent(() => import('container/staff/archives/ruzhiInfo'))
   },
   {

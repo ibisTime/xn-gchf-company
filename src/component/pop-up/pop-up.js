@@ -219,6 +219,11 @@ class PopUp extends React.Component {
           if(res.isSuccess) {
             showSucMsg('操作成功');
           }
+          this.props.form.setFieldsValue({
+            cutAmont: '',
+            awardAmount: '',
+            sf: ''
+          });
           this.props.changeState('popUp', false);
           this.props.getPageData();
         }).catch(() => { this.setState({ fetching: false }); });
@@ -229,6 +234,22 @@ class PopUp extends React.Component {
   }
   getSf = () => {
     return moneyFormat(this.props.sf - this.props.form.getFieldValue('cutAmount') * 1000 + this.props.form.getFieldValue('awardAmount') * 1000);
+  };
+  editMoneyAdd = (e) => {
+    this.moneyAdd = e.target.value;
+    this.editMoneyChange();
+  };
+  editMoneySub = (e) => {
+    this.moneySub = e.target.value;
+    this.editMoneyChange();
+  };
+  editMoneyChange = () => {
+    let moneyAdd = this.moneyAdd || 0;
+    let moneySub = this.moneySub || 0;
+    let factAmount = moneyFormat(this.props.sf - moneySub * 1000 + moneyAdd * 1000);
+    this.props.form.setFieldsValue({
+      sf: factAmount
+    });
   };
   // 确定按钮分发事件
   handleSubmit = (projectCode, mode) => {
@@ -311,12 +332,12 @@ class PopUp extends React.Component {
                         <p>姓名：{this.props.staffName}</p>
                         <p>部门：{this.props.departmentName}</p>
                         <p>职位：{this.props.position}</p>
-                        <FormItem label="扣款" {...monthLayout}>
+                        <FormItem label="扣款" {...monthLayout} >
                           {getFieldDecorator('cutAmount', {
                             rules: [rule0],
                             initialValue: ''
                           })(
-                              <Input placeholder="输入金额"/>
+                              <Input placeholder="输入金额" onChange={this.editMoneySub}/>
                           )}
                         </FormItem>
                         <FormItem label="奖金" {...monthLayout}>
@@ -324,7 +345,7 @@ class PopUp extends React.Component {
                             rules: [rule0],
                             initialValue: ''
                           })(
-                              <Input placeholder="输入金额"/>
+                              <Input placeholder="输入金额" onChange={this.editMoneyAdd}/>
                           )}
                         </FormItem>
                         <FormItem label="实发" {...monthLayout}>

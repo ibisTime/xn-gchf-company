@@ -119,7 +119,7 @@ class AllStaffError extends React.Component {
       pageCode: 631445,
       head: (
           <div style={{ height: '15px' }}>
-            <div className="blue-title"><span>发生异常事件请及时处理，相关监管单位可实时查看您的处理进度，请详细填写跟进的过程。</span></div>
+            <div className="blue-tips"><span>发生异常事件请及时处理，相关监管单位可实时查看您的处理进度，请详细填写跟进的过程。</span></div>
           </div>
       )
     }) : null;

@@ -1,4 +1,4 @@
-.blue-title {
+.blue-tips {
     height: 35px;
     background: #1791FF;
     position: relative;
@@ -7,7 +7,7 @@
     margin-left: -24px;
     margin-right: -24px;
 }
-.blue-title i {
+.blue-tips i {
     width: 3px;
     height: 11pt;
     border-radius: 2px;
@@ -17,7 +17,7 @@
     top: 7px;
     margin-right: 10px;
 }
-.blue-title span {
+.blue-tips span {
     margin-left: 24px;
     font-size: 14px;
     line-height: 35px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import originJsonp from 'jsonp';
 import fetch from 'common/js/fetch';
-import { Input, Select, Button, Form, DatePicker, Modal, TreeSelect, Row, Col } from 'antd';
+import { Input, Select, Button, Form, DatePicker, TreeSelect, Spin } from 'antd';
 import { getProjectListForO, getBumen, getZhiHang, luru } from 'api/project';
 import { getUserDetail, getUserId, ruzhi, reruzhi, getStaffDetail } from 'api/user';
 import { getDict } from 'api/dict';
@@ -57,7 +57,8 @@ class RuzhiInfo extends React.Component {
       position: [],
       departmentCode: '',
       salary: 0,
-      cutAmount: 0
+      cutAmount: 0,
+      fetching: false
     };
     this.code = getQueryString('code', this.props.location.search);
     this.idNo = getQueryString('idNo', this.props.location.search);
@@ -65,71 +66,71 @@ class RuzhiInfo extends React.Component {
     this.staffCode = getQueryString('staffCode', this.props.location.search);
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((res) => {
-      this.setState({ projectCode: res.projectCode });
-      getBumen({ projectCode: this.state.projectCode }).then((data) => {
-        if(data.length === '0') {
-          showWarnMsg('该项目暂无部门，即将前往添加...');
-          setTimeout(() => {
-            this.props.history.push(`/projectManage/project/addBumen`);
-          }, 1000);
-          return;
-        }
-        this.setState({ departmentList: data });
-        this.getTree(data);
-        this.props.form.setFieldsValue({
-          cutAmount: this.state.cutAmount,
-          salary: this.state.salary
-        });
-        if(this.reruzhi) {
-          fetch(631467, { code: this.code }).then((data) => {
-            data.joinDatetime = dateFormat(data.joinDatetime);
-            var formatTime = Moment(data.joinDatetime);// 参数换成毫秒的变量就OK
-            this.props.form.setFieldsValue({
-              // departmentCode: data.departmentCode,
-              position: data.position,
-              joinDatetime: formatTime,
-              cutAmount: data.cutAmount / 1000,
-              salary: data.salary / 1000,
-              subbranch: data.bankCard ? data.bankCard.bankSubbranchName : '',
-              bankcardNumber: data.bankCard ? data.bankCard.bankcardNumber : '',
-              type: data.type,
-              mobile: data.staff.mobile,
-              contacts: data.staff.contacts,
-              contactsMobile: data.staff.contactsMobile
-            });
-            this.setState({departmentCode: data.departmentCode});
-          });
-        }
-      });
-      this.props.form.setFieldsValue({
-        projectCode: res.projectName
-      });
-    });
-    getZhiHang().then((res) => {
-      this.setState({
-        zhihang: res
-      });
-    });
-    getDict('staff_type').then((res) => {
-      this.source = res.map((item) => ({
+    this.setState({ fetching: true });
+    Promise.all([
+      getUserDetail(getUserId()),
+      getZhiHang(),
+      getDict('staff_type'),
+      getQiniuToken(),
+      getDict('position_type')
+    ]).then(([res1, res2, res3, res4, res5]) => {
+      this.source = res3.map((item) => ({
         type: item.dkey,
         name: item.dvalue
       }));
       this.setState({
-        source: this.source
+        zhihang: res2,
+        source: this.source,
+        token: res4.uploadToken,
+        position: res5
       });
-    });
-    getQiniuToken().then(data => {
-      this.setState({ token: data.uploadToken });
-    }).catch(() => {});
-    getDict('position_type').then((data) => {
-      this.setState({ position: data });
+      getUserDetail(getUserId()).then((res) => {
+        this.setState({ projectCode: res.projectCode });
+        getBumen({ projectCode: this.state.projectCode }).then((data) => {
+          if(data.length === '0') {
+            showWarnMsg('该项目暂无部门，即将前往添加...');
+            setTimeout(() => {
+              this.props.history.push(`/projectManage/project/addBumen`);
+            }, 1000);
+            return;
+          }
+          this.setState({ departmentList: data });
+          this.getTree(data);
+          this.props.form.setFieldsValue({
+            cutAmount: this.state.cutAmount,
+            salary: this.state.salary
+          });
+          if(this.reruzhi) {
+            fetch(631467, { code: this.code }).then((data) => {
+              data.joinDatetime = dateFormat(data.joinDatetime);
+              var formatTime = Moment(data.joinDatetime);// 参数换成毫秒的变量就OK
+              this.props.form.setFieldsValue({
+                // departmentCode: data.departmentCode,
+                position: data.position,
+                joinDatetime: formatTime,
+                cutAmount: data.cutAmount / 1000,
+                salary: data.salary / 1000,
+                subbranch: data.bankCard ? data.bankCard.bankSubbranchName : '',
+                bankcardNumber: data.bankCard ? data.bankCard.bankcardNumber : '',
+                type: data.type,
+                mobile: data.staff.mobile,
+                contacts: data.staff.contacts,
+                contactsMobile: data.staff.contactsMobile
+              });
+              this.setState({departmentCode: data.departmentCode, fetching: false});
+            });
+          }
+        });
+        this.props.form.setFieldsValue({
+          projectCode: res.projectName
+        });
+      });
     });
     if(this.idNo) {
       getStaffDetail(this.idNo).then((res) => {
         this.setState({
-          staffCode: res.code
+          staffCode: res.code,
+          fetching: false
         });
       });
     }
@@ -166,12 +167,6 @@ class RuzhiInfo extends React.Component {
     this.props.form.validateFieldsAndScroll((err, params) => {
       if (!err) {
         let format = 'YYYY-MM-DD';
-        if(params.subbranch) {
-          this.state.zhihang.map((item) => {
-            params.bankName = item.bankName;
-            params.bankCode = item.bankCode;
-          });
-        }
         let luruParams = {
           code: this.staffCode,
           updater: getUserId(),
@@ -181,13 +176,15 @@ class RuzhiInfo extends React.Component {
           contacts: params.contacts,
           contactsMobile: params.contactsMobile
         };
-        this.state.zhihang.map((item) => {
-          if(params.subbranch === item.code || params.subbranch === item.bankSubbranchName) {
-            params.bankCode = item.bankCode;
-            params.bankName = item.bankName;
-            params.subbranch = item.subbranchName;
-          }
-        });
+        if(params.subbranch) {
+          this.state.zhihang.map((item) => {
+            if(params.subbranch === item.code || params.subbranch === item.bankSubbranchName) {
+              params.bankCode = item.bankCode;
+              params.bankName = item.bankName;
+              params.subbranch = item.subbranchName;
+            }
+          });
+        }
         let ruzhiParams = {
           projectCode: this.state.projectCode,
           joinDatetime: params.joinDatetime.format(format),
@@ -196,7 +193,11 @@ class RuzhiInfo extends React.Component {
           salary: params.salary *= 1000,
           departmentCode: params.departmentCode,
           position: params.position,
-          type: params.type
+          type: params.type,
+          bankCode: params.bankCode,
+          bankName: params.bankName,
+          bankcardNumber: params.bankcardNumber,
+          subbranch: params.subbranch
         };
         if(this.reruzhi) {
           // 重新入职
@@ -329,14 +330,15 @@ class RuzhiInfo extends React.Component {
       accept: 'image/*'
     };
     return (
+      <Spin spinning={this.state.fetching}>
         <div>
-          <div className="blue-title"><i></i><span>入职信息</span></div>
+          <div className="blue-title" style={{left: '-24px', top: '-24px', right: '-24px'}}><i></i><span>入职信息</span></div>
           <div>
             <div style={{ verticalAlign: 'middle', width: '100%' }}>
-              <div className="comparison-main2 comparison-mains2">
+              <div className="comparison-main2 comparison-mains2 ruzhi-content">
                 <div style={{ width: 600, padding: '30px 0', margin: '0 auto' }}>
                   <Form>
-                    <div className="ruzhi-title">入职信息(选填)</div>
+                    <div className="ruzhi-title">入职信息(必填)</div>
                     <FormItem label="入职部门" {...ruzhiFormItemLayout}>
                       {getFieldDecorator('departmentCode', {
                         rules: [rule0],
@@ -442,6 +444,7 @@ class RuzhiInfo extends React.Component {
             </div>
           </div>
         </div>
+      </Spin>
     );
   }
 }

@@ -10,14 +10,13 @@ import {
   restore
 } from '@redux/projectStaff/projectStaff-addedit';
 import { Pagination, Select, Spin } from 'antd';
-import { getQueryString, showSucMsg, formatImg } from 'common/js/util';
+import { getQueryString, showSucMsg, showWarnMsg, formatImg } from 'common/js/util';
 import { getUserId, getEmployContractList, uploadContract } from 'api/user';
 import { getQiniuToken } from 'api/general';
 import request from 'superagent-bluebird-promise';
 import {Base64} from 'js-base64';
 import Contract from './contract.png';
 import Delete from './delete.png';
-import {showWarnMsg} from '../../../common/js/util';
 
 const {Option} = Select;
 
@@ -227,21 +226,25 @@ class ProjectStaffAddContract extends React.Component {
       }
       return Promise.resolve({body: {key: item.url}});
     });
-    Promise.all(contractArr).then(([...res]) => {
-      let photos = res.map(v => v.body.key);
-      uploadContract({
-        contentPicList: photos,
-        code: this.code,
-        updater: getUserId()
-      }).then((res) => {
-        if(res.code) {
-          showSucMsg('操作成功');
-          this.props.history.push(`/projectStaff/projectStaff`);
-        } else {
-          showWarnMsg('操作失败');
-        }
-      });
-    }).catch(() => {});
+    if(contractArr.length) {
+      Promise.all(contractArr).then(([...res]) => {
+        let photos = res.map(v => v.body.key);
+        uploadContract({
+          contentPicList: photos,
+          code: this.code,
+          updater: getUserId()
+        }).then((res) => {
+          if(res.code) {
+            showSucMsg('操作成功');
+            this.props.history.push(`/projectStaff/projectStaff`);
+          } else {
+            showWarnMsg('操作失败');
+          }
+        });
+      }).catch(() => {});
+    } else {
+      showWarnMsg('请拍摄合同照片');
+    }
   };
   // 上传七牛
   uploadByBase64(base64) {

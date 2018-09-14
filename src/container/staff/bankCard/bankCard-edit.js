@@ -103,7 +103,7 @@ class BankCardAddEdit extends React.Component {
     };
     return (
       <div>
-        <div className="blue-title"><i></i><span>离职</span></div>
+        <div className="blue-title"><i></i><span>工资卡录入</span></div>
         <div>
           <div>
             <div>

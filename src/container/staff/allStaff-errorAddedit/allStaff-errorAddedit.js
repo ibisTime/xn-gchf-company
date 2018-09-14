@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Input, Divider, Spin, Form, Table, Timeline, Modal, Upload, Icon } from 'antd';
-import { getQueryString, showSucMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
+import { Button, Input, Spin, Form, Table, Timeline, Modal, Upload, Icon } from 'antd';
+import { getQueryString, showSucMsg, showWarnMsg, formatDate, getUserKind, formatImg, moneyFormat } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
 import { getBankNameByCode } from 'api/project';
 import { getDict } from 'api/dict';
@@ -55,29 +55,33 @@ class AllStaffAddEdit extends React.Component {
     this.props.history.go(-1);
   };
   sendInfo = () => {
-    this.setState({ loading: true });
-    senderrInfo({
-      salaryCode: this.code,
-      handleNote: this.state.textValue,
-      handlePicList: this.state.pics,
-      handler: getUserId()
-    }).then((res) => {
-      if(res.code) {
-        showSucMsg('发送成功！');
-      } else {
-        showSucMsg('发送失败！');
-      }
-      getUserErrorInfo(this.code).then(errordata => {
-        this.setState({
-          errordata,
-          loading: false,
-          textValue: '',
-          pics: [],
-          fileList: []
-        });
-        this.list();
+    if(!this.state.textValue) {
+      showWarnMsg('请输入处理备注');
+    } else {
+      this.setState({ loading: true });
+      senderrInfo({
+        salaryCode: this.code,
+        handleNote: this.state.textValue,
+        handlePicList: this.state.pics,
+        handler: getUserId()
+      }).then((res) => {
+        if(res.code) {
+          showSucMsg('发送成功！');
+        } else {
+          showSucMsg('发送失败！');
+        }
+        getUserErrorInfo(this.code).then(errordata => {
+          this.setState({
+            errordata,
+            loading: false,
+            textValue: '',
+            pics: [],
+            fileList: []
+          });
+          this.list();
+        }).catch(() => this.setState({ loading: false }));
       }).catch(() => this.setState({ loading: false }));
-    }).catch(() => this.setState({ loading: false }));
+    }
   };
   handleCancel = () => this.setState({ previewVisible: false });
   handlePreview = (file) => {
