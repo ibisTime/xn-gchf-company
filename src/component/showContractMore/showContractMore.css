@@ -1,4 +1,4 @@
-.modal-out {
+.modal-out.contract-mask {
     width: 100%;
     margin-right: 0;
     text-align: center;
@@ -12,7 +12,7 @@
     height: 100%;
     z-index: 1000;
 }
-.my-modal-pop-up {
+.contract-mask .my-modal-pop-up {
     width: 439pt;
     /*height: 240pt;*/
     margin: 0.5rem auto !important;
@@ -20,28 +20,20 @@
     background-size: 100% 100%;
     padding: 18pt;
 }
-.showContract-title {
-    width: 100%;
-    height: 25pt;
-    color: #fff;
-    font-size: 16pt;
-    text-align: center;
-    margin-bottom: 7pt;
-}
-.my-modal-pop-up .closeContractMore {
+.contract-mask .my-modal-pop-up .closeContractMore {
     display: block;
     text-align: left;
     padding-bottom: 10px;
 }
-.my-modal-pop-up .closeContractMore img:hover {
+.contract-mask .my-modal-pop-up .closeContractMore img:hover {
     cursor: pointer;
 }
-.content {
+.contract-mask .content {
     margin-bottom: 20pt;
     overflow: auto;
     height: 562px;
 }
-.content span {
+.contract-mask .content span {
     display: inline-block;
     width: 271pt;
     height: 60pt;
@@ -49,33 +41,9 @@
     font-size: 14pt;
     text-align: left;
 }
-.my-modal-pop-up label {
+.contract-mask .my-modal-pop-up label {
     color: #fff;
 }
-.buttons {
-    margin-top: 20pt;
-    height: 38pt;
-}
-.buttons div {
-    display: inline-block;
-    width: 104pt;
-    height: 100%;
-    background-size: 100% 100%;
-    font-size: 14pt;
-    padding-top: 9pt;
-}
-.buttons div:hover {
-    cursor: pointer;
-}
-.cancel {
-    background: url("./cancel.png") no-repeat;
-    margin-right: 42pt;
-    color: #6CAAFF;
-}
-.ok {
-    background: url("./ok.png") no-repeat;
-    color: #fff;
-}
-.showContractMore-contacts {
+.contract-mask .showContractMore-contacts {
     width: 100%;
 }

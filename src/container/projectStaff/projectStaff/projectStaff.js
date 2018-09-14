@@ -110,7 +110,7 @@ class ProjectStaff extends React.Component {
       hidden: true,
       search: true
     }, {
-      field: 'projectCode',
+      field: 'departmentCode',
       placeholder: '部门',
       listCode: '631036',
       params: {
@@ -119,8 +119,8 @@ class ProjectStaff extends React.Component {
       keyName: 'code',
       valueName: 'name',
       type: 'select',
-      hidden: true,
-      search: true
+      search: true,
+      hidden: true
     }, {
       field: 'pict1Status',
       placeholder: '图片信息',

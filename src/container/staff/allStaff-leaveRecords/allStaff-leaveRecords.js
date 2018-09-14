@@ -44,6 +44,16 @@ class AllStaffLeaveRecords extends React.Component {
       field: 'staffName',
       title: '姓名'
     }, {
+      field: 'position',
+      title: '职位',
+      type: 'select',
+      key: 'position_type'
+    }, {
+      field: 'employStatus',
+      title: '状态',
+      type: 'select',
+      key: 'staff_status'
+    }, {
       field: 'startDatetime',
       title: '请假时间',
       type: 'date'

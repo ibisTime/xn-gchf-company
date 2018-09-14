@@ -324,7 +324,7 @@ class ProjectStaffAddContract extends React.Component {
                   <span>用工合同</span>
                   <span>点击拍摄</span>
                 </div>
-                <canvas ref={canvas => this.canvas = canvas}className="contract-canvas" style={{ width: '340px', height: '440px' }} width="1020" height="1320"></canvas>
+                <canvas ref={canvas => this.canvas = canvas} className="contract-canvas" style={{ width: '340px', height: '440px' }} width="1020" height="1320"></canvas>
               </div>
             </div>
             <div className="showContract">

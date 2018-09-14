@@ -353,8 +353,8 @@ class Jiandang extends React.Component {
                     </div>
                   </div>
                   <div className="right-wrapper">
-                    <div className="head-wrap"><i></i>人脸信息采集</div>
-                    <div className="right-bottom">
+                    <div className="head-wrap"><i></i>身份证信息采集</div>
+                    <div className="right-bottom jiandang-content">
                       <Form className="ant-form ant-form-horizontal" id="formId" onSubmit={this.submitBtn}>
                         <FormItem label="姓名" {...jiandangFormItemLayout}>
                           {getFieldDecorator('realName', {
@@ -375,8 +375,7 @@ class Jiandang extends React.Component {
                             }],
                             initialValue: this.state.sex
                           })(
-                              <Select placeholder="请选择性别" onChange={ this.handleTypeChange }
-                                      style={{ width: '400px' }}>
+                              <Select placeholder="请选择性别" onChange={ this.handleTypeChange }>
                                 <Option key='男' value='男'>男</Option>
                                 <Option key='女' value='女'>女</Option>
                               </Select>
@@ -452,7 +451,6 @@ class Jiandang extends React.Component {
                                   locale={locale}
                                   placeholder="请选择有效截止日期"
                                   format='YYYY-MM-DD'
-                                  style={{ width: '300px' }}
                               />
                           )}
                         </FormItem>

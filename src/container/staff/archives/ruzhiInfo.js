@@ -200,30 +200,36 @@ class RuzhiInfo extends React.Component {
           subbranch: params.subbranch
         };
         if(this.reruzhi) {
-          // 重新入职
+          // 重新入职  一定要分开写
           ruzhiParams.code = this.code;
-          Promise.all([
-            reruzhi(ruzhiParams),
-            luru(luruParams)
-          ]).then(([res1, res2]) => {
-            if(res1.isSuccess && res2.isSuccess) {
-              showSucMsg('重新入职成功！');
-              this.props.history.push(`/projectStaff/projectStaff`);
+          reruzhi(ruzhiParams).then((res) => {
+            if(res.isSuccess) {
+              luru(luruParams).then((data) => {
+                if(data.isSuccess) {
+                  showSucMsg('重新入职成功！');
+                  this.props.history.push(`/projectStaff/projectStaff`);
+                } else {
+                  showWarnMsg('重新入职失败！');
+                }
+              });
             } else {
               showWarnMsg('重新入职失败！');
             }
           });
         } else {
-          // 入职
+          // 入职  一定要分开写
           ruzhiParams.staffCode = this.staffCode || this.state.staffCode;
           ruzhiParams.projectCode = this.state.projectCode;
-          Promise.all([
-            ruzhi(ruzhiParams),
-            luru(luruParams)
-          ]).then(([res1, res2]) => {
-            if(res1.code && res2.isSuccess) {
-              showSucMsg('入职成功！');
-              this.props.history.push(`/staff/jiandang`);
+          ruzhi(ruzhiParams).then((res) => {
+            if(res.code) {
+              luru(luruParams).then((data) => {
+                if(data.isSuccess) {
+                  showSucMsg('入职成功！');
+                  this.props.history.push(`/staff/jiandang1`);
+                } else {
+                  showWarnMsg('入职失败！');
+                }
+              });
             } else {
               showWarnMsg('入职失败！');
             }

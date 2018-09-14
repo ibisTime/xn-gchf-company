@@ -1,4 +1,4 @@
-.modal-out {
+.pop-up-modal-out {
     width: 100%;
     margin-right: 0;
     text-align: center;
@@ -12,7 +12,7 @@
     height: 100%;
     z-index: 1000;
 }
-.my-modal-pop-up {
+.my-modal-pop-up.pop-up {
     width: 336pt;
     /*height: 240pt;*/
     margin: 12.5rem auto !important;
@@ -37,10 +37,10 @@
 .pop-up-close:hover {
     cursor: pointer;
 }
-.content {
+.pop-up .content {
     margin-bottom: 20pt;
 }
-.content span {
+.pop-up .content span {
     display: inline-block;
     width: 271pt;
     height: 60pt;
@@ -78,7 +78,7 @@
 .editSalary .ant-form-item-label {
     width: 110px;
 }
-.my-modal-pop-up label {
+.my-modal-pop-up.pop-up label {
     color: #fff;
 }
 .buttons {

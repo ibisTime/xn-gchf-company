@@ -38,11 +38,11 @@ export const tailFormItemLayout = {
 export const jiandangFormItemLayout = {
   labelCol: {
     xs: { span: 22 },
-    sm: { span: 4 }
+    sm: { span: 5 }
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 20 }
+    sm: { span: 19 }
   }
 };
 export const ruzhiFormItemLayout = {

@@ -286,8 +286,8 @@ class PopUp extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-        <div className="modal-out ant-modal-mask" style={{ display: this.props.popUpVisible ? 'block' : 'none' }}>
-          <div className="my-modal-pop-up">
+        <div className="ant-modal-mask pop-up-modal-out" style={{ display: this.props.popUpVisible ? 'block' : 'none' }}>
+          <div className="my-modal-pop-up pop-up">
             <div className="pop-up-title" align="center"><span>{this.props.title}</span></div>
             <div className="pop-up-close" onClick={() => { this.props.changeState('popUp', false); }}><img src={close} alt=""/></div>
             <div className="content" style={{ display: this.props.content ? 'block' : 'none' }}><span>{this.props.content}</span></div>

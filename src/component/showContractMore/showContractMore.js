@@ -16,7 +16,7 @@ class ShowContractMore extends React.Component {
   }
   render() {
     return (
-        <div className="modal-out ant-modal-mask" style={{ display: this.props.contractMoreVisible ? 'block' : 'none' }}>
+        <div className="modal-out ant-modal-mask contract-mask" style={{ display: this.props.contractMoreVisible ? 'block' : 'none' }}>
           <div className="my-modal-pop-up">
             <div className="closeContractMore" onClick={(e) => { this.props.setContractMoreVisible(false, event); }}><img src={close} alt=""/></div>
             <div className="content">

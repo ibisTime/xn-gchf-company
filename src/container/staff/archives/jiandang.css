@@ -305,10 +305,10 @@
 .jiandang .ant-form-item-children {
     width: 60%;
 }
-
-.jiandang .comparison-main .ant-input {
-    width: 80%;
-}
 .ant-form-explain {
     display: inline-block;
+}
+.jiandang-content .ant-form-item-children, .jiandang-content .ant-form-item-children input, .jiandang-content .ant-form-item-children .ant-select, .jiandang-content .ant-form-item-children .ant-select-selection,#joinDatetime, .ruzhi-item{
+    width: 420px;
+    height: 34px;
 }

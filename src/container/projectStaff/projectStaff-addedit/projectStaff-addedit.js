@@ -65,19 +65,27 @@ class ProjectStaffAddedit extends React.Component {
               <div className="four">
                 <div className="face">
                   <div className="four-title"><span>人脸采集照片</span></div>
-                  <img src={formatImg(idInfo.pict1)} alt="" className="face-img"/>
+                  <img src={formatImg(idInfo.pict1)} alt="" className="face-img"
+                       style={{ display: idInfo.pict1 ? 'inline-block' : 'none' }}/>
+                  <div className="hetong-img" style={{ display: idInfo.pict1 ? 'none' : 'inline-block' }}>暂无图片</div>
                 </div>
                 <div className="hold">
                   <div className="four-title"><span>手持证件照片</span></div>
-                  <img src={formatImg(idInfo.pict4)} alt="" className="hold-img"/>
+                  <img src={formatImg(idInfo.pict4)} alt="" className="hold-img"
+                       style={{ display: idInfo.pict4 ? 'inline-block' : 'none' }}/>
+                  <div className="hetong-img" style={{ display: idInfo.pict4 ? 'none' : 'inline-block' }}>暂无图片</div>
                 </div>
                 <div className="front">
                   <div className="four-title"><span>身份证正面</span></div>
-                  <img src={formatImg(idInfo.pict2)} alt="" className="front-img"/>
+                  <img src={formatImg(idInfo.pict2)} alt="" className="front-img"
+                       style={{ display: idInfo.pict2 ? 'inline-block' : 'none' }}/>
+                  <div className="hetong-img" style={{ display: idInfo.pict2 ? 'none' : 'inline-block' }}>暂无图片</div>
                 </div>
                 <div className="back">
                   <div className="four-title"><span>身份证反面</span></div>
-                  <img src={formatImg(idInfo.pict3)} alt="" className="back-img"/>
+                  <img src={formatImg(idInfo.pict3)} alt="" className="back-img"
+                       style={{ display: idInfo.pict3 ? 'inline-block' : 'none' }}/>
+                  <div className="hetong-img" style={{ display: idInfo.pict3 ? 'none' : 'inline-block' }}>暂无图片</div>
                 </div>
               </div>
               <div className="hetong" onClick={ () => { contractPic.length && this.showHetongMore(true); } }>

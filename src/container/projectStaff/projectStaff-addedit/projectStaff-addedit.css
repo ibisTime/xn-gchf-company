@@ -43,6 +43,7 @@
     width: 47%;
     background: #fafafa;
     text-align: center;
+    vertical-align: top;
 }
 .four img {
     display: inline-block;

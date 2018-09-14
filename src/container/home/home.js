@@ -16,7 +16,7 @@ const orderDict = {
   2: '已提交待发放',
   3: '正常发放',
   4: '部分发放',
-  5: '已补发',
+  5: '已转正常',
   6: '延迟发放',
   7: '部分且延迟发放'
 };
@@ -24,7 +24,8 @@ const checkDict = {
   0: '待上班打卡',
   1: '待下班打卡',
   2: '已打卡待结算',
-  3: '已结算'
+  3: '已结算',
+  4: '旷工'
 };
 const abnormalColumns = [{
   title: '工程名称',
@@ -234,7 +235,6 @@ class Home extends React.Component {
       this.setState({ projectCode: data.projectCode });
       getProject(data.projectCode).then((res) => {
         this.data.push(res);
-        console.log(this.data);
         this.data.forEach((item, i) => {
           let point = [item.longitude, item.latitude];
           let marker = new AMap.Marker({
@@ -436,7 +436,7 @@ class Home extends React.Component {
   // 分页查询项目考勤
   getPageChecks(start, limit) {
     this.setState({ checkLoading: true });
-    getPageChecks(start, limit, this.code).then((data) => {
+    getPageChecks(start, limit, this.state.projectCode).then((data) => {
       let { checkPagination } = this.state;
       this.setState({
         checkPagination: {
@@ -455,7 +455,7 @@ class Home extends React.Component {
   // 分页查询异常信息
   getPageabnormal(start, limit) {
     this.setState({ abnormalLoading: true });
-    getPageabnormal(start, limit, this.code).then((data) => {
+    getPageabnormal(start, limit, this.state.projectCode).then((data) => {
       let { abnormalPagination } = this.state;
       this.setState({
         abnormalPagination: {
