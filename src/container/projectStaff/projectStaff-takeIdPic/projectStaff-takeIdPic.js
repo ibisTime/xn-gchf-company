@@ -327,7 +327,7 @@ class IdPicture2 extends React.Component {
       this.setState({ fetching: false });
       if(res.isSuccess) {
         showSucMsg('提交成功');
-        this.props.history.push(`/staff/jiandang/luru2?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
+        this.props.history.push(`/projectStaff/projectStaff`);
       }
     }).catch(() => { this.setState({ fetching: false }); });
   };

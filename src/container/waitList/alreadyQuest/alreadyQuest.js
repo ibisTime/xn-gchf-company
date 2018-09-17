@@ -41,7 +41,6 @@ class AlreadyQuest extends React.Component {
       this.setState({
         subbranch: data.subbranch,
         bankName: data.bankName,
-        projectCodeList: data.projectCodeList,
         projectCode: data.projectCode
       });
     });
@@ -74,7 +73,7 @@ class AlreadyQuest extends React.Component {
       field: 'handleDatetime',
       type: 'datetime'
     }];
-    return this.props.buildList({
+    return projectCode ? this.props.buildList({
           fields,
           searchParams: {
             statusList: ['1', '2', '3'],
@@ -82,7 +81,7 @@ class AlreadyQuest extends React.Component {
             kind: 'O'
           },
           pageCode: 631435
-        });
+        }) : null;
   }
 }
 

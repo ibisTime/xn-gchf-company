@@ -114,7 +114,9 @@ class AllStaffError extends React.Component {
         staffCode: this.staffCode,
         type: '1',
         projectCode: this.state.projectCode,
-        statusList: ['4', '6', '7']
+        statusList: ['4', '6', '7'],
+        orderColumn: 'code',
+        orderDir: 'desc'
       },
       pageCode: 631445,
       head: (

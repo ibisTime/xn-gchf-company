@@ -14,6 +14,7 @@ import {
 import { listWrapper } from 'common/js/build-list';
 import { getUserId, getUserKind, showWarnMsg } from 'common/js/util';
 import { getUserDetail } from 'api/user';
+import { getDict } from 'api/dict';
 
 @listWrapper(
   state => ({
@@ -34,12 +35,19 @@ class BankCard extends React.Component {
       positionObj: {
         0: '普工',
         1: '主管'
-      }
+      },
+      bankCardStatusObj: {}
     };
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((data) => {
-      this.setState({ 'projectCode': data.projectCode });
+    Promise.all([
+      getUserDetail(getUserId()),
+      getDict('bankcard_number_status')
+    ]).then(([res1, res2]) => {
+      this.setState({ projectCode: res1.projectCode });
+      res2.map((item) => {
+        this.state.bankCardStatusObj[item.dkey] = item.dvalue;
+      });
     });
   }
   render() {
@@ -101,14 +109,13 @@ class BankCard extends React.Component {
         }
       },
       export: (selectedRowKeys, selectedRows) => {
-        console.log(1);
         this.props.doFetching();
         fetch(631425, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
           this.props.cancelFetching();
           let tableData = [];
           let title = [];
           fields.map((item) => {
-            if (item.title !== '员工编号' && item.title !== '关键字查询' && item.title !== '现状') {
+            if (item.title !== '员工编号' && item.title !== '关键字查询') {
               title.push(item.title);
             }
           });
@@ -122,7 +129,8 @@ class BankCard extends React.Component {
                 item.departmentName,
                 this.state.positionObj[item.position],
                 item.bankSubbranchName,
-                item.bankcardNumber
+                item.bankcardNumber,
+                this.state.bankCardStatusObj[item.numberStatus]
             );
             tableData.push(temp);
           });

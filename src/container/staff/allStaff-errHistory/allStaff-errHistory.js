@@ -109,7 +109,9 @@ class AllStaffError extends React.Component {
         type: '1',
         projectCode: this.state.projectCode,
         kind: 'O',
-        status: 5
+        status: 5,
+        orderColumn: 'code',
+        orderDir: 'desc'
       },
       buttons: [{
         code: 'detail',

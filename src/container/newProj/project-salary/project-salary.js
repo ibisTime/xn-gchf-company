@@ -266,20 +266,30 @@ class Salary extends React.Component {
                   if (!selectedRowKeys.length) {
                     showWarnMsg('请选择记录');
                   } else {
-                    this.codeList = selectedRowKeys;
-                    let total = 0;
+                    let flag = true;
                     selectedRows.map((item) => {
-                      total += item.factAmount;
+                      if(item.status !== '0') {
+                        flag = false;
+                      }
                     });
-                    this.setState({
-                      popUp: true,
-                      title: '审核工资条',
-                      mode: 'checkSalary',
-                      onlyBtnText: '审核',
-                      contentInfo1: `选中${selectedRowKeys.length}条工资条`,
-                      contentInfo2: `共计金额${moneyFormat(total)}元`,
-                      codeList: this.codeList
-                    });
+                    if (flag) {
+                      this.codeList = selectedRowKeys;
+                      let total = 0;
+                      selectedRows.map((item) => {
+                        total += item.factAmount;
+                      });
+                      this.setState({
+                        popUp: true,
+                        title: '审核工资条',
+                        mode: 'checkSalary',
+                        onlyBtnText: '审核',
+                        contentInfo1: `选中${selectedRowKeys.length}条工资条`,
+                        contentInfo2: `共计金额${moneyFormat(total)}元`,
+                        codeList: this.codeList
+                      });
+                    } else {
+                      showWarnMsg('包含不可审核的工资条');
+                    }
                   }
                 }
               }, {

@@ -64,6 +64,7 @@ class mianguanRead2 extends React.Component {
     getStaffDetail(this.idNo).then((res) => {
       this.setState({ fetching: false });
       if(res.pict1) {
+        // 如果有免冠照，那么reshot为true
         this.setState({
           pict1: res.pict1,
           feat: res.feat,
@@ -200,18 +201,23 @@ class mianguanRead2 extends React.Component {
   };
   handleSubmit = (e) => {
     e.preventDefault();
-    var info = {};
-    // if (this.state.feat) {
-    // info.feat = this.state.feat;
+    let info = {};
     info.feat = 'NOFACE';
-    info.pic1 = this.canvas.toDataURL('image/jpeg');
+    if(this.state.vedio) {
+      showWarnMsg('请拍摄免冠照');
+      return;
+    }
+    if(this.state.reshot) {
+      info.pic1 = this.canvas.toDataURL('image/jpeg');
+    } else if(this.state.pict1) {
+      info.pic1 = this.state.pict1;
+    }
     this.upload(info);
   };
   upload(info) {
     info.code = this.staffCode;
     info.updater = getUserId();
     if(info.feat) {
-      console.log(info);
       mianguanPicture(info).then(rs => {
         if (rs.isSuccess) {
           showSucMsg('提交成功');
@@ -220,8 +226,6 @@ class mianguanRead2 extends React.Component {
           showWarnMsg(rs.errorInfo || '提交失败');
         }
       });
-    } else {
-      showWarnMsg('请拍摄免冠照');
     }
   };
   deviceChange = (v) => {
