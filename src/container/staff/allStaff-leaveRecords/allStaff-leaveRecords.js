@@ -33,6 +33,7 @@ class AllStaffLeaveRecords extends React.Component {
       searchParams: null,
       projectCode: ''
     };
+    this.staffCode = getQueryString('staffCode', this.props.location.search);
   }
   componentDidMount() {
     getUserDetail(getUserId()).then((data) => {
@@ -114,7 +115,7 @@ class AllStaffLeaveRecords extends React.Component {
       buttons: [{
         code: 'export',
         name: '导出',
-        handler: (selectedRowKeys, selectedRows) => {
+        handler: () => {
           fetch(631468, {projectCode: this.state.projectCode, limit: 10000, start: 1}).then((data) => {
             let tableData = [];
             let title = [];

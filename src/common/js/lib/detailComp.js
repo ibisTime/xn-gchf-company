@@ -465,7 +465,34 @@ export default class DetailComp extends React.Component {
         check: true
       }];
     }
-    return item.readonly ? null : (
+    return item.readonly ? (
+      item.options.detail ? <Button
+          type="primary"
+          disabled={!hasSelected}
+          style={{marginRight: 20, marginBottom: 16}}
+          onClick={() => {
+            let keys = this.state.o2mSKeys[item.field];
+            if (!keys.length || keys.length > 1) {
+              showWarnMsg('请选择一条记录');
+              return;
+            }
+            let key = keys[0];
+            let keyName = item.options.rowKey || 'code';
+            let useData = this.props.pageData[item.field].filter((v) => v[keyName] === key)[0];
+            this.setState({
+              modalOptions: {
+                ...item.options,
+                code: key,
+                view: true,
+                useData
+              }
+            }, () => {
+              this.setState({
+                modalVisible: true
+              });
+            });
+          }}
+      >详情</Button> : null) : (
       <div style={{ marginBottom: 16 }}>
         {item.options.add ? <Button
           type="primary"

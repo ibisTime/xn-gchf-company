@@ -43,8 +43,6 @@ class mianguanRead extends React.Component {
     };
     this.openVideo = this.openVideo.bind(this);
     this.getFeat = this.getFeat.bind(this);
-    this.handleShotClick = this.handleShotClick.bind(this);
-    this.next = this.next.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.code = getQueryString('code', this.props.location.search);
     this.ruzhi = getQueryString('ruzhi', this.props.location.search);
@@ -100,7 +98,7 @@ class mianguanRead extends React.Component {
       img.src = result[1];
       this.setState({ pict1: result[1] });
       this.setState({ fetching: false });
-    }).catch(() => { showWarnMsg('网络异常'); this.setState({ fetching: false }); });
+    }).catch(() => { showWarnMsg('读取图像失败'); this.setState({ fetching: false }); });
   }
   // 打开摄像头
   openVideo(deviceId) {
@@ -178,40 +176,11 @@ class mianguanRead extends React.Component {
   };
   getFeat() {
     let base64 = this.canvas.toDataURL('image/jpeg');
-    // getFeatInfo(base64).then((res) => {
-    //   var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(res);
-    //   if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
-    //       showWarnMsg('请对准人脸');
-    //       return;
-    //   };
-    //   this.setState({
-    //       feat: result[1]
-    //   });
-    // });
-    // jsonp('http://118.31.17.181/getfeature', Base64.encode(base64))
-    // console.log(base64);
-    // axios.post('https://feat.aijmu.com/getfeature', encodeURIComponent(base64), {
-    // 暂时注释
-    // axios.post('https://feat.aijmu.com/getfeature', base64, {
-    //   withCredentials: false
-    // }).then((rs) => {
-    //   // console.log(rs);
-    //   // console.log(rs.data);
-    //   var result = /getFaceFeature\({"data":"([^]+)"}\)/.exec(rs.data);
-    //   if (!result || result[1] === 'error' || result[1] === 'NOFACE') {
-    //     showWarnMsg('请对准人脸');
-    //     this.setState({ feat: '' });
-    //     return;
-    //   };
-    //   this.setState({
-    //     feat: result[1]
-    //   });
-    // });
     this.setState({
       feat: 'NOFACE'
     });
   }
-  handleShotClick() {
+  handleShotClick = () => {
     this.state.shot === true ? this.shot() : this.cancel();
   }
   shot() {
@@ -227,19 +196,14 @@ class mianguanRead extends React.Component {
   };
   handleSubmit(e) {
     e.preventDefault();
-    var info = {};
-    // if (this.state.feat) {
+    let info = {};
     info.feat = this.state.feat;
-    //     info.feat = 'NOFACE';
     if(this.state.pict1) {
       info.pic1 = this.state.pict1;
     } else {
       info.pic1 = this.canvas.toDataURL('image/jpeg');
     }
     this.upload(info);
-    // } else if (!this.state.feat) {
-    //     showWarnMsg('请重新拍摄');
-    // };
   };
   upload(info) {
     info.code = this.code;

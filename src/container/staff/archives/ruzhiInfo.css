@@ -121,7 +121,7 @@ html, body {
     width: 340px;
     height: 46px;
 }
-#salary::-ms-input-placeholder{text-align: right;}
-#salary::-webkit-input-placeholder{text-align: right;}
-#cutAmount::-ms-input-placeholder{text-align: right;}
-#cutAmount::-webkit-input-placeholder{text-align: right;}
+.ruzhi-content #salary::-ms-input-placeholder{text-align: right;}
+.ruzhi-content #salary::-webkit-input-placeholder{text-align: right;}
+.ruzhi-content #cutAmount::-ms-input-placeholder{text-align: right;}
+.ruzhi-content #cutAmount::-webkit-input-placeholder{text-align: right;}

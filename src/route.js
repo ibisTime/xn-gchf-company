@@ -461,6 +461,10 @@ const ROUTES = [
     component: asyncComponent(() => import('container/projectStaff/projectStaff-takePhoto/projectStaff-takePhoto'))
   },
   {
+    path: '/projectStaff/projectStaff/takeIdPic',
+    component: asyncComponent(() => import('container/projectStaff/projectStaff-takeIdPic/projectStaff-takeIdPic'))
+  },
+  {
     path: '/projectStaff/projectStaff/checkFeat',
     component: asyncComponent(() => import('container/projectStaff/projectStaff-checkFeat/projectStaff-checkFeat'))
   },

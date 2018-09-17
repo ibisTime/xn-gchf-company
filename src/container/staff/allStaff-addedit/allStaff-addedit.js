@@ -91,6 +91,7 @@ class AllStaffAddEdit extends React.Component {
         add: true,
         edit: true,
         delete: true,
+        detail: true,
         scroll: { x: 600 },
         fields: [
           {
@@ -186,10 +187,12 @@ class AllStaffAddEdit extends React.Component {
       title: '技能列表',
       field: 'skillList',
       type: 'o2m',
+      readonly: true,
       options: {
         add: true,
         edit: true,
         delete: true,
+        detail: true,
         scroll: { x: 600 },
         fields: [
           {

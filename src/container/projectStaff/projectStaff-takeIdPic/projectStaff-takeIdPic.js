@@ -1,18 +1,17 @@
 import React from 'react';
 import axios from 'axios';
 import { Button, Select, Spin } from 'antd';
-import './idPicture.css';
-import Figure from './figure.png';
+import './../../staff/archives/idPicture.css';
 import Hold from './hold.png';
 import IDFRONT from './id-front.png';
 import IDBACK from './id-back.png';
 import { getQueryString, getUserId, showWarnMsg } from 'common/js/util';
-import { idPicture3 } from 'api/user';
+import { idPicture3, getStaffDetail } from 'api/user';
 import { showSucMsg } from '../../../common/js/util';
 
 const {Option} = Select;
 
-class IdPicture extends React.Component {
+class IdPicture2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,11 +30,11 @@ class IdPicture extends React.Component {
       label: '',
       fetching: false
     };
-    // this.openVideo = this.openVideo.bind(this);
     this.curIdx = 1;
     this.next = this.next.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.code = getQueryString('code', this.props.location.search);
+    this.staffCode = getQueryString('staffCode', this.props.location.search);
     this.ruzhi = getQueryString('ruzhi', this.props.location.search);
     this.idNo = getQueryString('idNo', this.props.location.search);
   }
@@ -44,10 +43,26 @@ class IdPicture extends React.Component {
     navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
     this.context = this.canvas1.getContext('2d');
     this.mediaStreamTrack = '';
+    this.setState({ fetching: true });
+    getStaffDetail(this.idNo).then((res) => {
+      this.setState({ fetching: false });
+      if(res.pict1) {
+        this.setState({
+          pic1: res.pict2,
+          pic2: res.pict3,
+          pic3: res.pict4
+        });
+      }
+      if(res.contacts) {
+        this.setState({
+          next: true
+        });
+      }
+    }).catch(() => { this.setState({ fetching: false }); });
     this.getdeviceId();
   };
   next() {
-    this.props.history.push(`/staff/jiandang/idInfoRead`);
+    this.props.history.push(`/staff/jiandang/luru2?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
   };
   getdeviceId = () => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -89,7 +104,7 @@ class IdPicture extends React.Component {
     }).catch(() => { showWarnMsg('读取图像失败'); this.setState({ fetching: false }); });
   }
   // 打开摄像头
-  openVideo1(deviceId) {
+  openVideo1 = (deviceId) => {
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
@@ -259,13 +274,12 @@ class IdPicture extends React.Component {
   };
   getBase64(canvas, index) {
     let base64 = canvas.toDataURL('image/jpeg');
-    // console.log(base64, index);
     this.setState({ [`pic${index}`]: base64 });
   }
   handleShotClick = () => {
     let currentVideo = this.state.video1 ? '1' : this.state.video2 ? '2' : '3';
     this.cutImg(currentVideo);
-  };
+  }
   shot = (index, deviceId) => {
     deviceId = deviceId || this.state.deviceId;
     if(index === 1) {
@@ -291,7 +305,7 @@ class IdPicture extends React.Component {
       this.openVideo3(deviceId);
     }
     this.curIdx = index;
-  }
+  };
   cancel() {
     this.setState({
       vedio: true,
@@ -306,15 +320,16 @@ class IdPicture extends React.Component {
       pic2: this.state.pic2,
       pic3: this.state.pic3,
       updater: getUserId(),
-      code: this.code
+      code: this.staffCode
     };
+    this.setState({ fetching: true });
     idPicture3(info).then((res) => {
+      this.setState({ fetching: false });
       if(res.isSuccess) {
         showSucMsg('提交成功');
-        this.props.history.push(`/staff/jiandang1/ruzhiInfo?ruzhi=${this.ruzhi}&staffCode=${this.code}&idNo=${this.idNo}`);
+        this.props.history.push(`/staff/jiandang/luru2?ruzhi=${this.ruzhi}&code=${this.code}&idNo=${this.idNo}`);
       }
-    });
-    // console.log(this.state);
+    }).catch(() => { this.setState({ fetching: false }); });
   };
   deviceChange = (deviceId) => {
     let device = this.state.devices.find(v => v.deviceId === deviceId);
@@ -322,92 +337,97 @@ class IdPicture extends React.Component {
     if (deviceId) {
       this.shot(this.curIdx, deviceId);
     }
-  };
-  next = () => {
-    this.props.history.push(`/staff/jiandang1/ruzhiInfo?ruzhi=${this.ruzhi}&staffCode=${this.code}&idNo=${this.idNo}`);
-  };
+  }
   render() {
     return (
-      <Spin spinning={this.state.fetching}>
-        <div className="id-total">
-          <div className="id-title"><i></i><span>证件采集</span></div>
-          <div style={{textAlign: 'left', marginTop: -30}}>
-            <label>摄像头</label>
-            <Select style={{
-              marginBottom: 20,
-              marginLeft: 20,
-              width: 300
-            }} onChange={this.deviceChange}
-                    value={this.state.deviceId}>
-              {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
-            </Select>
-          </div>
-          <div className="out">
-            <div className="left">
-              <div className="top">
-                <div className="id-video-box" style={{ display: this.state.video1 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
-                  <div className="border">
-                    <span></span><span></span><span></span><span></span>
+        <Spin spinning={this.state.fetching}>
+          <div className="id-total ">
+            <div className="id-title"><i></i><span>证件采集</span></div>
+            <div style={{textAlign: 'left', marginTop: -30}}>
+              <label>摄像头</label>
+              <Select style={{
+                marginBottom: 20,
+                marginLeft: 20,
+                width: 300
+              }} onChange={this.deviceChange}
+                      value={this.state.deviceId}>
+                {this.state.devices.map(v => <Option value={v.deviceId}>{v.label}</Option>)}
+              </Select>
+            </div>
+            <div className="out">
+              <div className="left">
+                <div className="top">
+                  <div className="id-video-box" style={{ display: this.state.video1 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <video ref={video => this.video1 = video} className="id-video"></video>
                   </div>
-                  <video ref={video => this.video1 = video} className="id-video"></video>
+                  <div className="id-img-box" style={{ display: this.state.video1 ? 'none' : 'block' }} onClick={ () => { this.shot(1); }}>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                      <img src={IDFRONT} className="userImg3" id="userImg"/>
+                    </div>
+                    <div className="tips">
+                      <span>身份证正面</span><br/>
+                      <span>点击拍摄</span>
+                    </div>
+                    <div style={{ display: this.state.pic1 ? 'block' : 'none' }}>
+                      <img src={this.state.pic1} className="haveUserImg" alt=""/>
+                    </div>
+                    <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                  </div>
                 </div>
-                <div className="id-img-box" style={{ display: this.state.video1 ? 'none' : 'block' }} onClick={ () => { this.shot(1); }}>
+                <div className="bottom">
+                  <div className="id-video-box" style={{ display: this.state.video2 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <video ref={video => this.video2 = video} className="id-video"></video>
+                  </div>
+                  <div className="id-img-box" style={{ display: this.state.video2 ? 'none' : 'block' }} onClick={ () => { this.shot(2); }}>
+                    <div className="border">
+                      <span></span><span></span><span></span><span></span>
+                      <img src={IDBACK} className="userImg3" id="userImg"/>
+                    </div>
+                    <div className="tips">
+                      <span>身份证反面</span><br/>
+                      <span>点击拍摄</span>
+                    </div>
+                    <div style={{ display: this.state.pic2 ? 'block' : 'none' }}>
+                      <img src={this.state.pic2} className="haveUserImg" alt=""/>
+                    </div>
+                    <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div className="right">
+                <div className="id-video-box" style={{ display: this.state.video3 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
+                  <video ref={video => this.video3 = video} className="id-video"></video>
+                </div>
+                <div className="id-img-box" style={{ display: this.state.video3 ? 'none' : 'block' }} onClick={ () => { this.shot(3); }}>
                   <div className="border">
                     <span></span><span></span><span></span><span></span>
-                    <img src={IDFRONT} className="userImg3" id="userImg"/>
+                    <img src={Hold} className="userImg3" id="userImg"/>
                   </div>
                   <div className="tips">
-                    <span>身份证正面</span><br/>
-                    <span>点击拍摄</span>
+                    <span>点击拍摄</span><br/>
+                    <span>请保持正脸在线框之内</span>
                   </div>
-                  <canvas ref={canvas => this.canvas1 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
+                  <div style={{ display: this.state.pic3 ? 'block' : 'none' }}>
+                    <img src={this.state.pic3} className="haveUserImg" alt=""/>
+                  </div>
+                  <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" style={{ width: '340px', height: '512px' }} width="1020" height="1536"></canvas>
                 </div>
               </div>
-              <div className="bottom">
-                <div className="id-video-box" style={{ display: this.state.video2 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
-                  <div className="border">
-                    <span></span><span></span><span></span><span></span>
-                  </div>
-                  <video ref={video => this.video2 = video} className="id-video"></video>
-                </div>
-                <div className="id-img-box" style={{ display: this.state.video2 ? 'none' : 'block' }} onClick={ () => { this.shot(2); }}>
-                  <div className="border">
-                    <span></span><span></span><span></span><span></span>
-                    <img src={IDBACK} className="userImg3" id="userImg"/>
-                  </div>
-                  <div className="tips">
-                    <span>身份证反面</span><br/>
-                    <span>点击拍摄</span>
-                  </div>
-                  <canvas ref={canvas => this.canvas2 = canvas} className="inner-item" style={{ width: '340px', height: '240px' }} width="1020" height="720"></canvas>
-                </div>
+              <div className="button">
+                <Button type="primary" onClick={ this.handleSubmit }>确定</Button>
               </div>
-            </div>
-            <div className="right">
-              <div className="id-video-box" style={{ display: this.state.video3 ? 'block' : 'none' }} onClick={ this.handleShotClick }>
-                <video ref={video => this.video3 = video} className="id-video"></video>
-              </div>
-              <div className="id-img-box" style={{ display: this.state.video3 ? 'none' : 'block' }} onClick={ () => { this.shot(3); }}>
-                <div className="border">
-                  <span></span><span></span><span></span><span></span>
-                  <img src={Hold} className="userImg3" id="userImg"/>
-                </div>
-                <div className="tips">
-                  <span>点击拍摄</span><br/>
-                  <span>请保持正脸在线框之内</span>
-                </div>
-                <canvas ref={canvas => this.canvas3 = canvas} className="inner-item" style={{ width: '340px', height: '512px' }} width="1020" height="1536"></canvas>
-              </div>
-            </div>
-            <div className="button">
-              <Button type="primary" onClick={ this.handleSubmit }>下一步</Button>
-              <Button onClick={ this.next }>跳过</Button>
             </div>
           </div>
-        </div>
-      </Spin>
+        </Spin>
     );
   }
 }
 
-export default IdPicture;
+export default IdPicture2;
