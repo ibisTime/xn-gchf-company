@@ -139,6 +139,12 @@ class ProjectStaffAddContract extends React.Component {
   }
   // 打开摄像头
   openVideo(deviceId) {
+    let label = this.state.devices.find(v => v.deviceId === deviceId).label;
+    if(label.toUpperCase().indexOf('E1100') !== -1) {
+      this.setState({ regular: true });
+    } else {
+      this.setState({ regular: false });
+    }
     // 使用新方法打开摄像头
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({
@@ -313,7 +319,10 @@ class ProjectStaffAddContract extends React.Component {
             <div className="cut-contract">
               <div className="contract-video-box" style={{ display: this.state.video ? 'block' : 'none' }} onClick={ this.handleShotClick }>
                 <div className="figure"><img src={Contract} alt=""/></div>
-                <video ref={video => this.video = video} className="contract-video"></video>
+                { this.state.regular
+                  ? <video ref={video => this.video = video} className="contract-video-regular"></video>
+                  : <video ref={video => this.video = video} className="contract-video"></video>
+              }
               </div>
               <div className="contract-img-box" style={{ display: this.state.video ? 'none' : 'block' }} onClick={ this.handleShotClick }>
                 <div className="border">
