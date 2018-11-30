@@ -286,8 +286,7 @@ class ProjectStaffAddContract extends React.Component {
     base64 = base64.substr(base64.indexOf('base64,') + 7);
     var timestamp = (new Date()).valueOf();
     var key = Base64.encode(timestamp + '0845.jpg');
-    // return request.post('http://up-z2.qiniu.com/putb64/-1/key/' + key)
-    return request.post('https://upload-z2.qiniu.com/putb64/-1/key/' + key)
+    return request.post('https://up-z0.qiniup.com/putb64/-1/key/' + key)
       .set('Content-Type', 'application/octet-stream')
       .set('Authorization', `UpToken ${this.token}`)
       .send(base64)

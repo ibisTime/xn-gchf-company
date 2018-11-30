@@ -1,7 +1,7 @@
 import React from 'react';
 import { getUserId, showSucMsg, showWarnMsg, moneyFormat } from 'common/js/util';
 import fetch from 'common/js/fetch';
-import { Form, DatePicker, Input } from 'antd';
+import { Form, DatePicker, Input, Spin } from 'antd';
 import { popUpLayout, monthLayout } from 'common/js/config';
 import close from './close.png';
 import './pop-up.css';
@@ -21,7 +21,9 @@ class PopUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      projectCode: ''
+      projectCode: '',
+      fetching: false,
+      showButton: true
     };
   }
   // 项目开工（原审核）
@@ -117,14 +119,15 @@ class PopUp extends React.Component {
   };
   // 生成工资条
   makeSalary = () => {
+    console.log(this.props);
     this.props.form.validateFieldsAndScroll((err, params) => {
       if (!err) {
-        this.setState({ fetching: true });
+        this.setState({ fetching: true, showButton: false });
         fetch(631440, {
           projectCode: this.props.projectCode,
           month: params.month.format(MONTH_FORMAT)
         }).then((res) => {
-          this.setState({ fetching: false });
+          this.setState({ fetching: false, showButton: true });
           if (res.salaryNumber !== '0') {
             showSucMsg('操作成功');
           } else {
@@ -132,7 +135,7 @@ class PopUp extends React.Component {
           }
           this.props.changeState('popUp', false);
           this.props.getPageData();
-        }).catch(() => { this.setState({ fetching: true }); });
+        }).catch(() => { this.setState({ fetching: false, showButton: true }); });
       } else {
         console.log(err);
       }
@@ -289,7 +292,7 @@ class PopUp extends React.Component {
         <div className="ant-modal-mask pop-up-modal-out" style={{ display: this.props.popUpVisible ? 'block' : 'none' }}>
           <div className="my-modal-pop-up pop-up">
             <div className="pop-up-title" align="center"><span>{this.props.title}</span></div>
-            <div className="pop-up-close" onClick={() => { this.props.changeState('popUp', false); }}><img src={close} alt=""/></div>
+            <div className="pop-up-close" onClick={() => { this.props.changeState('popUp', false); }}><img src={close}/></div>
             <div className="content" style={{ display: this.props.content ? 'block' : 'none' }}><span>{this.props.content}</span></div>
             <Form>
               {
@@ -392,9 +395,18 @@ class PopUp extends React.Component {
               <div className="ok" onClick={ () => { this.handleSubmit(this.props.projectCode, this.props.mode); } }>{this.props.okText}</div>
             </div>
             <div className="oneBtn" style={{ display: this.props.onlyBtnText ? 'block' : 'none' }}>
-              <div className="ok" onClick={ () => { this.handleSubmit(this.props.projectCode, this.props.mode); } }>{this.props.onlyBtnText}</div>
+              <div className="ok" onClick={ () => {
+                if(this.props.mode === 'makeSalary') {
+                  if(this.state.showButton) {
+                    this.handleSubmit(this.props.projectCode, this.props.mode);
+                  }
+                } else {
+                  this.handleSubmit(this.props.projectCode, this.props.mode);
+                }
+                } }>{this.props.onlyBtnText}</div>
             </div>
           </div>
+          <Spin spinning={this.state.fetching}></Spin>
         </div>
     );
   }

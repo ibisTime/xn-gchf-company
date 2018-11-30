@@ -174,38 +174,6 @@ class Salary extends React.Component {
         }
       }]
     };
-    const makeSalaryOptions = {
-      fields: [{
-        field: 'projectCode',
-        title: '项目',
-        hidden: true,
-        value: this.state.projectCode
-      }, {
-        field: 'month',
-        title: '生成工资月份',
-        type: 'month',
-        required: true
-      }],
-      addCode: 631440,
-      buttons: [{
-        title: '确认',
-        check: true,
-        type: 'primary',
-        handler: (params, doFetching, cancelFetching, handleCancelModal) => {
-          doFetching();
-          fetch(631440, params).then((res) => {
-            cancelFetching();
-            if (res.salaryNumber !== '0') {
-              showSucMsg('操作成功');
-            } else {
-              showWarnMsg('该条件下没有可生成的工资条');
-            }
-            this.props.getPageData();
-            handleCancelModal();
-          }).catch(cancelFetching);
-        }
-      }]
-    };
 
     return this.state.projectCode ? (
         <div>
@@ -299,12 +267,14 @@ class Salary extends React.Component {
                   if (!selectedRowKeys.length) {
                     showWarnMsg('请选择记录');
                   } else {
+                    this.props.doFetching();
                     deleteSalaryMany(selectedRowKeys).then((res) => {
+                      this.props.cancelFetching();
                       if(res.isSuccess) {
                         showSucMsg('操作成功');
                         this.props.getPageData();
                       }
-                    });
+                    }).catch(() => { this.props.doFetching(); });
                   }
                 }
               }, {
@@ -342,11 +312,6 @@ class Salary extends React.Component {
               visible={this.state.visible}
               hideModal={() => this.setState({ visible: false })}
               options={options} />
-          <ModalDetail
-              title='生成工资月份'
-              visible={this.state.showMakeSalary}
-              hideModal={() => this.setState({ showMakeSalary: false })}
-              options={makeSalaryOptions} />
           <PopUp popUpVisible={this.state.popUp}
                  title={this.state.title}
                  content={this.state.content}
