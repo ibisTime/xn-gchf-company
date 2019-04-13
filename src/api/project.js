@@ -122,7 +122,7 @@ export function getProjectStatus() {
  * @param code
  */
 export function getProject(code) {
-  return fetch(631358, { code });
+  return fetch(631616, { code });
 }
 /**
  * 分页查询工资条

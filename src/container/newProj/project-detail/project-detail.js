@@ -79,7 +79,7 @@ class ProjectDetail extends React.Component {
       fields,
       code: this.code,
       view: this.view,
-      detailCode: 631358,
+      detailCode: 631616,
       addCode: 631040,
       editCode: 631042
     });

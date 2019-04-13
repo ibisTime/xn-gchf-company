@@ -88,7 +88,7 @@ class ProjectCheck extends React.Component {
       code: this.state.projectCode,
       view: this.view,
       addCode: 631354,
-      detailCode: 631358,
+      detailCode: 631616,
       editCode: 631354,
       buttons: [{
         title: '确定',

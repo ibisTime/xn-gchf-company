@@ -105,7 +105,7 @@ class ProjectEdit extends React.Component {
       fields: edit,
       key: 'code',
       code: this.code,
-      detailCode: 631358,
+      detailCode: 631616,
       buttons: [{
         title: '保存',
         check: true,

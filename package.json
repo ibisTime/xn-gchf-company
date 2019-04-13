@@ -70,11 +70,11 @@
     "js-base64": "^2.4.5",
     "jsonp": "^0.2.1",
     "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
-    "xlsx": "^0.12.9"
+    "xlsx": "wlqsltz/js-xlsx"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start": "node --max_old_space_size=4096 scripts/start.js",
+    "build": "node --max_old_space_size=4096 scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {

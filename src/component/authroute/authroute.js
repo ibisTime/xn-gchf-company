@@ -5,7 +5,7 @@ import cookies from 'browser-cookies';
 @withRouter
 class AuthRoute extends React.Component {
   componentDidMount() {
-    if (cookies.get('userId')) {
+    if (cookies.get('userId') && cookies.get('organizationCode')) {
       return;
     }
     this.props.history.push('/login');

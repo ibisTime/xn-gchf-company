@@ -1,7 +1,7 @@
 import fetch from 'common/js/fetch';
 import cookies from 'browser-cookies';
-import { setUser, getUserId, getUserName, getRoleCode, setRoleInfo } from 'common/js/util';
-import { showWarnMsg, DeleteCookie } from '../common/js/util';
+import { setUser, getUserId, getUserName, getRoleCode, setRoleInfo,
+  getOrganizationCode, getProjectName, showWarnMsg, DeleteCookie } from 'common/js/util';
 
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 const LOGOUT = 'LOGOUT';
@@ -16,6 +16,8 @@ const initState = {
   userId: getUserId() || '',
   loginName: getUserName() || '',
   roleCode: getRoleCode() || '',
+  organizationCode: getOrganizationCode() || '',
+  projectName: getProjectName() || '',
   kind: ''
 };
 

@@ -282,7 +282,7 @@ class ProjectAddedit extends React.Component {
         }
       }],
       editCode: 631352,
-      detailCode: 631358,
+      detailCode: 631616,
       addCode: 631350
     }) : null;
   }

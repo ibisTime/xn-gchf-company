@@ -1,5 +1,6 @@
 import fetch from 'common/js/fetch';
 import cookies from 'browser-cookies';
+import { getOrganizationCode } from 'common/js/util';
 
 export function setRoleMenus(menuCodeList, roleCode, updater) {
   return fetch(631050, { menuCodeList, roleCode, updater });
@@ -62,30 +63,60 @@ export function getjindu(companyCode, projectCode) {
 }
 
 // 建档
-export function jiandang(birthday,
-  idAddress,
-  idEndDate,
-  idNation,
-  idNo,
-  idPic,
-  idPolice,
-  idStartDate,
-  realName,
-  sex,
-  updater,
-  companyCode) {
-  return fetch(631410, { birthday,
-    idAddress,
-    idEndDate,
-    idNation,
-    idNo,
-    idPic,
-    idPolice,
-    idStartDate,
-    realName,
-    sex,
-    updater,
-    companyCode});
+export function jiandang(birthday, address, expiryDate, nation,
+  idCardNumber, headImageUrl, grantOrg, startDate, name, gender,
+  politicsType, cultureLevelType, isJoined, joinedTime, specialty,
+  hasBadMedicalHistory, maritalStatus, userId) {
+  return fetch(631790, {
+    birthday,
+    address,
+    expiryDate,
+    nation,
+    idCardNumber,
+    headImageUrl,
+    grantOrg,
+    startDate,
+    name,
+    gender,
+    politicsType,
+    cultureLevelType,
+    isJoined,
+    joinedTime,
+    specialty,
+    hasBadMedicalHistory,
+    maritalStatus,
+    userId,
+    idCardType: '01',
+    projectCode: getOrganizationCode()
+  });
+}
+// 建档
+export function reJiandang(code, birthday, address, expiryDate, nation,
+  idCardNumber, headImageUrl, grantOrg, startDate, name, gender,
+  politicsType, cultureLevelType, isJoined, joinedTime, specialty,
+  hasBadMedicalHistory, maritalStatus, userId) {
+  return fetch(631793, {
+    code,
+    birthday,
+    address,
+    expiryDate,
+    nation,
+    idCardNumber,
+    headImageUrl,
+    grantOrg,
+    startDate,
+    name,
+    gender,
+    politicsType,
+    cultureLevelType,
+    isJoined,
+    joinedTime,
+    specialty,
+    hasBadMedicalHistory,
+    maritalStatus,
+    userId,
+    idCardType: '01'
+  });
 }
 
 // 免冠照片

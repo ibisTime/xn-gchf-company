@@ -43,8 +43,6 @@ import { newProjProjectKaoqin } from './redux/newProj/project-kaoqin';
 import { newProjProjectWeekday } from './redux/newProj/project-weekday';
 import { newProjProjectQuit } from './redux/newProj/project-quit';
 import { newProjProjectAddBumen } from './redux/newProj/project-addBumen';
-import { yewuManageAccount } from './redux/yewuManage/account';
-import { yewuManageAccountAddEdit } from './redux/yewuManage/account-addedit';
 import { hetongChengbaoshang } from './redux/hetong/chengbaoshang';
 import { hetongChengbaoshangAddEdit } from './redux/hetong/chengbaoshang-addedit';
 import { hetongJindu } from './redux/hetong/jindu';
@@ -75,7 +73,6 @@ import { staffBankCard } from './redux/staff/bankCard';
 import { staffBankCardAddEdit } from './redux/staff/bankCard-addedit';
 import { staffHistoryDetail } from './redux/staff/history-detail';
 import { daifaDaifa } from './redux/daifa/daifa';
-import { mapMap } from './redux/map/map';
 import { daifaDaifaAddEdit } from './redux/daifa/daifa-addedit';
 import { daifaDaifaEdit } from './redux/daifa/daifa-edit';
 import { newIdBank } from './redux/newId/bank';
@@ -92,6 +89,19 @@ import { projectStaffAddEdit } from './redux/projectStaff/projectStaff-addedit';
 // import { projectStaffAddBankCard } from './redux/projectStaff/projectStaff-addBankCard';
 import { waitListAlreadyQuest } from './redux/waitList/alreadyQuest';
 import { waitListAlreadyQuestAddedit } from './redux/waitList/alreadyQuest-addedit';
+import { jiandangStep2 } from './redux/staff/jiandang-step2';
+import { jiandangStep3 } from './redux/staff/jiandang-step3';
+import { bizBank } from './redux/biz/bank';
+// 项目管理
+import { projectParticipating } from './redux/biz/project/participating';
+import { projectClass } from './redux/biz/project/class';
+import { projectMember } from './redux/biz/project/member';
+import { projectInout } from './redux/biz/project/inout';
+import { projectMemContract } from './redux/biz/project/memcontract';
+import { projectAttence } from './redux/biz/project/attence';
+import { projectWages } from './redux/biz/project/wages';
+import { projectBasic } from './redux/biz/project/basic';
+import { companyInfo } from './redux/biz/company/info';
 
 export default combineReducers({
   user,
@@ -115,7 +125,6 @@ export default combineReducers({
   publicBannerAddEdit,
   publicAboutusAddEdit,
   publicTimeAddEdit,
-  mapMap,
   generalTextParam,
   generalTextParamAddEdit,
   newProjCompanyConstruct,
@@ -139,8 +148,6 @@ export default combineReducers({
   newProjKaoqin,
   newProjProjectKaoqin,
   newProjProjectAddBumen,
-  yewuManageAccount,
-  yewuManageAccountAddEdit,
   hetongChengbaoshang,
   hetongChengbaoshangAddEdit,
   hetongJindu,
@@ -186,5 +193,17 @@ export default combineReducers({
   projectStaffAddEdit,
   // projectStaffAddBankCard,
   waitListAlreadyQuest,
-  waitListAlreadyQuestAddedit
+  waitListAlreadyQuestAddedit,
+  jiandangStep2,
+  jiandangStep3,
+  bizBank,
+  projectParticipating,
+  projectClass,
+  projectMember,
+  projectInout,
+  projectMemContract,
+  projectAttence,
+  projectWages,
+  projectBasic,
+  companyInfo
 });

@@ -6,6 +6,7 @@ export const UPLOAD_URL = 'http://up-z0.qiniu.com';
 // export const PIC_PREFIX = 'http://otoieuivb.bkt.clouddn.com/';
 // export const PIC_PREFIX = 'http://image.tree.hichengdai.com/';
 export const PIC_PREFIX = 'http://picture.jm60s.com//';
+export const PIC_BASEURL_L = '?imageMogr2/auto-orient/thumbnail/!1000x1000r';
 
 // 系统userid
 export const SYS_USER = 'SYS_USER_ZXZX';
@@ -34,6 +35,19 @@ export const tailFormItemLayout = {
     sm: {
       span: 16,
       offset: 8
+    }
+  }
+};
+
+export const tailFormItemLayout1 = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0
+    },
+    sm: {
+      span: 19,
+      offset: 5
     }
   }
 };
@@ -118,3 +132,15 @@ export const bumenItemLayout = {
     sm: { span: 14 }
   }
 };
+
+// 定义 validateFieldsAndScroll 的滚动行为
+export const validateFieldsAndScrollOption = {
+    scroll: {
+        offsetTop: 110
+    }
+};
+
+export const DATE_FORMAT = 'YYYY-MM-DD';
+export const MONTH_FORMAT = 'YYYY-MM';
+export const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+export const TIME_FORMAT = 'HH:mm';

@@ -44,9 +44,10 @@ html {
   margin-top: 20px;
 }
 
-.table-wrapper .ant-table {
+.table-wrapper .ant-table, .detail-form-wrapper .ant-table {
   overflow: auto;
 }
+
 
 .table-wrapper .ant-table tbody tr {
   cursor: pointer;

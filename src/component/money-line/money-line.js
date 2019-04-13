@@ -37,7 +37,7 @@ export default class MoneyLine extends React.Component {
     //   length: 5 // 刻度线的长度, **原来的属性为 line**,可以通过将值设置为负数来改变其在轴上的方向
     // };
     let height = window.innerHeight * 0.12228261;
-    return (
+    return data && data.length ? (
       <Chart height={90} padding={[ 10, 10, 0, 10 ]} data={data} scale={cols} forceFit>
         <Axis grid={null} name="month"/>
         <Axis grid={null} name="value" label={{
@@ -50,6 +50,6 @@ export default class MoneyLine extends React.Component {
         <Geom type="line" position="month*value" size={2}/>
         <Geom type='point' position="month*value" size={4} shape={'circle'} style={{stroke: '#fff', lineWidth: 1}} />
       </Chart>
-    );
+    ) : null;
   }
 }

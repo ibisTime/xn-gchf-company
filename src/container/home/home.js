@@ -213,7 +213,7 @@ class Home extends React.Component {
   getProject() {
     this.points = {};
     getUserDetail(getUserId()).then((res) => {
-      getProject(res.projectCode).then((data) => {
+      getProject(res.organizationCode).then((data) => {
         let point = [data.longitude, data.latitude];
         let marker = new AMap.Marker({
           position: point,
@@ -232,8 +232,8 @@ class Home extends React.Component {
     this.points = {};
     this.data = [];
     getUserDetail(getUserId()).then((data) => {
-      this.setState({ projectCode: data.projectCode });
-      getProject(data.projectCode).then((res) => {
+      this.setState({ projectCode: data.organizationCode });
+      getProject(data.organizationCode).then((res) => {
         this.data.push(res);
         this.data.forEach((item, i) => {
           let point = [item.longitude, item.latitude];

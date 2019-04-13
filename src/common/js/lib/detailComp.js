@@ -863,7 +863,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
   getSearchSelectItem(item, initVal, rules, getFieldDecorator) {
     let data;
     if (item.readonly && item.data) {
-      data = item.data.filter(v => v[item.keyName] === initVal);
+      data = item.data.filter(v => v[item.keyName] == initVal);
     }
     return (
       <FormItem key={item.field} {...formItemLayout} label={this.getLabel(item)}>
@@ -871,7 +871,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
           item.readonly ? <div className="readonly-text">{data && data.length ? data[0][item.valueName] || tempString(item.valueName, data[0]) : ''}</div>
             : getFieldDecorator(item.field, {
               rules,
-              initialValue: item.data ? initVal : ''
+              initialValue: item.data ? initVal + '' : ''
             })(
               <Select
                 allowClear
@@ -884,7 +884,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
                 notFoundContent={this.state.fetching[item.field] ? <Spin size="small" /> : '暂无数据'}
                 placeholder="请输入关键字搜索">
                 {item.data ? item.data.map(d => (
-                  <Option key={d[item.keyName]} value={d[item.keyName]}>
+                  <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
                     {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
                   </Option>
                 )) : null}
@@ -910,7 +910,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
   getSelectComp(item, initVal, rules, getFieldDecorator) {
     let data;
     if (item.readonly && item.data) {
-      data = item.data.filter(v => v[item.keyName] === initVal);
+      data = item.data.filter(v => v[item.keyName] == initVal);
     }
     return (
       <FormItem key={item.field} {...formItemLayout} label={this.getLabel(item)}>
@@ -918,7 +918,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
           item.readonly ? <div className="readonly-text">{data && data.length ? data[0][item.valueName] || tempString(item.valueName, data[0]) : ''}</div>
             : getFieldDecorator(item.field, {
               rules,
-              initialValue: item.data ? initVal : ''
+              initialValue: item.data ? initVal + '' : ''
             })(
               <Select
                 showSearch
@@ -931,7 +931,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
                 style={{ width: '100%' }}
                 placeholder="请选择">
                 {item.data ? item.data.map(d => (
-                  <Option key={d[item.keyName]} value={d[item.keyName]}>
+                  <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
                     {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
                   </Option>
                 )) : null}

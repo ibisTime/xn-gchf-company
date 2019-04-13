@@ -58,7 +58,7 @@ class Dashboard extends React.Component {
     this.props.getMenuList();
   }
   handleTopMenuClick(e) {
-    if (e.key && e.key !== 'user') {
+    if (e.key && e.key !== 'user' && e.key !== 'help') {
       this.props.setTopCode(e.key);
       let leftMenu = this.props.top2SubObj[e.key][0];
       leftMenu = leftMenu.children ? leftMenu.children[0] : leftMenu;
@@ -130,10 +130,10 @@ class Dashboard extends React.Component {
               </a>
             </Dropdown>
           </Item>
-          <div className="con-help-icon">
+          <Item key="help" style={{float: 'right', paddingRight: 0}}>
             <img src={contract} className="contract" alt="" onClick={(event) => this.setContactWithUsVisible(true, event, 1)}/>
             <img src={help} className="help" alt="" onClick={(event) => this.setContactWithUsVisible(true, event, 2)}/>
-          </div>
+          </Item>
         </Menu>
         <EditPwd editPwdVisible={this.state.editPwdVisible} setEditPwdVisible={this.setEditPwdVisible}/>
         <ContactWithUs contactWithUsVisible={this.state.contactWithUsVisible}

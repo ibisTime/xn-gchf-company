@@ -170,14 +170,6 @@ const ROUTES = [
     component: asyncComponent(() => import('container/newProj/project-daka/project-daka'))
   },
   {
-    path: '/yewuManage/account',
-    component: asyncComponent(() => import('container/yewuManage/account/account'))
-  },
-  {
-    path: '/yewuManage/account/addedit',
-    component: asyncComponent(() => import('container/yewuManage/account-addedit/account-addedit'))
-  },
-  {
     path: '/hetong/chengbaoshang',
     component: asyncComponent(() => import('container/hetong/chengbaoshang/chengbaoshang'))
   },
@@ -228,6 +220,14 @@ const ROUTES = [
   {
     path: '/staff/allStaff',
     component: asyncComponent(() => import('container/staff/allStaff/allStaff'))
+  },
+  {
+    path: '/staff/bank',
+    component: asyncComponent(() => import('container/biz/bank/bank'))
+  },
+  {
+    path: '/staff/bank/addedit',
+    component: asyncComponent(() => import('container/biz/bank/bank-addedit'))
   },
   {
     path: '/staff/allStaff/addedit',
@@ -320,6 +320,18 @@ const ROUTES = [
   {
     path: '/staff/bankCard/addedit',
     component: asyncComponent(() => import('container/staff/bankCard-addedit/bankCard-addedit'))
+  },
+  {
+    path: '/staff/jiandang',
+    component: asyncComponent(() => import('container/staff/archives/jiandang'))
+  },
+  {
+    path: '/staff/jiandang/step2',
+    component: asyncComponent(() => import('container/staff/archives/jiandang-step2'))
+  },
+  {
+    path: '/staff/jiandang/step3',
+    component: asyncComponent(() => import('container/staff/archives/jiandang-step3'))
   },
   // {
   //   path: '/staff/jiandang',
@@ -437,10 +449,6 @@ const ROUTES = [
     component: asyncComponent(() => import('container/newId/supervise-addedit/supervise-addedit'))
   },
   {
-    path: '/projectManage/project',
-    component: asyncComponent(() => import('container/dailiManage/map/map3'))
-  },
-  {
     path: '/projectStaff/projectStaff',
     component: asyncComponent(() => import('container/projectStaff/projectStaff/projectStaff'))
   },
@@ -475,6 +483,141 @@ const ROUTES = [
   {
     path: '/waitList/alreadyQuest/addedit',
     component: asyncComponent(() => import('container/waitList/alreadyQuest-addedit/alreadyQuest-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位
+  {
+    path: '/project/projectparticipant',
+    component: asyncComponent(() => import('container/biz/project/participating/participating'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位--详情
+  {
+    path: '/project/projectparticipant/addedit',
+    component: asyncComponent(() => import('container/biz/project/participating/participating-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位--导入
+  {
+    path: '/project/projectparticipant/import',
+    component: asyncComponent(() => import('container/biz/project/participating/participating-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位--银行列表
+  {
+    path: '/project/projectparticipant/bank',
+    component: asyncComponent(() => import('container/biz/bank/bank'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位--银行列表--详情
+  {
+    path: '/project/projectparticipant/bank/addedit',
+    component: asyncComponent(() => import('container/biz/bank/bank-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目班组
+  {
+    path: '/project/class',
+    component: asyncComponent(() => import('container/biz/project/class/class'))
+  },
+  // 业务管理 -- 项目管理-- 项目班组-- 详情
+  {
+    path: '/project/class/addedit',
+    component: asyncComponent(() => import('container/biz/project/class/class-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目班组-- 导入
+  {
+    path: '/project/class/import',
+    component: asyncComponent(() => import('container/biz/project/class/class-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员
+  {
+    path: '/project/member',
+    component: asyncComponent(() => import('container/biz/project/member/member'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员-- 详情
+  {
+    path: '/project/member/addedit',
+    component: asyncComponent(() => import('container/biz/project/member/member-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员-- 导入
+  {
+    path: '/project/member/import',
+    component: asyncComponent(() => import('container/biz/project/member/member-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员进退场
+  {
+    path: '/project/inout',
+    component: asyncComponent(() => import('container/biz/project/inout/inout'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员进退场-- 导入
+  {
+    path: '/project/inout/import',
+    component: asyncComponent(() => import('container/biz/project/inout/inout-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员进退场-- 详情
+  {
+    path: '/project/inout/addedit',
+    component: asyncComponent(() => import('container/biz/project/inout/inout-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员合同
+  {
+    path: '/project/memcontract',
+    component: asyncComponent(() => import('container/biz/project/memcontract/memcontract'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员合同-- 导入
+  {
+    path: '/project/memcontract/import',
+    component: asyncComponent(() => import('container/biz/project/memcontract/memcontract-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员合同-- 详情
+  {
+    path: '/project/memcontract/addedit',
+    component: asyncComponent(() => import('container/biz/project/memcontract/memcontract-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员考勤
+  {
+    path: '/project/attence',
+    component: asyncComponent(() => import('container/biz/project/attence/attence'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员考勤-- 导入
+  {
+    path: '/project/attence/import',
+    component: asyncComponent(() => import('container/biz/project/attence/attence-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员考勤-- 详情
+  {
+    path: '/project/attence/addedit',
+    component: asyncComponent(() => import('container/biz/project/attence/attence-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员工资
+  {
+    path: '/project/wages',
+    component: asyncComponent(() => import('container/biz/project/wages/wages'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员工资-- 新增
+  {
+    path: '/project/wages/add',
+    component: asyncComponent(() => import('container/biz/project/wages/wages-add'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员工资-- 导入
+  {
+    path: '/project/wages/import',
+    component: asyncComponent(() => import('container/biz/project/wages/wages-import'))
+  },
+  // 业务管理 -- 项目管理-- 项目人员工资-- 详情
+  {
+    path: '/project/wages/addedit',
+    component: asyncComponent(() => import('container/biz/project/wages/wages-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目基本信息
+  {
+    path: '/project/basic',
+    component: asyncComponent(() => import('container/biz/project/basic/basic'))
+  },
+  // 业务管理 -- 企业库-- 企业基本信息
+  {
+    path: '/company/info',
+    component: asyncComponent(() => import('container/biz/company/info/info'))
+  },
+  // 业务管理 -- 企业库-- 企业基本信息-- 详情
+  {
+    path: '/company/info/addedit',
+    component: asyncComponent(() => import('container/biz/company/info/info-addedit'))
   }
 ];
 

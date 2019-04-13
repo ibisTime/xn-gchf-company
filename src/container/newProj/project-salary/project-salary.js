@@ -13,7 +13,8 @@ import {
   setSearchData
 } from '@redux/newProj/project-salary';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, showSucMsg, getQueryString, dateTimeFormat, moneyFormat, getUserKind, getUserId } from 'common/js/util';
+import { showWarnMsg, showSucMsg, moneyFormat, getUserId, getOrganizationCode,
+  getProjectName } from 'common/js/util';
 import { getUserDetail, getEmploy } from 'api/user';
 import { deleteSalaryMany } from 'api/project';
 import { getDict } from 'api/dict';
@@ -35,9 +36,8 @@ class Salary extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      projectCode: '',
-      projectName: '',
-      projectCodeList: '',
+      projectCode: getOrganizationCode(),
+      projectName: getProjectName(),
       salaryStatus: [],
       popUp: false,
       title: '',
@@ -47,13 +47,6 @@ class Salary extends React.Component {
     };
   }
   componentDidMount() {
-    getUserDetail(getUserId()).then((data) => {
-      this.setState({
-        projectCode: data.projectCode,
-        projectName: data.projectName,
-        projectCodeList: data.projectCodeList
-      });
-    });
     getDict('salary_status').then((res) => {
       res.map((item) => {
         this.state.salaryStatus[item.dkey] = item.dvalue;
