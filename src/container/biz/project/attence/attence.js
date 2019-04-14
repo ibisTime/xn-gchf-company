@@ -103,6 +103,9 @@ class ProjectAttence extends React.Component {
           } else {
             this.props.history.push(`/project/attence/addedit?code=${keys[0]}`);
           }
+        },
+        create: () => {
+          this.props.history.push('/project/attence/create');
         }
       }
     });

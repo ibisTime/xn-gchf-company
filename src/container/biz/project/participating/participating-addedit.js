@@ -20,6 +20,7 @@ class ParticipatingAddEdit extends DetailUtil {
       },
       keyName: 'corpCode',
       valueName: 'corpName',
+      searchName: 'corpName',
       type: 'select',
       required: true
     }, {

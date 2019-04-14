@@ -76,9 +76,10 @@ class BankAddEdit extends DetailUtil {
             title: '人员编号',
             field: 'businessSysNo',
             type: 'select',
-            pageCode: '631805',
+            pageCode: '631605',
             keyName: 'code',
-            valueName: '{{name.DATA}}-{{idCardNumber.DATA}}',
+            valueName: '{{projectName.DATA}}-{{teamName.DATA}}-{{workerName.DATA}}-{{idcardNumber.DATA}}',
+            searchName: 'workerName',
             params: { userId: getUserId() },
             require: true
           });
@@ -94,11 +95,12 @@ class BankAddEdit extends DetailUtil {
             field: 'businessSysNo1',
             _keys: ['businessSysNo'],
             type: 'select',
-            pageCode: '631805',
+            pageCode: '631605',
             keyName: 'code',
-            valueName: '{{name.DATA}}-{{idCardNumber.DATA}}',
+            valueName: '{{projectName.DATA}}-{{teamName.DATA}}-{{workerName.DATA}}-{{idcardNumber.DATA}}',
+            searchName: 'workerName',
             params: { userId: getUserId() },
-            readonly: true
+            require: true
           });
         }
       }

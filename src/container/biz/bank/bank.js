@@ -124,6 +124,10 @@ class Bank extends React.Component {
   }
   render() {
     const fields = [{
+      title: '户名',
+      field: 'businessName',
+      search: true
+    }, {
       title: '银行支行名称',
       field: 'bankName'
     }, {

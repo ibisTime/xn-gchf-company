@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import originJsonp from 'jsonp';
 import './jiandang.css';
-import { Form, Input, Button, Select, DatePicker, Spin, Upload } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Spin, Upload, Divider, Row, Col } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout, DATE_FORMAT,
   UPLOAD_URL } from 'common/js/config';
 import { jiandang, reJiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
@@ -58,6 +58,7 @@ class Jiandang extends React.Component {
       maritalStatusData: [],
       cultureLevelTypeData: [],
       politicsTypeData: [],
+      searchIdcard: '',
       fetching: true,
       picLoading: false
     };
@@ -103,29 +104,32 @@ class Jiandang extends React.Component {
       code: this.code,
       userId: getUserId()
     }).then(data => {
-      this.setState({
-        idPic: data.headImageUrl,
-        fetching: false
-      });
-      this.props.form.setFieldsValue({
-        realName: data.name,
-        sex: data.gender + '',
-        idNation: data.nation,
-        birthday: this.getRealDate(data.birthday),
-        idNo: data.idCardNumber,
-        idAddress: data.address,
-        idStartDate: this.getRealDate(data.startDate),
-        idEndDate: this.getRealDate(data.expiryDate),
-        idPolice: data.grantOrg,
-        politicsType: data.politicsType,
-        cultureLevelType: data.cultureLevelType,
-        isJoined: isUndefined(data.isJoined) ? '' : data.isJoined + '',
-        joinedTime: this.getRealDate(data.joinedTime),
-        specialty: data.specialty,
-        hasBadMedicalHistory: isUndefined(data.hasBadMedicalHistory) ? '' : data.hasBadMedicalHistory + '',
-        maritalStatus: data.maritalStatus
-      });
+      this.setDataByUserInfo(data);
     }).catch(() => this.setState({ fetching: false }));
+  }
+  setDataByUserInfo(data) {
+    this.setState({
+      idPic: data.headImageUrl,
+      fetching: false
+    });
+    this.props.form.setFieldsValue({
+      realName: data.name,
+      sex: data.gender + '',
+      idNation: data.nation,
+      birthday: this.getRealDate(data.birthday),
+      idNo: data.idCardNumber,
+      idAddress: data.address,
+      idStartDate: this.getRealDate(data.startDate),
+      idEndDate: this.getRealDate(data.expiryDate),
+      idPolice: data.grantOrg,
+      politicsType: data.politicsType,
+      cultureLevelType: data.cultureLevelType,
+      isJoined: isUndefined(data.isJoined) ? '' : data.isJoined + '',
+      joinedTime: this.getRealDate(data.joinedTime),
+      specialty: data.specialty,
+      hasBadMedicalHistory: isUndefined(data.hasBadMedicalHistory) ? '' : data.hasBadMedicalHistory + '',
+      maritalStatus: data.maritalStatus
+    });
   }
   getRealDate(date) {
     return date ? Moment(dateFormat(date), DATE_FORMAT) : null;
@@ -322,8 +326,21 @@ class Jiandang extends React.Component {
       }));
     }
   }
+  searchUser = () => {
+    this.setState({ fetching: true });
+    fetch(631808, {
+      idCardNumber: this.state.searchIdcard
+    }).then(data => {
+      if (data.idCardNumber) {
+        this.setDataByUserInfo(data);
+      } else {
+        this.setState({ fetching: false });
+        showWarnMsg('抱歉，人员库中未查到该用户');
+      }
+    }).catch(() => this.setState({ fetching: false }));
+  }
   render() {
-    const { idPic, picLoading, token, fetching } = this.state;
+    const { idPic, picLoading, token, fetching, searchIdcard } = this.state;
     const uploadButton = (
       <Spin spinning={picLoading}>
         <div id="idPicSlib">
@@ -337,6 +354,17 @@ class Jiandang extends React.Component {
     return (
       <Spin spinning={fetching}>
         <div className="SectionContainer jiandang">
+          <Divider orientation="left">人员库查重</Divider>
+          <FormItem label="身份证号码" {...jiandangFormItemLayout}>
+            <Row gutter={8}>
+              <Col span={12}>
+                <Input value={searchIdcard} onChange={(e) => this.setState({searchIdcard: event.target.value})}/>
+              </Col>
+              <Col span={12}>
+                <Button type="primary" onClick={this.searchUser} disabled={!searchIdcard.length}>查询</Button>
+              </Col>
+            </Row>
+          </FormItem>
           <div className="section">
             <div style={{ display: 'table-cell', verticalAlign: 'middle', width: '100%' }}>
               <div className="comparison-main" style={{ height: 970 }}>
