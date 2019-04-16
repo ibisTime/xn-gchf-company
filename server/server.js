@@ -17,8 +17,9 @@ app.use('/api', function (req, res) {
   // var url = 'http://47.96.161.183:4401/forward-service/api';
   // var url = 'http://47.96.161.183:2501/forward-service/api';
   // var url = 'http://120.26.6.213:2501/forward-service/api';
-  var url = 'http://47.98.248.153:2601/forward-service/api';
-  // var url = 'http://47.98.248.153:2501/forward-service/api';
+  // var url = 'http://47.98.248.153:2601/forward-service/api';
+  var url = 'http://47.98.248.153:2701/forward-service/api';
+  // var url = 'http://120.26.6.213:5601/demo-ocr/api';
   var _body = req.body;
   var param = 'code=' + _body.code + '&json=' + encodeURIComponent(_body.json);
   axios.post(url, param).then((response) => {
@@ -45,7 +46,7 @@ app.use('/getIdInfo', function (req, res) {
   var _body = req.body;
   var param = 'code=' + _body.code + '&json=' + encodeURIComponent(_body.json);
   axios.post(url, param).then((response) => {
-    var ret = response.data
+    var ret = response.data;
     if (typeof ret === 'string') {
       var reg = /^\w+\(({[^()]+})\)$/
       var matches = ret.match(reg)
@@ -79,6 +80,6 @@ app.use('/getfeature', function (req, res) {
   // console.log(time + ': ' + key);
 });
 
-app.listen(9091, function () {
-  console.log('Node app start at port 9091')
+app.listen(9093, function () {
+  console.log('Node app start at port 9093')
 });

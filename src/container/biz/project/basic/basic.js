@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'antd';
-import { getQueryString, getUserId, getOrganizationCode, showSucMsg } from 'common/js/util';
+import { getQueryString, getUserId, getOrganizationCode, showSucMsg, showWarnMsg } from 'common/js/util';
 import DetailUtil from 'common/js/build-detail-dev';
 import { days } from './data';
 import fetch from 'common/js/fetch';
@@ -37,8 +37,7 @@ class ProjectBasicAddEdit extends DetailUtil {
       required: true
     }, {
       field: 'buildCorpCode',
-      title: '建设单位统一社会信用代码',
-      required: true
+      title: '建设单位统一社会信用代码'
     }, {
       field: 'buildCorpName',
       title: '建设单位名称'
@@ -89,10 +88,32 @@ class ProjectBasicAddEdit extends DetailUtil {
       required: true
     }, {
       field: 'lng',
-      title: '经度'
+      title: '经度',
+      number: true,
+      onChange(v) {
+        if(v) {
+          let vd = v.toString().split('.')[0];
+          if(vd.length > 3) {
+            showWarnMsg('请输入正确的经度值');
+            document.getElementById('lng').value = vd.substr(0, 3);
+            return '';
+          }
+        }
+      }
     }, {
       field: 'lat',
-      title: '纬度'
+      title: '纬度',
+      number: true,
+      onChange(v) {
+        if(v) {
+          let vd = v.toString().split('.')[0];
+          if(vd.length > 3) {
+            showWarnMsg('请输入正确的纬度值');
+            document.getElementById('lat').value = vd.substr(0, 3);
+            return '';
+          }
+        }
+      }
     }, {
       field: 'address',
       title: '项目地址'

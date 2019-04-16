@@ -45,7 +45,10 @@ class ProjectMemContractAddEdit extends DetailUtil {
           });
         }
       },
-      required: true
+      required: true,
+      formatter(v, d) {
+        return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
+      }
     }, {
       field: 'corpCode',
       hidden: true,

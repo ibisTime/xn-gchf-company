@@ -76,14 +76,7 @@ class ProjectWages extends React.Component {
       field: 'corpName'
     }, {
       title: '所在班组',
-      field: 'teamSysNo',
-      type: 'select',
-      keyName: 'code',
-      valueName: 'teamName',
-      searchName: 'teamName',
-      pageCode: 631665,
-      params: { userId: getUserId() },
-      required: true
+      field: 'teamName'
     }, {
       title: '状态',
       field: 'uploadStatus',

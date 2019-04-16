@@ -11,30 +11,24 @@ class AttenceImport extends DetailUtil {
     this.state = {
       ...this.state,
       projectCode: getOrganizationCode(),
-      cardTypeList: [],
       directionList: [],
-      attendTypeList: [],
       isLoading: false
     };
   }
   componentDidMount() {
-    // Promise.all([
-    //   getDictList({ parentKey: 'legal_manid_card_type' }),
-    //   getDictList({ parentKey: 'direction' }),
-    //   getDictList({ parentKey: 'attend_type' })
-    // ]).then(([cardTypeList, directionList, attendTypeList]) => {
-    //   this.setState({
-    //     cardTypeList,
-    //     directionList,
-    //     attendTypeList,
-    //     isLoading: false
-    //   });
-    // }).catch(() => {
-    //   this.setState({ isLoading: false });
-    // });
+    Promise.all([
+      getDictList({ parentKey: 'direction' })
+    ]).then(([directionList]) => {
+      this.setState({
+        directionList,
+        isLoading: false
+      });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
   render() {
-    const { cardTypeList, directionList, attendTypeList, isLoading } = this.state;
+    const { directionList, isLoading } = this.state;
     const fields = [{
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -80,8 +74,8 @@ class AttenceImport extends DetailUtil {
           title: '工人所属班组名称',
           field: 'teamName'
         }, {
-          title: '证件类型',
-          field: 'idCardType'
+          title: '工人姓名',
+          field: 'workerName'
         }, {
           title: '证件号码',
           field: 'idCardNumber'
@@ -105,18 +99,13 @@ class AttenceImport extends DetailUtil {
       addCode: 631713,
       beforeSubmit: (params) => {
         let error = false;
-        // for (let i = 0; i < params.dateList.length; i++) {
-        //   let item = params.dateList[i];
-        //   let error1 = findAndchangeInfo(cardTypeList, item, 'idCardType', i);
-        //   let error2 = findAndchangeInfo(directionList, item, 'direction', i);
-        //   let error3;
-        //   if (!isUndefined(item.channel)) {
-        //     error3 = findAndchangeInfo(attendTypeList, item, 'channel', i);
-        //   }
-        //   if (!error) {
-        //     error = error1 || error2 || error3;
-        //   }
-        // }
+        for (let i = 0; i < params.dateList.length; i++) {
+          let item = params.dateList[i];
+          let error2 = findAndchangeInfo(directionList, item, 'direction', i);
+          if (!error) {
+            error = error2;
+          }
+        }
         return !error;
       }
     });

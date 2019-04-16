@@ -68,9 +68,6 @@ class ClassImport extends DetailUtil {
           title: '责任人联系电话',
           field: 'responsiblePersonPhone'
         }, {
-          title: '责任人证件类型',
-          field: 'responsiblePersonIdcardType'
-        }, {
           title: '责任人证件号码',
           field: 'responsiblePersonIdNumber'
         }, {

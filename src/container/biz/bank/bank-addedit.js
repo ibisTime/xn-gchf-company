@@ -14,6 +14,12 @@ class BankAddEdit extends DetailUtil {
   }
   render() {
     let fields = [{
+      field: 'bankCode',
+      title: '银行名称',
+      key: 'bank_code',
+      type: 'select',
+      required: true
+    }, {
       title: '银行支行名称',
       field: 'bankName',
       required: true

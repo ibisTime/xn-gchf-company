@@ -11,6 +11,8 @@ import reducers from './reducer';
 import AuthRoute from 'component/authroute/authroute';
 import './index.css';
 
+import DemoImg from 'container/demo/demo';
+
 const store = createStore(reducers, compose(
   applyMiddleware(thunk)
   // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() // 打包注释掉

@@ -335,7 +335,7 @@ class Jiandang extends React.Component {
         this.setDataByUserInfo(data);
       } else {
         this.setState({ fetching: false });
-        showWarnMsg('抱歉，人员库中未查到该用户');
+        showWarnMsg('该证件未在人员库中，请及时建档');
       }
     }).catch(() => this.setState({ fetching: false }));
   }

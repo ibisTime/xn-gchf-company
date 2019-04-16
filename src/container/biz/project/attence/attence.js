@@ -98,6 +98,7 @@ class ProjectAttence extends React.Component {
             showWarnMsg('请选择记录');
           } else if (keys.length > 1) {
             showWarnMsg('请选择一条记录');
+            items = [];
           } else if (items[0].uploadStatus === '2') {
             showWarnMsg('已上传不可修改');
           } else {

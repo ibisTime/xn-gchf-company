@@ -11,26 +11,23 @@ class ParticipatingImport extends DetailUtil {
     this.state = {
       ...this.state,
       cropTypeList: [],
-      cardTypeList: [],
       isLoading: false
     };
   }
   componentDidMount() {
-    // Promise.all([
-    //   getDictList({ parentKey: 'project_corp_type' }),
-    //   getDictList({ parentKey: 'legal_manid_card_type' })
-    // ]).then(([cropTypeList, cardTypeList]) => {
-    //   this.setState({
-    //     cropTypeList,
-    //     cardTypeList,
-    //     isLoading: false
-    //   });
-    // }).catch(() => {
-    //   this.setState({ isLoading: false });
-    // });
+    Promise.all([
+      getDictList({ parentKey: 'project_corp_type' })
+    ]).then(([cropTypeList]) => {
+      this.setState({
+        cropTypeList,
+        isLoading: false
+      });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
   render() {
-    const { cropTypeList, cardTypeList, isLoading } = this.state;
+    const { cropTypeList, isLoading } = this.state;
     const fields = [{
       title: '对应项目',
       field: 'projectCode',
@@ -79,9 +76,6 @@ class ParticipatingImport extends DetailUtil {
           title: '项目经理',
           field: 'pmName'
         }, {
-          title: '项目经理证件类型',
-          field: 'pmIDCardType'
-        }, {
           title: '项目经理证件号码',
           field: 'pmIDCardNumber'
         }, {
@@ -97,17 +91,13 @@ class ParticipatingImport extends DetailUtil {
       addCode: 631633,
       beforeSubmit: (params) => {
         let error = false;
-        // for (let i = 0; i < params.dateList.length; i++) {
-        //   let item = params.dateList[i];
-        //   let error1 = findAndchangeInfo(cropTypeList, item, 'corpType', i);
-        //   let error2;
-        //   if (!isUndefined(item.pmIDCardType)) {
-        //     error2 = findAndchangeInfo(cardTypeList, item, 'pmIDCardType', i);
-        //   }
-        //   if (!error) {
-        //     error = error1 || error2;
-        //   }
-        // }
+        for (let i = 0; i < params.dateList.length; i++) {
+          let item = params.dateList[i];
+          let error1 = findAndchangeInfo(cropTypeList, item, 'corpType', i);
+          if (!error) {
+            error = error1;
+          }
+        }
         return !error;
       }
     });

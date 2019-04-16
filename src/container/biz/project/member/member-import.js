@@ -11,46 +11,32 @@ class ExportImport extends DetailUtil {
     this.state = {
       ...this.state,
       isNotList: [],
-      cardTypeList: [],
       workTypeList: [],
       workRoleList: [],
-      bankCodeList: [],
       politicsTypeList: [],
-      levelTypeList: [],
-      maritalstatusList: [],
       isLoading: false
     };
   }
   componentDidMount() {
-    // Promise.all([
-    //   getDictList({ parentKey: 'is_not' }),
-    //   getDictList({ parentKey: 'legal_manid_card_type' }),
-    //   getDictList({ parentKey: 'work_type' }),
-    //   getDictList({ parentKey: 'work_role' }),
-    //   getDictList({ parentKey: 'bank_code' }),
-    //   getDictList({ parentKey: 'politics_type' }),
-    //   getDictList({ parentKey: 'culture_level_type' }),
-    //   getDictList({ parentKey: 'marital_status' })
-    // ]).then(([isNotList, cardTypeList, workTypeList, workRoleList,
-    // bankCodeList, politicsTypeList, levelTypeList, maritalstatusList]) => {
-    //   this.setState({
-    //     isNotList,
-    //     cardTypeList,
-    //     workTypeList,
-    //     workRoleList,
-    //     bankCodeList,
-    //     politicsTypeList,
-    //     levelTypeList,
-    //     maritalstatusList,
-    //     isLoading: false
-    //   });
-    // }).catch(() => {
-    //   this.setState({ isLoading: false });
-    // });
+    Promise.all([
+      getDictList({ parentKey: 'is_not' }),
+      getDictList({ parentKey: 'work_type' }),
+      getDictList({ parentKey: 'work_role' }),
+      getDictList({ parentKey: 'politics_type' })
+    ]).then(([isNotList, workTypeList, workRoleList, politicsTypeList]) => {
+      this.setState({
+        isNotList,
+        workTypeList,
+        workRoleList,
+        politicsTypeList,
+        isLoading: false
+      });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
   render() {
-    const { isNotList, cardTypeList, workTypeList, workRoleList, bankCodeList,
-      politicsTypeList, levelTypeList, maritalstatusList, isLoading } = this.state;
+    const { isNotList, workTypeList, workRoleList, politicsTypeList, isLoading } = this.state;
     const fields = [{
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -88,9 +74,6 @@ class ExportImport extends DetailUtil {
         }, {
           title: '是否为班组长',
           field: 'isTeamLeader'
-        }, {
-          title: '证件类型',
-          field: 'idCardType'
         }, {
           title: '证件号码',
           field: 'idCardNumber'
@@ -174,32 +157,23 @@ class ExportImport extends DetailUtil {
       addCode: 631693,
       beforeSubmit: (params) => {
         let error = false;
-        // for (let i = 0; i < params.workerList.length; i++) {
-        //   let item = params.workerList[i];
-        //   let error1 = findAndchangeInfo(isNotList, item, 'isTeamLeader', i);
-        //   let error2 = findAndchangeInfo(cardTypeList, item, 'idCardType', i);
-        //   let error3 = findAndchangeInfo(workTypeList, item, 'workType', i);
-        //   let error4 = findAndchangeInfo(workRoleList, item, 'workRole', i);
-        //   let error5 = findAndchangeInfo(politicsTypeList, item, 'politicsType', i);
-        //   let error6 = findAndchangeInfo(levelTypeList, item, 'cultureLevelType', i);
-        //   let error7, error8, error9, error10;
-        //   if (!isUndefined(item.payRollTopBankCode)) {
-        //     error7 = findAndchangeInfo(bankCodeList, item, 'payRollTopBankCode', i);
-        //   }
-        //   if (!isUndefined(item.hasBuyInsurance)) {
-        //     error8 = findAndchangeInfo(isNotList, item, 'hasBuyInsurance', i);
-        //   }
-        //   if (!isUndefined(item.hasBadMedicalHistory)) {
-        //     error9 = findAndchangeInfo(isNotList, item, 'hasBadMedicalHistory', i);
-        //   }
-        //   if (!isUndefined(item.maritalStatus)) {
-        //     error10 = findAndchangeInfo(maritalstatusList, item, 'maritalStatus', i);
-        //   }
-        //   if (!error) {
-        //     error = error1 || error2 || error3 || error4 || error5 || error6 ||
-        //       error7 || error8 || error9 || error10;
-        //   }
-        // }
+        for (let i = 0; i < params.workerList.length; i++) {
+          let item = params.workerList[i];
+          let error1 = findAndchangeInfo(isNotList, item, 'isTeamLeader', i);
+          let error3 = findAndchangeInfo(workTypeList, item, 'workType', i);
+          let error4 = findAndchangeInfo(workRoleList, item, 'workRole', i);
+          let error5 = findAndchangeInfo(politicsTypeList, item, 'politicsType', i);
+          let error7, error8, error9, error10;
+          if (!isUndefined(item.hasBuyInsurance)) {
+            error8 = findAndchangeInfo(isNotList, item, 'hasBuyInsurance', i);
+          }
+          if (!isUndefined(item.hasBadMedicalHistory)) {
+            error9 = findAndchangeInfo(isNotList, item, 'hasBadMedicalHistory', i);
+          }
+          if (!error) {
+            error = error1 || error3 || error4 || error8 || error9 || error5;
+          }
+        }
         return !error;
       }
     });

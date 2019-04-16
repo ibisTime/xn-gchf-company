@@ -5,6 +5,10 @@ import DetailUtil from 'common/js/build-detail-dev';
 
 @Form.create()
 class ProjectAttenceCreate extends DetailUtil {
+  componentDidMount() {
+    const SP_ELE = document.querySelector('.ant-btn-primary span');
+    SP_ELE.innerText = '生成';
+  }
   render() {
     const fields = [{
       field: 'projectCode',
@@ -18,12 +22,12 @@ class ProjectAttenceCreate extends DetailUtil {
       key: 'direction',
       required: true
     }, {
-      title: '开始时间',
+      title: '考勤开始时间',
       field: 'startDatetime',
       type: 'datetime',
       required: true
     }, {
-      title: '结束时间',
+      title: '考勤结束时间',
       field: 'endDatetime',
       type: 'datetime',
       required: true

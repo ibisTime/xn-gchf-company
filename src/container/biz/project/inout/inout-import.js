@@ -10,28 +10,25 @@ class InputImport extends DetailUtil {
     super(props);
     this.state = {
       ...this.state,
-      cardTypeList: [],
       typeList: [],
       isLoading: false
     };
   }
   componentDidMount() {
-    // Promise.all([
-    //   getDictList({ parentKey: 'legal_manid_card_type' }),
-    //   getDictList({ parentKey: 'entry_exit_type' })
-    // ])
-    // .then(([cardTypeList, typeList]) => {
-    //   this.setState({
-    //     cardTypeList,
-    //     typeList,
-    //     isLoading: false
-    //   });
-    // }).catch(() => {
-    //   this.setState({ isLoading: false });
-    // });
+    Promise.all([
+      getDictList({ parentKey: 'entry_exit_type' })
+    ])
+    .then(([typeList]) => {
+      this.setState({
+        typeList,
+        isLoading: false
+      });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
   render() {
-    const { cardTypeList, typeList, isLoading } = this.state;
+    const { typeList, isLoading } = this.state;
     const fields = [{
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -64,8 +61,8 @@ class InputImport extends DetailUtil {
           title: '工人所属班组名称',
           field: 'teamName'
         }, {
-          title: '证件类型',
-          field: 'idcardType'
+          title: '工人姓名',
+          field: 'workerName'
         }, {
           title: '证件号码',
           field: 'idcardNumber'
@@ -86,14 +83,13 @@ class InputImport extends DetailUtil {
       addCode: 631733,
       beforeSubmit: (params) => {
         let error = false;
-        // for (let i = 0; i < params.dateList.length; i++) {
-        //   let item = params.dateList[i];
-        //   let error1 = findAndchangeInfo(cardTypeList, item, 'idcardType', i);
-        //   let error2 = findAndchangeInfo(typeList, item, 'type', i);
-        //   if (!error) {
-        //     error = error1 || error2;
-        //   }
-        // }
+        for (let i = 0; i < params.dateList.length; i++) {
+          let item = params.dateList[i];
+          let error2 = findAndchangeInfo(typeList, item, 'type', i);
+          if (!error) {
+            error = error2;
+          }
+        }
         return !error;
       }
     });

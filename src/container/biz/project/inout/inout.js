@@ -24,7 +24,7 @@ import { showUploadConfirm } from '../../util';
 class ProjectInout extends React.Component {
   render() {
     const fields = [{
-      title: '工人姓名',
+      title: '人员名称',
       field: 'workerName',
       search: true
     }, {

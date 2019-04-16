@@ -96,8 +96,8 @@ class ProjectMemberAddEdit extends DetailUtil {
       field: 'payRollBankCardNumber',
       bankCard: true
     }, {
-      title: '发放工资银行名称',
-      field: 'payRollBankName'
+      title: '发放银行卡支行名称',
+      field: 'bankName'
     }, {
       title: '工资卡银行联号',
       field: 'bankLinkNumber'

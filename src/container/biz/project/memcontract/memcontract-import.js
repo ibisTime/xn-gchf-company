@@ -10,30 +10,27 @@ class ProjectMemContractImport extends DetailUtil {
     super(props);
     this.state = {
       ...this.state,
-      cardTypeList: [],
       periodTypeList: [],
       unitList: [],
       isLoading: false
     };
   }
   componentDidMount() {
-    // Promise.all([
-    //   getDictList({ parentKey: 'legal_manid_card_type' }),
-    //   getDictList({ parentKey: 'contract_period_type' }),
-    //   getDictList({ parentKey: 'unit' })
-    // ]).then(([cardTypeList, periodTypeList, unitList]) => {
-    //   this.setState({
-    //     cardTypeList,
-    //     periodTypeList,
-    //     unitList,
-    //     isLoading: false
-    //   });
-    // }).catch(() => {
-    //   this.setState({ isLoading: false });
-    // });
+    Promise.all([
+      getDictList({ parentKey: 'contract_period_type' }),
+      getDictList({ parentKey: 'unit' })
+    ]).then(([periodTypeList, unitList]) => {
+      this.setState({
+        periodTypeList,
+        unitList,
+        isLoading: false
+      });
+    }).catch(() => {
+      this.setState({ isLoading: false });
+    });
   }
   render() {
-    const { cardTypeList, periodTypeList, unitList, isLoading } = this.state;
+    const { periodTypeList, unitList, isLoading } = this.state;
     const fields = [{
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -63,8 +60,8 @@ class ProjectMemContractImport extends DetailUtil {
           title: '企业名称',
           field: 'corpName'
         }, {
-          title: '证件类型',
-          field: 'idCardType'
+          title: '工人姓名',
+          field: 'workerName'
         }, {
           title: '证件号码',
           field: 'idCardNumber'
@@ -93,18 +90,17 @@ class ProjectMemContractImport extends DetailUtil {
       addCode: 631673,
       beforeSubmit: (params) => {
         let error = false;
-        // for (let i = 0; i < params.dateList.length; i++) {
-        //   let item = params.dateList[i];
-        //   let error1 = findAndchangeInfo(cardTypeList, item, 'idCardType', i);
-        //   let error2 = findAndchangeInfo(periodTypeList, item, 'contractPeriodType', i);
-        //   let error3;
-        //   if (!isUndefined(item.unit)) {
-        //     error3 = findAndchangeInfo(unitList, item, 'unit', i);
-        //   }
-        //   if (!error) {
-        //     error = error1 || error2 || error3;
-        //   }
-        // }
+        for (let i = 0; i < params.dateList.length; i++) {
+          let item = params.dateList[i];
+          let error2 = findAndchangeInfo(periodTypeList, item, 'contractPeriodType', i);
+          let error3;
+          if (!isUndefined(item.unit)) {
+            error3 = findAndchangeInfo(unitList, item, 'unit', i);
+          }
+          if (!error) {
+            error = error2 || error3;
+          }
+        }
         return !error;
       }
     });

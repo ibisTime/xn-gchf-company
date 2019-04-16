@@ -14,6 +14,7 @@ import {
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, showSucMsg } from 'common/js/util';
 import {getUserDetail} from '../../../api/user';
+import fetch from 'common/js/fetch';
 
 @listWrapper(
   state => ({
@@ -40,8 +41,10 @@ class User extends React.Component {
   render() {
     const fields = [{
       title: '用户名',
-      field: 'loginName',
-      render: (v) => v + '1'
+      field: 'loginName'
+    }, {
+      title: '真实姓名',
+      field: 'realName'
     }, {
       title: '状态',
       field: 'status',
@@ -89,7 +92,7 @@ class User extends React.Component {
               this.props.doFetching();
               rock(selectedRowKeys[0], getUserId()).then(() => {
                 showSucMsg('操作成功');
-                this.props.cancelFetching();
+                this.props.getPageData();
               }).catch(this.props.cancelFetching);
             }
           });
