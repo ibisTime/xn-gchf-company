@@ -22,7 +22,6 @@ export default (loadComponent, placeholder = null) => {
       const {default: component} = await loadComponent();
 
       if (this.unmount) return;
-
       this.setState({
         component: component
       });

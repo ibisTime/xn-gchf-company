@@ -53,7 +53,7 @@ class ProjectStop extends React.Component {
       code: this.projectCode,
       view: false,
       addCode: 631350,
-      detailCode: 631358,
+      detailCode: 631616,
       editCode: 631352,
       buttons: [{
         title: '保存',

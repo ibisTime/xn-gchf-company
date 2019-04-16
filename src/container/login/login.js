@@ -18,7 +18,7 @@ class Login extends React.Component {
     // this.state = {
     //   storePwd: true
     // };
-    this.typeName = '业主端';
+    this.typeName = '项目端';
     // this.onChange = this.onChange.bind(this);
     // if (cookies.get('loginName') && cookies.get('loginName') !== null && cookies.get('loginName') !== undefined) {
     //   this.initName = cookies.get('loginName');
