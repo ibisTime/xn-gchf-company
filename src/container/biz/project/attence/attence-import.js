@@ -82,7 +82,7 @@ class AttenceImport extends DetailUtil {
         }, {
           title: '刷卡时间',
           field: 'date',
-          type: 'datetime'
+          type: 'date'
         }, {
           title: '刷卡进出方向',
           field: 'direction'

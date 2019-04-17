@@ -45,7 +45,14 @@ class ProjectAttenceAddEdit extends DetailUtil {
           });
         }
       },
-      required: true
+      required: true,
+      formatter(v, d) {
+        if(d.projectName) {
+          return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
+        }else {
+          return '';
+        }
+      }
     }, {
       title: '刷卡时间',
       field: 'date',

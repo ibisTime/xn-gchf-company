@@ -1,11 +1,11 @@
 // 七牛上传地址
-export const UPLOAD_URL = 'http://up-z0.qiniu.com';
+export const UPLOAD_URL = 'https://up.qbox.me';
 // 研发
 // export const UPLOAD_URL = 'https://up-z0.qiniup.com';
 // 七牛图片前缀
 // export const PIC_PREFIX = 'http://otoieuivb.bkt.clouddn.com/';
 // export const PIC_PREFIX = 'http://image.tree.hichengdai.com/';
-export const PIC_PREFIX = 'http://picture.jm60s.com//';
+export const PIC_PREFIX = 'https://picture.jm60s.com/';
 export const PIC_BASEURL_L = '?imageMogr2/auto-orient/thumbnail/!1000x1000r';
 
 // 系统userid

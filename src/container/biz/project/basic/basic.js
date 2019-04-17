@@ -118,6 +118,15 @@ class ProjectBasicAddEdit extends DetailUtil {
       field: 'address',
       title: '项目地址'
     }, {
+      field: 'province',
+      title: '省'
+    }, {
+      field: 'city',
+      title: '市'
+    }, {
+      field: 'area',
+      title: '区/县'
+    }, {
       field: 'approvalNum',
       title: '立项文号'
     }, {

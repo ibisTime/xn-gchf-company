@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import fetch from 'common/js/fetch';
-import { Upload, Icon, message } from 'antd';
+import { Upload, Icon, message, Button, Input } from 'antd';
+import html2canvas from 'html2canvas';
+import timg from './timg.png';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -9,7 +11,7 @@ function getBase64(img, callback) {
 }
 
 function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg';
+  const isJPG = file.type === 'image/jpeg' || 'image/png';
   if (!isJPG) {
     message.error('You can only upload JPG file!');
   }
@@ -24,7 +26,10 @@ export default class DemoImg extends Component {
   state = {
     uploadToken: '',
     loading: false,
-    imageUrl: ''
+    imageUrl: '',
+    cardPassword: '',
+    imageP: '',
+    imageDiv: ''
   };
   handleChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -37,7 +42,12 @@ export default class DemoImg extends Component {
         imageUrl,
         loading: false
       }, () => {
-        console.log(this.state.imageUrl);
+        const base64Img = info.file.response.hash;
+        fetch('600102', {base64Img}).then(data => {
+          this.setState({
+            cardPassword: data.cardPassword
+          });
+        });
       }));
     }
   };
@@ -57,20 +67,65 @@ export default class DemoImg extends Component {
     );
     const imageUrl = this.state.imageUrl;
     return (
-      <Upload
-        name="file"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action="http://up-z0.qiniu.com"
-        beforeUpload={beforeUpload}
-        onChange={this.handleChange}
-        data={{
-          token: this.state.uploadToken
-        }}
-      >
-        {imageUrl ? <img src={imageUrl} alt="avatar" /> : uploadButton}
-      </Upload>
+      <div>
+        <Upload
+          name="file"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          action="http://up-z0.qiniu.com"
+          beforeUpload={beforeUpload}
+          onChange={this.handleChange}
+          data={{
+            token: this.state.uploadToken
+          }}
+        >
+          {imageUrl ? <img src={imageUrl} alt="avatar" width={400}/> : uploadButton}
+        </Upload>
+        <div style={{ 'margin': '50px', 'display': 'flex' }}>
+          <p style={{
+            'position': 'relative',
+            'width': '400px',
+            'height': '300px',
+            'marginLeft': '50px',
+            'backgroundImage': `url(${timg})`,
+            'backgroundSize': '100% 100%'}}
+             ref={(target) => {
+               this.state.imageP = target;
+             }}
+          >
+            <span style={{'position': 'absolute', 'left': '36%', 'top': '18%'}}>{this.state.cardPassword}</span>
+          </p>
+          <div style={{
+            'width': '400px',
+            'height': '300px',
+            'marginLeft': '50px'
+          }}
+               ref={(target) => {
+                 this.state.imageDiv = target;
+               }}
+          >
+          </div>
+          <div style={{'marginLeft': '50px'}}>
+            <Input value={this.state.cardPassword} onChange={(ev) => {
+              this.setState({
+                cardPassword: ev.target.value
+              });
+            }} style={{'marginBottom': '30px'}}/>
+            <Button onClick={() => {
+              html2canvas(this.state.imageP).then((canvas) => {
+                const baseUrl = canvas.toDataURL();
+                var event = new MouseEvent('click');
+                this.state.imageDiv.appendChild(canvas);
+                let imgA = document.createElement('a');
+                imgA.download = '下载图片名称';
+                imgA.href = baseUrl;
+                imgA.dispatchEvent(event);
+              });
+            }}>下载图片</Button>
+          </div>
+        </div>
+      </div>
     );
   }
 }

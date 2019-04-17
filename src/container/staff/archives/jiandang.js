@@ -242,6 +242,10 @@ class Jiandang extends React.Component {
   // 提交
   handleSubmit = (e) => {
     e.preventDefault();
+    if(!this.state.idPic) {
+      showWarnMsg('请上传身份证头像');
+      return;
+    }
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.setState({ idNo: values.idNo, fetching: true });

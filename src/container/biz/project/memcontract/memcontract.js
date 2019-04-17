@@ -10,8 +10,9 @@ import {
   setSearchData
 } from '@redux/biz/project/memcontract';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, dateFormat, getUserId, isUndefined } from 'common/js/util';
+import { showWarnMsg, dateFormat, getUserId, isUndefined, showSucMsg, showErrMsg } from 'common/js/util';
 import { showUploadConfirm } from '../../util';
+import fetch from 'common/js/fetch';
 
 @listWrapper(
     state => ({
@@ -114,6 +115,21 @@ class ProjectMemContract extends React.Component {
             showWarnMsg('已上传不可修改');
           } else {
             this.props.history.push(`/project/memcontract/addedit?code=${keys[0]}`);
+          }
+        },
+        // 批量删除
+        delete: (keys) => {
+          if (!keys.length) {
+            showWarnMsg('请选择记录');
+          } else {
+            fetch('631671', { codeList: keys, userId: getUserId() }).then(() => {
+              showSucMsg('操作成功');
+              setTimeout(() => {
+                this.props.getPageData();
+              }, 1.5);
+            }, () => {
+              showErrMsg('操作失败');
+            });
           }
         }
       }

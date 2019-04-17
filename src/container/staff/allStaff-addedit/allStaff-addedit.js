@@ -28,9 +28,11 @@ class AllStaffAddEdit extends React.Component {
     }, {
       field: 'headImageUrl',
       title: '身份证头像',
-      type: 'img',
       single: true,
-      required: true
+      required: true,
+      formatter(v) {
+        return (<img src = {v} width = {100} />);
+      }
     }, {
       title: '性别',
       field: 'gender',

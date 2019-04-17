@@ -11,8 +11,9 @@ import {
   setSearchData
 } from '@redux/biz/project/attence';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, getUserId } from 'common/js/util';
+import { showWarnMsg, getUserId, showSucMsg, showErrMsg } from 'common/js/util';
 import { showUploadConfirm } from '../../util';
+import fetch from 'common/js/fetch';
 
 @listWrapper(
     state => ({
@@ -107,6 +108,21 @@ class ProjectAttence extends React.Component {
         },
         create: () => {
           this.props.history.push('/project/attence/create');
+        },
+        // 批量删除
+        delete: (keys) => {
+          if (!keys.length) {
+            showWarnMsg('请选择记录');
+          } else {
+            fetch('631711', { codeList: keys, userId: getUserId() }).then(() => {
+              showSucMsg('操作成功');
+              setTimeout(() => {
+                this.props.getPageData();
+              }, 1.5);
+            }, () => {
+              showErrMsg('操作失败');
+            });
+          }
         }
       }
     });

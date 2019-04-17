@@ -10,8 +10,9 @@ import {
   setSearchData
 } from '@redux/biz/project/participating';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, getUserId, getOrganizationCode } from 'common/js/util';
+import { showWarnMsg, getUserId, getOrganizationCode, showSucMsg, showErrMsg } from 'common/js/util';
 import { showUploadConfirm } from '../../util';
+import fetch from 'common/js/fetch';
 
 @listWrapper(
     state => ({
@@ -117,6 +118,21 @@ class Participating extends React.Component {
             showWarnMsg('请选择一条记录');
           } else {
             this.props.history.push(`/project/projectparticipant/bank?code=${keys[0]}&type=001`);
+          }
+        },
+        // 批量删除
+        delete: (keys) => {
+          if (!keys.length) {
+            showWarnMsg('请选择记录');
+          } else {
+            fetch('631631', { codeList: keys, userId: getUserId() }).then(() => {
+              showSucMsg('操作成功');
+              setTimeout(() => {
+                this.props.getPageData();
+              }, 1.5);
+            }, () => {
+              showErrMsg('操作失败');
+            });
           }
         }
       },

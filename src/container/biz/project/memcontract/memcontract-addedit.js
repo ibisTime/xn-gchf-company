@@ -47,6 +47,9 @@ class ProjectMemContractAddEdit extends DetailUtil {
       },
       required: true,
       formatter(v, d) {
+        if(!d.projectName) {
+          return '';
+        }
         return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
       }
     }, {
