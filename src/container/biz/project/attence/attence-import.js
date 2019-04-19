@@ -99,13 +99,15 @@ class AttenceImport extends DetailUtil {
       addCode: 631713,
       beforeSubmit: (params) => {
         let error = false;
-        for (let i = 0; i < params.dateList.length; i++) {
-          let item = params.dateList[i];
+        let dateList = JSON.parse(JSON.stringify(params.dateList));
+        for (let i = 0; i < dateList.length; i++) {
+          let item = dateList[i];
           let error2 = findAndchangeInfo(directionList, item, 'direction', i);
           if (!error) {
             error = error2;
           }
         }
+        params.dateList = JSON.parse(JSON.stringify(dateList));
         return !error;
       }
     });

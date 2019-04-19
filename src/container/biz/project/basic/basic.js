@@ -10,6 +10,7 @@ class ProjectBasicAddEdit extends DetailUtil {
   constructor(props) {
     super(props);
     this.code = getOrganizationCode();
+    this.isSend = true;
   }
   render() {
     const fields = [{
@@ -211,10 +212,17 @@ class ProjectBasicAddEdit extends DetailUtil {
         title: '保存',
         handler: (params) => {
           this.doFetching();
-          fetch(631602, params).then((data) => {
-            showSucMsg('操作成功');
-            this.cancelFetching();
-          }).catch(() => this.cancelFetching());
+          if(this.isSend) {
+            this.isSend = false;
+            fetch(631602, params).then((data) => {
+              showSucMsg('操作成功');
+              this.cancelFetching();
+              this.isSend = true;
+            }).catch(() => {
+              this.isSend = true;
+              return this.cancelFetching();
+            });
+          }
         }
       }]
     });

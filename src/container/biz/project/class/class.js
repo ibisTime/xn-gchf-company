@@ -93,6 +93,20 @@ class ProjectClass extends React.Component {
               this.props.doFetching, this.props.cancelFetching, 631654);
           }
         },
+        // 修改平台
+        edit_p: (keys, items) => {
+          if (!keys.length) {
+            showWarnMsg('请选择记录');
+          } else {
+            showUploadConfirm(keys, items, this.props.getPageData,
+              this.props.doFetching, this.props.cancelFetching, 631655,
+              '选择的记录中包含未上传平台的数据',
+              '确定修改平台？',
+              '修改成功后，需要等待几分钟。国家平台最终反馈回来的结果有可能会上传失败。如果失败，可以到详细页面查看操作日志里的失败原因。',
+              '1'
+            );
+          }
+        },
         // 导入
         import: (keys, items) => {
           this.props.history.push('/project/class/import');

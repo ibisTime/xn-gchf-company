@@ -48,7 +48,7 @@ class ProjectAttenceAddEdit extends DetailUtil {
       required: true,
       formatter(v, d) {
         if(d.projectName) {
-          return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
+          return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idCardNumber ? d.idCardNumber : ''}`;
         }else {
           return '';
         }

@@ -13,7 +13,10 @@ class ExportImport extends DetailUtil {
       isNotList: [],
       workTypeList: [],
       workRoleList: [],
+      cultureLevelType: [],
       politicsTypeList: [],
+      bankCodeList: [],
+      maritalStatusList: [],
       isLoading: false
     };
   }
@@ -22,13 +25,19 @@ class ExportImport extends DetailUtil {
       getDictList({ parentKey: 'is_not' }),
       getDictList({ parentKey: 'work_type' }),
       getDictList({ parentKey: 'work_role' }),
-      getDictList({ parentKey: 'politics_type' })
-    ]).then(([isNotList, workTypeList, workRoleList, politicsTypeList]) => {
+      getDictList({ parentKey: 'culture_level_type' }),
+      getDictList({ parentKey: 'bank_code' }),
+      getDictList({ parentKey: 'politics_type' }),
+      getDictList({ parentKey: 'marital_status' })
+    ]).then(([isNotList, workTypeList, workRoleList, cultureLevelType, bankCodeList, politicsTypeList, maritalStatusList]) => {
       this.setState({
         isNotList,
         workTypeList,
         workRoleList,
+        cultureLevelType,
         politicsTypeList,
+        bankCodeList,
+        maritalStatusList,
         isLoading: false
       });
     }).catch(() => {
@@ -36,7 +45,7 @@ class ExportImport extends DetailUtil {
     });
   }
   render() {
-    const { isNotList, workTypeList, workRoleList, politicsTypeList, isLoading } = this.state;
+    const { isNotList, workTypeList, workRoleList, cultureLevelType, politicsTypeList, bankCodeList, maritalStatusList, isLoading } = this.state;
     const fields = [{
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -157,13 +166,21 @@ class ExportImport extends DetailUtil {
       addCode: 631693,
       beforeSubmit: (params) => {
         let error = false;
-        for (let i = 0; i < params.workerList.length; i++) {
-          let item = params.workerList[i];
+        let workerList = JSON.parse(JSON.stringify(params.workerList));
+        for (let i = 0; i < workerList.length; i++) {
+          let item = workerList[i];
           let error1 = findAndchangeInfo(isNotList, item, 'isTeamLeader', i);
           let error3 = findAndchangeInfo(workTypeList, item, 'workType', i);
           let error4 = findAndchangeInfo(workRoleList, item, 'workRole', i);
+          let error6 = findAndchangeInfo(cultureLevelType, item, 'cultureLevelType', i);
           let error5 = findAndchangeInfo(politicsTypeList, item, 'politicsType', i);
           let error7, error8, error9, error10;
+          if(!isUndefined(item.maritalStatus)) {
+            error10 = findAndchangeInfo(maritalStatusList, item, 'maritalStatus', i);
+          }
+          if(!isUndefined(item.payRollTopBankCode)) {
+            error7 = findAndchangeInfo(bankCodeList, item, 'payRollTopBankCode', i);
+          }
           if (!isUndefined(item.hasBuyInsurance)) {
             error8 = findAndchangeInfo(isNotList, item, 'hasBuyInsurance', i);
           }
@@ -171,9 +188,10 @@ class ExportImport extends DetailUtil {
             error9 = findAndchangeInfo(isNotList, item, 'hasBadMedicalHistory', i);
           }
           if (!error) {
-            error = error1 || error3 || error4 || error8 || error9 || error5;
+            error = error1 || error3 || error4 || error8 || error9 || error5 || error6 || error7 || error10;
           }
         }
+        params.workerList = JSON.parse(JSON.stringify(workerList));
         return !error;
       }
     });

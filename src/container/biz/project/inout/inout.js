@@ -34,7 +34,7 @@ class ProjectInout extends React.Component {
     }, {
       title: '进退场日期',
       field: 'date',
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '类型',
       field: 'type',

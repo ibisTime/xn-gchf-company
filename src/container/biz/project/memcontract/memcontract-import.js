@@ -90,8 +90,9 @@ class ProjectMemContractImport extends DetailUtil {
       addCode: 631673,
       beforeSubmit: (params) => {
         let error = false;
-        for (let i = 0; i < params.dateList.length; i++) {
-          let item = params.dateList[i];
+        let dateList = JSON.parse(JSON.stringify(params.dateList));
+        for (let i = 0; i < dateList.length; i++) {
+          let item = dateList[i];
           let error2 = findAndchangeInfo(periodTypeList, item, 'contractPeriodType', i);
           let error3;
           if (!isUndefined(item.unit)) {
@@ -101,6 +102,7 @@ class ProjectMemContractImport extends DetailUtil {
             error = error2 || error3;
           }
         }
+        params.dateList = JSON.parse(JSON.stringify(dateList));
         return !error;
       }
     });

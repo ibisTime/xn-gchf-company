@@ -33,10 +33,9 @@ class ProjectWages extends React.Component {
       title: '证件号',
       field: 'idcardNumber'
     }, {
-      title: '发放工资的月份',
-      field: 'payMonth',
-      type: 'month',
-      render: (v, d) => d ? monthFormat(d.balanceDate) : '',
+      title: '发放工资的日期',
+      field: 'balanceDate',
+      type: 'date',
       search: true
     }, {
       title: '出勤天数',
@@ -46,12 +45,10 @@ class ProjectWages extends React.Component {
       field: 'workHours'
     }, {
       title: '应发金额',
-      field: 'totalPayAmount',
-      amount: true
+      field: 'totalPayAmount'
     }, {
       title: '实发金额',
-      field: 'actualAmount',
-      amount: true
+      field: 'actualAmount'
     }, {
       title: '是否为补发',
       field: 'isBackPay',

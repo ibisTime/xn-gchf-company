@@ -94,11 +94,7 @@ class ProjectWagesAdd extends DetailUtil {
           bankCard: true,
           required: true
         }, {
-          title: '发放工资银行名称',
-          field: 'payRollBankName',
-          required: true
-        }, {
-          title: '发放工资银行代码',
+          title: '发放工资银行',
           field: 'payRollBankCode',
           key: 'bank_code',
           type: 'select',
@@ -109,11 +105,7 @@ class ProjectWagesAdd extends DetailUtil {
           bankCard: true,
           required: true
         }, {
-          title: '工资代发银行名称',
-          field: 'payBankName',
-          required: true
-        }, {
-          title: '工资代发银行代码',
+          title: '工资代发银行',
           field: 'payBankCode',
           key: 'bank_code',
           type: 'select',
@@ -121,12 +113,10 @@ class ProjectWagesAdd extends DetailUtil {
         }, {
           title: '应发金额',
           field: 'totalPayAmount',
-          amount: true,
           required: true
         }, {
           title: '实发金额',
           field: 'actualAmount',
-          amount: true,
           required: true
         }, {
           title: '发放日期',

@@ -105,13 +105,15 @@ class ProjectWagesImport extends DetailUtil {
       addCode: 631812,
       beforeSubmit: (params) => {
         let error = false;
-        for (let i = 0; i < params.dateList.length; i++) {
-          let item = params.dateList[i];
+        let dateList = JSON.parse(JSON.stringify(params.dateList));
+        for (let i = 0; i < dateList.length; i++) {
+          let item = dateList[i];
           let error4 = findAndchangeInfo(isNotList, item, 'isBackPay', i);
           if (!error) {
             error = error4;
           }
         }
+        params.dateList = JSON.parse(JSON.stringify(dateList));
         return !error;
       }
     });

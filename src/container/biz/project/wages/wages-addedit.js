@@ -18,13 +18,13 @@ class ProjectWagesAddEdit extends DetailUtil {
       title: '总工时',
       field: 'workHours'
     }, {
-      title: '应发金额',
+      title: '应发金额(元)',
       field: 'totalPayAmount',
-      amount: true
+      required: true
     }, {
-      title: '实发金额',
+      title: '实发金额(元)',
       field: 'actualAmount',
-      amount: true
+      required: true
     }, {
       title: '是否为补发',
       field: 'isBackPay',
@@ -33,29 +33,39 @@ class ProjectWagesAddEdit extends DetailUtil {
     }, {
       title: '发放日期',
       field: 'balanceDate',
-      type: 'date'
+      type: 'date',
+      required: true
     }, {
       title: '工人工资卡号',
-      field: 'payRollBankCardNumber'
+      field: 'payRollBankCardNumber',
+      required: true
     }, {
       title: '工人工资卡银行',
       field: 'payRollBankCode',
       type: 'select',
-      key: ' bank_code'
+      key: 'bank_code',
+      required: true
     }, {
       title: '工人工资卡开户行名称',
-      field: 'payRollBankName'
+      field: 'payRollBankName',
+      required: true
     }, {
       title: '工资代发银行卡号',
-      field: 'payBankCardNumber'
+      field: 'payBankCardNumber',
+      required: true
     }, {
       title: '工资代发银行',
       field: 'payBankCode',
       type: 'select',
-      key: 'bank_code'
+      key: 'bank_code',
+      required: true
     }, {
       title: '工资代发开户行名称',
-      field: 'payBankName'
+      field: 'payBankName',
+      required: true
+    }, {
+      title: '第三方工资单编号',
+      field: 'thirdPayRollCode'
     }, {
       field: 'userId',
       value: getUserId(),
