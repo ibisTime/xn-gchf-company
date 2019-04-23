@@ -181,7 +181,6 @@ class ProjectBasicAddEdit extends DetailUtil {
     }, {
       field: 'builderLicenses',
       title: '施工许可证',
-      required: true,
       type: 'o2m',
       options: {
         add: true,

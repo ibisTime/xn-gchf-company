@@ -62,7 +62,8 @@ class ProjectWages extends React.Component {
       field: 'corpCode',
       pageCode: '631255',
       params: {
-        uploadStatus: '2'
+        uploadStatus: '2',
+        userId: getUserId()
       },
       keyName: 'corpCode',
       valueName: 'corpName',

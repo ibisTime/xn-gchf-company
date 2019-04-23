@@ -39,7 +39,8 @@ class ProjectClass extends React.Component {
       field: 'corpCode',
       pageCode: '631255',
       params: {
-        uploadStatus: '2'
+        uploadStatus: '2',
+        userId: getUserId()
       },
       keyName: 'corpCode',
       valueName: 'corpName',
@@ -55,11 +56,11 @@ class ProjectClass extends React.Component {
     }, {
       title: '进场时间',
       field: 'entryTime',
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '退场时间',
       field: 'exitTime',
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '备注',
       field: 'remark',

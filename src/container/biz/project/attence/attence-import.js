@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Spin } from 'antd';
+import { Form, Spin, message } from 'antd';
 import DetailUtil from 'common/js/build-detail-dev';
 import { getUserId, findAndchangeInfo, isUndefined, getOrganizationCode } from 'common/js/util';
 import { getDictList } from 'api/dict';
@@ -108,6 +108,18 @@ class AttenceImport extends DetailUtil {
           }
         }
         params.dateList = JSON.parse(JSON.stringify(dateList));
+        const zzTime = /(((20[0-3][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])/;
+        let isok = true;
+        params.dateList.forEach(item => {
+          if(item.date && !zzTime.test(item.date)) {
+            isok = false;
+          }
+        });
+        if(isok) {
+          return !error;
+        }else {
+          message.warning('请统一时间格式为yyyy-MM-dd hh:mm:ss');
+        }
         return !error;
       }
     });

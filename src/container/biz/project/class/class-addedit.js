@@ -66,11 +66,11 @@ class ProjectClassAddEdit extends DetailUtil {
     }, {
       title: '进场时间',
       field: 'entryTime',
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '退场时间',
       field: 'exitTime',
-      type: 'datetime'
+      type: 'date'
     }, {
       title: '班组长姓名',
       field: 'teamLeaderName'

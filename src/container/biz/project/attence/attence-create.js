@@ -16,6 +16,18 @@ class ProjectAttenceCreate extends DetailUtil {
       hidden: true,
       required: true
     }, {
+      title: '所在班组',
+      field: 'teamSysNo',
+      type: 'select',
+      keyName: 'code',
+      valueName: 'teamName',
+      searchName: 'teamName',
+      pageCode: 631665,
+      params: {
+        userId: getUserId()
+      },
+      required: true
+    }, {
       title: '刷卡进出方向',
       field: 'direction',
       type: 'select',

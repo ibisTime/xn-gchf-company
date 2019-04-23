@@ -10,9 +10,11 @@ import { getDictList } from 'api/dict';
 import { getQiniuToken } from 'api/general';
 import {
   formatFile, formatImg, isUndefined, dateTimeFormat, dateFormat, getUserId,
-  tempString, moneyFormat, moneyParse, showSucMsg, showErrMsg, showWarnMsg
+  tempString, moneyFormat, moneyParse, showSucMsg, showErrMsg, showWarnMsg,
+  getRules
 } from 'common/js/util';
-import { UPLOAD_URL, PIC_PREFIX, formItemLayout, tailFormItemLayout } from '../config';
+import { UPLOAD_URL, PIC_PREFIX, formItemLayout, tailFormItemLayout,
+  DATE_FORMAT, DATETIME_FORMAT, MONTH_FORMAT } from '../config';
 import { listWrapper } from 'common/js/build-list';
 import fetch from 'common/js/fetch';
 import cityData from 'common/js/lib/city';
@@ -23,9 +25,6 @@ const { Item: FormItem } = Form;
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker, MonthPicker } = DatePicker;
-const DATE_FORMAT = 'YYYY-MM-DD';
-const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-const MONTH_FORMAT = 'YYYY-MM';
 const TIME_FORMAT = 'HH:mm';
 const TIME_FORMAT1 = 'HH:mm:ss';
 const imgUploadBtn = (
@@ -111,6 +110,7 @@ export default class DetailComp extends React.Component {
     this.props.restore();
   }
   buildDetail = (options) => {
+    const { ownerModel = '' } = options;
     this.options = {
       ...this.options,
       ...options
@@ -142,8 +142,8 @@ export default class DetailComp extends React.Component {
     });
     children.push(this.getBtns(this.options.buttons));
     this.first = false;
-    return this.getPageComponent(children);
-  }
+    return this.getPageComponent(children, ownerModel);
+  };
   beforeSubmit(err, values) {
     if (err) {
       return false;
@@ -249,7 +249,7 @@ export default class DetailComp extends React.Component {
       let msg = file.status === 'uploading' ? '文件还未上传完成' : '文件上传失败';
       showErrMsg(msg);
     }
-  }
+  };
   getToken() {
     if (!this.tokenFetch) {
       this.tokenFetch = true;
@@ -267,6 +267,10 @@ export default class DetailComp extends React.Component {
     this.options.beforeDetail && this.options.beforeDetail(param);
     this.props.doFetching();
     fetch(this.options.detailCode, param).then(data => {
+      // 工程核发-业务管理-项目管理 的详情查询返回的是分页格式的数据
+      if (data && data.list) {
+        data = data.list[0];
+      }
       this.props.cancelFetching();
       this.props.setPageData(data);
     }).catch(this.props.cancelFetching);
@@ -320,7 +324,7 @@ export default class DetailComp extends React.Component {
       }).catch(() => { });
     }
   }
-  getPageComponent = (children) => {
+  getPageComponent = (children, ownerModel) => {
     const { previewImage, previewVisible } = this.state;
     return (
       <Spin spinning={this.props.fetching}>
@@ -330,6 +334,9 @@ export default class DetailComp extends React.Component {
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="图片" style={{ width: '100%' }} src={previewImage} />
         </Modal>
+        {
+          ownerModel ? ownerModel() : null
+        }
       </Spin>
     );
   }
@@ -350,9 +357,26 @@ export default class DetailComp extends React.Component {
       }
     });
   }
+  getChooseMap(item) {
+    // let address = '';
+    // let addr = this.props.form.getFieldValue(item.lnglat).join('');
+    // address = address + addr + this.props.form.getFieldValue(item.field);
+    // let geocoder = new AMap.Geocoder();
+    // // 地理编码,返回地理编码结果
+    // geocoder.getLocation(address, (status, result) => {
+    //   if (status === 'complete' && result.info === 'OK') {
+    //     this.props.form.setFieldsValue({
+    //       [item.lnglatTo[0]]: result.geocodes[0].location.lng,
+    //       [item.lnglatTo[1]]: result.geocodes[0].location.lat
+    //     });
+    //   } else {
+    //     showErrMsg('经纬度获取失败');
+    //   }
+    // });
+  }
   getItemByType(type, item) {
     const { getFieldDecorator } = this.props.form;
-    let rules = this.getRules(item);
+    let rules = getRules(item);
     let initVal = this.getRealValue(item);
     switch (type) {
       case 'o2m':
@@ -373,8 +397,8 @@ export default class DetailComp extends React.Component {
           : this.getDateItem(item, initVal, rules, getFieldDecorator, type === 'datetime', false);
       case 'month':
         return item.rangedate
-            ? this.getRangeDateItem(item, initVal, rules, getFieldDecorator, type === 'datetime', true)
-            : this.getDateItem(item, initVal, rules, getFieldDecorator, type === 'datetime', true);
+          ? this.getRangeDateItem(item, initVal, rules, getFieldDecorator, type === 'datetime', true)
+          : this.getDateItem(item, initVal, rules, getFieldDecorator, type === 'datetime', true);
       case 'time':
         return this.getTimeComp(item, initVal, rules, getFieldDecorator);
       case 'img':
@@ -393,12 +417,12 @@ export default class DetailComp extends React.Component {
         return this.getImportComp(item, initVal, rules, getFieldDecorator);
       case 'lnglat':
         return this.getLngLatComp(item, initVal, rules, getFieldDecorator);
+      case 'chooseMap':
+        return this.getChooseMapComp(item, initVal, rules, getFieldDecorator);
       case 'date28':
         return this.getDate28Comp(item, initVal, rules, getFieldDecorator);
       case 'line':
         return this.getLineComp(item, initVal, rules, getFieldDecorator);
-      case 'buttonEvent':
-        return this.getButtonEvent(item, initVal, rules, getFieldDecorator);
       default:
         return this.getInputComp(item, initVal, rules, getFieldDecorator);
     }
@@ -465,34 +489,7 @@ export default class DetailComp extends React.Component {
         check: true
       }];
     }
-    return item.readonly ? (
-      item.options.detail ? <Button
-          type="primary"
-          disabled={!hasSelected}
-          style={{marginRight: 20, marginBottom: 16}}
-          onClick={() => {
-            let keys = this.state.o2mSKeys[item.field];
-            if (!keys.length || keys.length > 1) {
-              showWarnMsg('请选择一条记录');
-              return;
-            }
-            let key = keys[0];
-            let keyName = item.options.rowKey || 'code';
-            let useData = this.props.pageData[item.field].filter((v) => v[keyName] === key)[0];
-            this.setState({
-              modalOptions: {
-                ...item.options,
-                code: key,
-                view: true,
-                useData
-              }
-            }, () => {
-              this.setState({
-                modalVisible: true
-              });
-            });
-          }}
-      >详情</Button> : null) : (
+    return item.readonly ? null : (
       <div style={{ marginBottom: 16 }}>
         {item.options.add ? <Button
           type="primary"
@@ -640,7 +637,7 @@ export default class DetailComp extends React.Component {
     }));
   }
   // 获取经纬度
-getLngLatComp(item, initVal, rules, getFieldDecorator) {
+  getLngLatComp(item, initVal, rules, getFieldDecorator) {
     return (
       <FormItem
         className={item.hidden ? 'hidden' : ''}
@@ -670,36 +667,6 @@ getLngLatComp(item, initVal, rules, getFieldDecorator) {
       </FormItem>
     );
   }
-  // 获取经纬度getButtonEvent
-getButtonEvent(item, initVal, rules, getFieldDecorator) {
-  return (
-    <FormItem
-      className={item.hidden ? 'hidden' : ''}
-      key={item.field}
-      {...formItemLayout}
-      label={this.getLabel(item)}>
-      {
-        item.readonly ? <div className="readonly-text" style={item.style ? item.style : {}}>{initVal}</div>
-          : (
-            <Row gutter={8}>
-              <Col span={16}>
-                {getFieldDecorator(item.field, {
-                  rules,
-                  initialValue: initVal
-                })(
-                  <Input type={item.hidden ? 'hidden' : 'text'}/>
-                )}
-              </Col>
-              <Col span={8}>
-                <Button type="primary"
-                onClick={() => { item.event(item); }}>{item.buttonTitle}</Button>
-              </Col>
-            </Row>
-          )
-      }
-    </FormItem>
-  );
-}
   // 划线
   getLineComp(item, initVal, rules, getFieldDecorator) {
     return (
@@ -707,18 +674,18 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
         className={item.hidden ? 'hidden' : ''}
         key={item.field}
         {...formItemLayout}
-        >
+      >
         {
           item.readonly ? <div className="readonly-text" style={item.style ? item.style : {}}>{initVal}</div>
             : (
               <Row gutter={8}>
-              <Divider orientation="left">{item.title}</Divider>
+                <Divider orientation="left">{item.title}</Divider>
               </Row>
             )
         }
       </FormItem>
-  );
-}
+    );
+  }
   // 每月28天
   getDate28Comp(item, initVal, rules, getFieldDecorator) {
     return (
@@ -741,6 +708,37 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
                   )}
                 </Col>
                 <span>日</span>
+              </Row>
+            )
+        }
+      </FormItem>
+    );
+  }
+  // 插标选择地址
+  getChooseMapComp(item, initVal, rules, getFieldDecorator) {
+    return (
+      <FormItem
+        className={item.hidden ? 'hidden' : ''}
+        key={item.field}
+        {...formItemLayout}
+        label={this.getLabel(item)}>
+        {
+          item.readonly ? <div className="readonly-text" style={item.style ? item.style : {}}>{initVal}</div>
+            : (
+              <Row gutter={8}>
+                <Col span={16}>
+                  {getFieldDecorator(item.field, {
+                    rules,
+                    initialValue: initVal
+                  })(
+                    <Input type={item.hidden ? 'hidden' : 'text'}/>
+                  )}
+                </Col>
+                <Col span={8}>
+                  <Button onClick={() => {
+                    this.getChooseMap(item);
+                  }}>选择地址</Button>
+                </Col>
               </Row>
             )
         }
@@ -793,32 +791,32 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
               rules,
               initialValue: initVal || null
             })(
-              <DatePicker
-                allowClear={false}
-                locale={locale}
-                placeholder={places}
-                format={format}
-                showTime={isTime} />
+            <DatePicker
+              allowClear={false}
+              locale={locale}
+              placeholder={places}
+              format={format}
+              showTime={isTime} />
             )
         }
       </FormItem>
     ) : (
-        <FormItem key={item.field} {...formItemLayout} label={this.getLabel(item)}>
-          {
-            item.readonly ? <div className="readonly-text">{initVal}</div>
-                : getFieldDecorator(item.field, {
-                  rules,
-                  initialValue: initVal || null
-                })(
-                <MonthPicker
-                    allowClear={false}
-                    locale={locale}
-                    placeholder={places}
-                    format={format}
-                    showTime={false} />
-                )
-          }
-        </FormItem>
+      <FormItem key={item.field} {...formItemLayout} label={this.getLabel(item)}>
+        {
+          item.readonly ? <div className="readonly-text">{initVal}</div>
+            : getFieldDecorator(item.field, {
+              rules,
+              initialValue: initVal || null
+            })(
+            <MonthPicker
+              allowClear={false}
+              locale={locale}
+              placeholder={places}
+              format={format}
+              showTime={false} />
+            )
+        }
+      </FormItem>
     );
   }
   getRangeDateItem(item, initVal, rules, getFieldDecorator, isTime = false) {
@@ -832,13 +830,13 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
               rules,
               initialValue: initVal || null
             })(
-              <RangePicker
-                allowClear={false}
-                locale={locale}
-                placeholder={places}
-                ranges={{ '今天': [moment(), moment()], '本月': [moment(), moment().endOf('month')] }}
-                format={format}
-                showTime={isTime} />
+            <RangePicker
+              allowClear={false}
+              locale={locale}
+              placeholder={places}
+              ranges={{ '今天': [moment(), moment()], '本月': [moment(), moment().endOf('month')] }}
+              format={format}
+              showTime={isTime} />
             )
         }
       </FormItem>
@@ -854,7 +852,7 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
               rules,
               initialValue: initVal || null
             })(
-              <TimePicker placeholder='选择时间' format={format} />
+            <TimePicker placeholder='选择时间' format={format} />
             )
         }
       </FormItem>
@@ -862,7 +860,8 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
   }
   getSearchSelectItem(item, initVal, rules, getFieldDecorator) {
     let data;
-    if (item.readonly && item.data) {
+    if (item.readonly && item.data && !isUndefined(initVal)) {
+      initVal += '';
       data = item.data.filter(v => v[item.keyName] == initVal);
     }
     return (
@@ -871,24 +870,24 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
           item.readonly ? <div className="readonly-text">{data && data.length ? data[0][item.valueName] || tempString(item.valueName, data[0]) : ''}</div>
             : getFieldDecorator(item.field, {
               rules,
-              initialValue: item.data ? initVal + '' : ''
+              initialValue: item.data ? initVal : ''
             })(
-              <Select
-                allowClear
-                mode="combobox"
-                showArrow={false}
-                filterOption={false}
-                onSearch={v => this.searchSelectChange({ item, keyword: v })}
-                optionLabelProp="children"
-                style={{ width: 200 }}
-                notFoundContent={this.state.fetching[item.field] ? <Spin size="small" /> : '暂无数据'}
-                placeholder="请输入关键字搜索">
-                {item.data ? item.data.map(d => (
-                  <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
-                    {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
-                  </Option>
-                )) : null}
-              </Select>
+            <Select
+              allowClear
+              mode="combobox"
+              showArrow={false}
+              filterOption={false}
+              onSearch={v => this.searchSelectChange({ item, keyword: v })}
+              optionLabelProp="children"
+              style={{ width: 200 }}
+              notFoundContent={this.state.fetching[item.field] ? <Spin size="small" /> : '暂无数据'}
+              placeholder="请输入关键字搜索">
+              {item.data ? item.data.map(d => (
+                <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
+                  {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
+                </Option>
+              )) : null}
+            </Select>
             )
         }
       </FormItem>
@@ -909,7 +908,8 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
   }
   getSelectComp(item, initVal, rules, getFieldDecorator) {
     let data;
-    if (item.readonly && item.data) {
+    if (item.readonly && item.data && !isUndefined(initVal)) {
+      initVal += '';
       data = item.data.filter(v => v[item.keyName] == initVal);
     }
     return (
@@ -918,24 +918,24 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
           item.readonly ? <div className="readonly-text">{data && data.length ? data[0][item.valueName] || tempString(item.valueName, data[0]) : ''}</div>
             : getFieldDecorator(item.field, {
               rules,
-              initialValue: item.data ? initVal + '' : ''
+              initialValue: item.data ? initVal : ''
             })(
-              <Select
-                showSearch
-                allowClear
-                onChange={(val) => {
-                  item.onChange && item.onChange(val);
-                }}
-                optionFilterProp="children"
-                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                style={{ width: '100%' }}
-                placeholder="请选择">
-                {item.data ? item.data.map(d => (
-                  <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
-                    {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
-                  </Option>
-                )) : null}
-              </Select>
+            <Select
+              showSearch
+              allowClear
+              onChange={(val) => {
+                item.onChange && item.onChange(val);
+              }}
+              optionFilterProp="children"
+              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              style={{ width: '100%' }}
+              placeholder="请选择">
+              {item.data ? item.data.map(d => (
+                <Option key={d[item.keyName] + ''} value={d[item.keyName] + ''}>
+                  {d[item.valueName] ? d[item.valueName] : tempString(item.valueName, d)}
+                </Option>
+              )) : null}
+            </Select>
             )
         }
       </FormItem>
@@ -1167,7 +1167,6 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
         : btn;
   }
   setUploadFileUrl(fileList, isImg) {
-    console.log(fileList);
     let format = isImg ? formatImg : formatFile;
     fileList.forEach(f => {
       if (!f.url && f.status === 'done' && f.response) {
@@ -1210,70 +1209,5 @@ getButtonEvent(item, initVal, rules, getFieldDecorator) {
         }
       </FormItem>
     );
-  }
-  getRules(item) {
-    let rules = [];
-    if (item.required) {
-      rules.push({
-        required: true,
-        message: '必填字段'
-      });
-    }
-    if (item.maxlength) {
-      rules.push({
-        min: 1,
-        max: item.maxlength,
-        message: `请输入一个长度最多是${item.maxlength}的字符串`
-      });
-    }
-    if (item.email) {
-      rules.push({
-        type: 'email',
-        message: '请输入正确格式的电子邮件'
-      });
-    }
-    if (item.mobile) {
-      rules.push({
-        pattern: /^1[3|4|5|7|8]\d{9}$/,
-        message: '手机格式不对'
-      });
-    }
-    if (item['Z+']) {
-      rules.push({
-        pattern: /^[1-9]\d*$/,
-        message: '请输入正整数'
-      });
-    }
-    if (item.number) {
-      rules.push({
-        pattern: /^-?\d+(\.\d+)?$/,
-        message: '请输入合法的数字'
-      });
-    }
-    if (item.positive) {
-      rules.push({
-        pattern: /^\d+(\.\d+)?$/,
-        message: '请输入正数'
-      });
-    }
-    if (item.integer) {
-      rules.push({
-        pattern: /^-?\d+$/,
-        message: '请输入合法的整数'
-      });
-    }
-    if (item.date28) {
-      rules.push({
-        pattern: /^([1-9]|[1][0-9]|[2][0-8])$/,
-        message: '请输入1-28之间的整数'
-      });
-    }
-    if (item.date100) {
-      rules.push({
-        pattern: /[1-9]\d?|100/,
-        message: '请输入1-100之间的整数'
-      });
-    }
-    return rules;
   }
 }

@@ -16,13 +16,21 @@ class ParticipatingAddEdit extends DetailUtil {
       field: 'corpCode',
       pageCode: 631255,
       params: {
-        uploadStatus: '2'
+        uploadStatus: '2',
+        userId: getUserId()
       },
       keyName: 'corpCode',
       valueName: 'corpName',
       searchName: 'corpName',
       type: 'select',
-      required: true
+      required: true,
+      formatter(v, d) {
+        if(v) {
+          return d.corpName;
+        }else {
+          return '';
+        }
+      }
     }, {
       title: '企业类型',
       field: 'corpType',

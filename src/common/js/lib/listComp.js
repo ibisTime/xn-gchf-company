@@ -35,7 +35,18 @@ export default class ListComponent extends React.Component {
       searchParams: {}
     };
   }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.isok == '-1' || nextProps.isok == '1' || nextProps.isok == '2') {
+      this.setState({
+        selectedRowKeys: [],
+        selectedRows: []
+      });
+      sessionStorage.setItem('selectedRowKeys', JSON.stringify([]));
+      sessionStorage.setItem('selectedRows', JSON.stringify([]));
+    }
+  }
   buildList = (options) => {
+    const { ownerModel = '' } = options;
     this.options = {
       ...this.options,
       ...options
@@ -140,7 +151,7 @@ export default class ListComponent extends React.Component {
     this.columns = columns;
     this.tableClass = this.options.className || '';
     this.searchFields = searchFields;
-    return this.getPageComponent(searchFields);
+    return this.getPageComponent(searchFields, ownerModel);
   }
   renderSelect(value, f) {
     let val = '';
@@ -153,10 +164,10 @@ export default class ListComponent extends React.Component {
         return v[f.keyName] === value;
       });
       val = item
+        ? item[f.valueName]
           ? item[f.valueName]
-              ? item[f.valueName]
-              : tempString(f.valueName, item)
-          : '';
+          : tempString(f.valueName, item)
+        : '';
     }
     return val;
   }
@@ -167,7 +178,7 @@ export default class ListComponent extends React.Component {
   }
   onSelectChange = (selectedRowKeys, selectedRows) => {
     this.setState({ selectedRowKeys, selectedRows });
-  }
+  };
   searchSelectChange(key, item, start = 1, limit = 20) {
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -202,6 +213,8 @@ export default class ListComponent extends React.Component {
         selectedRowKeys.push(key);
         selectedRows.push(record);
       }
+      sessionStorage.setItem('selectedRowKeys', Array.isArray(selectedRowKeys) ? JSON.stringify(selectedRowKeys) : JSON.stringify([selectedRowKeys]));
+      sessionStorage.setItem('selectedRows', JSON.stringify(selectedRows));
     }
     this.setState({
       selectedRowKeys,
@@ -234,17 +247,20 @@ export default class ListComponent extends React.Component {
         data.list.forEach((d, i) => {
           let temp = [];
           this.options.fields.forEach(f => {
-            if (i === 0) {
+            if (i === 0 && !f.hidden) {
               titles.push(f.title);
             }
-            temp.push(f.render(d[f.field], d));
+            if(!f.hidden) {
+              temp.push(f.render(d[f.field], d));
+            }
           });
           bodys.push(temp);
         });
         let result = [titles].concat(bodys);
         const wb = getWorkbook();
+        const menuName = sessionStorage.getItem('menuName') || '表格下载';
         wb.getSheet(result, 'SheetJS');
-        wb.downloadXls('表格下载');
+        wb.downloadXls(menuName);
         this.props.cancelFetching();
       }
     }).catch(this.props.cancelFetching);
@@ -267,7 +283,7 @@ export default class ListComponent extends React.Component {
       start = this.options.pagination.start;
     }
     this.getPageData(start, values);
-  }
+  };
   getRealSearchParams(params) {
     let result = {};
     this.options.fields.forEach(v => {
@@ -351,7 +367,7 @@ export default class ListComponent extends React.Component {
       default:
         btnEvent[url] && btnEvent[url](this.state.selectedRowKeys, this.state.selectedRows);
     }
-    this.setState({ selectedRowKeys: [] });
+    this.setState({ selectedRowKeys: [], selectedRows: [] });
   }
   handleTableChange = (pagination) => {
     this.getPageData(pagination.current);
@@ -458,7 +474,7 @@ export default class ListComponent extends React.Component {
     }
     return data[this.options.rowKey];
   }
-  getPageComponent(searchFields) {
+  getPageComponent(searchFields, ownerModel) {
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
@@ -493,6 +509,9 @@ export default class ListComponent extends React.Component {
             onRowClick={this.handleRowClick}
           />
         </div>
+        {
+          ownerModel ? ownerModel() : null
+        }
       </div>
     );
   }

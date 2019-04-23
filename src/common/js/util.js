@@ -529,6 +529,7 @@ function getRealCheckboxVal(result) {
 export function findAndchangeInfo(list, item, key, i) {
   let info = list.find(c => c.dvalue === item[key]);
   if (!info) {
+    console.log(list, item);
     showWarnMsg(`导入的数据里第${i + 1}行的${item[key]}无法识别,请检查数据是否正确`);
     return true;
   }

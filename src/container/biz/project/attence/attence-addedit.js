@@ -22,6 +22,18 @@ class ProjectAttenceAddEdit extends DetailUtil {
       hidden: true,
       required: true
     }, {
+      title: '所在班组',
+      field: 'teamSysNo',
+      type: 'select',
+      keyName: 'code',
+      valueName: 'teamName',
+      searchName: 'teamName',
+      pageCode: 631665,
+      params: {
+        userId: getUserId()
+      },
+      required: true
+    }, {
       title: '员工编号',
       field: 'workerCode',
       type: 'select',

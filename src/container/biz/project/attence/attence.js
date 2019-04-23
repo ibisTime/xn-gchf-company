@@ -52,13 +52,27 @@ class ProjectAttence extends React.Component {
       field: 'corpCode',
       pageCode: '631255',
       params: {
-        uploadStatus: '2'
+        uploadStatus: '2',
+        userId: getUserId()
       },
       keyName: 'corpCode',
       valueName: 'corpName',
       type: 'select',
       hidden: true,
       search: true
+    }, {
+      title: '所在班组',
+      field: 'teamSysNo',
+      type: 'select',
+      keyName: 'code',
+      valueName: 'teamName',
+      searchName: 'teamName',
+      pageCode: 631665,
+      params: {
+        userId: getUserId()
+      },
+      search: true,
+      hidden: true
     }, {
       title: '所在班组',
       field: 'teamName'
