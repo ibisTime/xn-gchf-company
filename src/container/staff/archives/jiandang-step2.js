@@ -167,7 +167,7 @@ class JiandangStep2 extends React.Component {
         }
         setTimeout(() => {
           this.spanElement(0);
-        }, 300);
+        }, 500);
       });
     });
     this.appendEle02.style.width = '100px';
@@ -190,7 +190,7 @@ class JiandangStep2 extends React.Component {
         }
         setTimeout(() => {
           this.spanElement(1);
-        }, 100);
+        }, 500);
       });
     });
     this.appendEle03.style.width = '100px';
@@ -213,7 +213,7 @@ class JiandangStep2 extends React.Component {
         }
         setTimeout(() => {
           this.spanElement(2);
-        }, 100);
+        }, 500);
       });
     });
     ele01.appendChild(this.appendEle01);
