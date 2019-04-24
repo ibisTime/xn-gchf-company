@@ -25,6 +25,7 @@ class JiandangStep2 extends React.Component {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.ctx = null;
+    this.ctxShow = null;
     this.time = null;
     this.isIndex = 0;
   }
@@ -227,7 +228,6 @@ class JiandangStep2 extends React.Component {
     };
     // 获得video摄像头区域
     let video = document.getElementById('video');
-    video.setAttribute('autoplay', 'autoplay');
     // then()方法是异步执行，当then()前的方法执行完后再执行then()内部的程序
     // 避免数据没有获取到
     let promise = navigator.mediaDevices.getUserMedia(constraints);
@@ -240,22 +240,26 @@ class JiandangStep2 extends React.Component {
     // 获得Canvas对象
     let video = document.getElementById('video');
     let canvas = document.getElementById('canvas');
+    let canvasShow = document.getElementById('canvasShow');
     this.ctx = canvas.getContext('2d');
+    this.ctxShow = canvasShow.getContext('2d');
     this.ctx.drawImage(video, 0, 0, 100, 100);
+    this.ctxShow.drawImage(video, 0, 0, 500, 500);
+    const dataUrl = canvas.toDataURL();
     switch(this.state.setIndex) {
       case 0:
         this.setState({
-          updateUrl01: canvas.toDataURL()
+          updateUrl01: dataUrl
         });
         break;
       case 1:
         this.setState({
-          updateUrl02: canvas.toDataURL()
+          updateUrl02: dataUrl
         });
         break;
       case 2:
         this.setState({
-          updateUrl03: canvas.toDataURL()
+          updateUrl03: dataUrl
         });
         break;
     }
@@ -275,15 +279,17 @@ class JiandangStep2 extends React.Component {
     this[`appendEle0${this.state.setIndex + 1}`].innerText = '';
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundImage = `url(${this.state[`updateUrl0${this.state.setIndex + 1}`]})`;
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundSize = '100% 100%';
-    this.ctx.clearRect(0, 0, 500, 500);
+    this.ctx.clearRect(0, 0, 100, 100);
   };
   handleCancel = () => {
     this.setState({ visible: false });
+    this.ctx.clearRect(0, 0, 100, 100);
+    this.ctxShow.clearRect(0, 0, 500, 500);
   };
   ownerModel = () => {
     return (
       <Modal
-        width={700}
+        width={1200}
         visible={this.state.visible}
         title="Title"
         onOk={this.handleOk}
@@ -296,11 +302,22 @@ class JiandangStep2 extends React.Component {
         ]}
       >
         <div>
-          <video id="video" width="500px" height="500px" muted="muted">您的浏览器不支持拍照上传功能</video>
-          <canvas id="canvas" width="100px" height="100px" style={{'marginLeft': '50px'}}></canvas>
-          <Button onClick={() => {
-            this.takePhoto();
-          }} style={{'marginLeft': '10px'}}>拍照</Button>
+          <div style={{'display': 'flex'}}>
+            <div>
+              <video id="video" width="500px" height="500px" muted="muted">您的浏览器不支持拍照上传功能</video>
+            </div>
+            <div>
+              <canvas id="canvasShow" width="500px" height="500px" style={{'marginLeft': '30px'}}></canvas>
+            </div>
+            <div>
+              <canvas id="canvas" width="100px" height="100px" style={{'marginLeft': '20px'}}></canvas>
+            </div>
+          </div>
+          <div>
+            <Button onClick={() => {
+              this.takePhoto();
+            }} style={{'marginLeft': '10px'}}>拍照</Button>
+          </div>
         </div>
       </Modal>
     );
@@ -353,7 +370,7 @@ class JiandangStep2 extends React.Component {
             this.time = setTimeout(() => {
               this.spanElement();
               this.isIndex = 1;
-            }, 600);
+            }, 400);
           }
         }
         return(v);
@@ -384,9 +401,6 @@ class JiandangStep2 extends React.Component {
       editCode: 631791,
       beforeDetail: (params) => {
         params.userId = getUserId();
-      },
-      afterDetail: (data) => {
-        console.log(1, data);
       },
       onOk: () => {
         setTimeout(() => {
