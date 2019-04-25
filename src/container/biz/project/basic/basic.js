@@ -26,16 +26,35 @@ class ProjectBasicAddEdit extends DetailUtil {
       title: '施工总承包单位名称',
       required: true
     }, {
-      field: 'description',
-      title: '项目简介',
-      type: 'textarea',
-      normalArea: true
-    }, {
       field: 'category',
       title: '项目分类',
       key: 'category',
       type: 'select',
       required: true
+    }, {
+      field: 'areaCode',
+      title: '项目所在地',
+      required: true
+    }, {
+      field: 'linkMan',
+      title: '项目实名制负责人姓名',
+      required: true
+    }, {
+      field: 'linkPhone',
+      title: '项目实名制负责人手机号码',
+      mobile: true,
+      required: true
+    }, {
+      field: 'prjStatus',
+      title: '项目状态',
+      type: 'select',
+      key: 'prj_status',
+      required: true
+    }, {
+      field: 'description',
+      title: '项目简介',
+      type: 'textarea',
+      normalArea: true
     }, {
       field: 'buildCorpCode',
       title: '建设单位统一社会信用代码'
@@ -48,10 +67,6 @@ class ProjectBasicAddEdit extends DetailUtil {
     }, {
       field: 'buildPlanNum',
       title: '建设用地规划许可证编号'
-    }, {
-      field: 'areaCode',
-      title: '项目所在地',
-      required: true
     }, {
       field: 'invest',
       title: '总投资'
@@ -70,23 +85,8 @@ class ProjectBasicAddEdit extends DetailUtil {
       title: '竣工日期',
       type: 'date'
     }, {
-      field: 'linkMan',
-      title: '项目实名制负责人姓名',
-      required: true
-    }, {
-      field: 'linkPhone',
-      title: '项目实名制负责人手机号码',
-      mobile: true,
-      required: true
-    }, {
       field: 'chargeEmail',
       title: '项目实名制负责人邮箱地址'
-    }, {
-      field: 'prjStatus',
-      title: '项目状态',
-      type: 'select',
-      key: 'prj_status',
-      required: true
     }, {
       field: 'lng',
       title: '经度',

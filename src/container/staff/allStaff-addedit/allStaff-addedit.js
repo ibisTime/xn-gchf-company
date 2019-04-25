@@ -84,28 +84,6 @@ class AllStaffAddEdit extends React.Component {
       key: 'culture_level_type',
       required: true
     }, {
-      field: 'isJoined',
-      title: '是否加入公会',
-      type: 'select',
-      key: 'is_not'
-    }, {
-      field: 'joinedTime',
-      title: '加入公会时间',
-      type: 'date'
-    }, {
-      field: 'specialty',
-      title: '特长'
-    }, {
-      field: 'hasBadMedicalHistory',
-      title: '是否有重大病史',
-      type: 'select',
-      key: 'is_not'
-    }, {
-      field: 'maritalStatus',
-      title: '婚姻状况',
-      type: 'select',
-      key: 'marital_status'
-    }, {
       field: 'positiveIdCardImageUrl',
       title: '正面照URL',
       type: 'img',
@@ -137,6 +115,28 @@ class AllStaffAddEdit extends React.Component {
       field: 'urgentLinkManPhone',
       mobile: true,
       required: true
+    }, {
+      field: 'isJoined',
+      title: '是否加入公会',
+      type: 'select',
+      key: 'is_not'
+    }, {
+      field: 'joinedTime',
+      title: '加入公会时间',
+      type: 'date'
+    }, {
+      field: 'specialty',
+      title: '特长'
+    }, {
+      field: 'hasBadMedicalHistory',
+      title: '是否有重大病史',
+      type: 'select',
+      key: 'is_not'
+    }, {
+      field: 'maritalStatus',
+      title: '婚姻状况',
+      type: 'select',
+      key: 'marital_status'
     }];
 
     return this.props.buildDetail({

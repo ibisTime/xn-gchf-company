@@ -66,15 +66,15 @@ class ProjectAttenceAddEdit extends DetailUtil {
         }
       }
     }, {
-      title: '刷卡时间',
-      field: 'date',
-      type: 'datetime'
-    }, {
       title: '刷卡进出方向',
       field: 'direction',
       type: 'select',
       key: 'direction',
       required: true
+    }, {
+      title: '刷卡时间',
+      field: 'date',
+      type: 'datetime'
     }, {
       field: 'teamSysNo',
       hidden: true

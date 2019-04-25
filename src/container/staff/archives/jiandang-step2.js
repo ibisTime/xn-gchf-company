@@ -280,6 +280,7 @@ class JiandangStep2 extends React.Component {
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundImage = `url(${this.state[`updateUrl0${this.state.setIndex + 1}`]})`;
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundSize = '100% 100%';
     this.ctx.clearRect(0, 0, 100, 100);
+    this.ctxShow.clearRect(0, 0, 500, 500);
   };
   handleCancel = () => {
     this.setState({ visible: false });
@@ -355,7 +356,7 @@ class JiandangStep2 extends React.Component {
   render() {
     const fields = [{
       field: 'positiveIdCardImageUrl',
-      title: '正面照URL',
+      title: '身份证正面照',
       type: 'img',
       single: true,
       formatter: (v) => {
@@ -377,11 +378,11 @@ class JiandangStep2 extends React.Component {
       }
     }, {
       field: 'negativeIdCardImageUrl',
-      title: '反面照URL',
+      title: '身份证反面照',
       type: 'img',
       single: true
     }, {
-      title: '手持身份证照片URL',
+      title: '手持身份证照片',
       field: 'handIdCardImageUrl',
       type: 'img',
       single: true
@@ -406,6 +407,9 @@ class JiandangStep2 extends React.Component {
         setTimeout(() => {
           this.props.history.push(`/staff/jiandang/step3?code=${this.code}`);
         }, 300);
+      },
+      onCancel: () => {
+        this.props.history.push(`/staff/jiandang?code=${this.code}`);
       },
       ownerModel: this.ownerModel,
       beforeSubmit: (params) => {

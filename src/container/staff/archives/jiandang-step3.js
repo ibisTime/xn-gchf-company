@@ -56,7 +56,10 @@ class JiandangStep3 extends React.Component {
       },
       onOk: () => {
         this.props.history.push('/staff/jiandang');
-      }
+      },
+      onCancel: () => {
+      this.props.history.push(`/staff/jiandang/step2?code=${this.code}`);
+    }
     });
   }
 }

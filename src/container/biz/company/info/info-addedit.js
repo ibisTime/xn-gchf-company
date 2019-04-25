@@ -16,17 +16,9 @@ class CompanyInfoAddEdit extends DetailUtil {
       field: 'corpName',
       required: true
     }, {
-      title: '企业登记注册类型',
-      field: 'corpType',
-      type: 'select',
-      key: 'corp_type'
-    }, {
       title: '统一社会信用代码',
       field: 'corpCode',
       required: true
-    }, {
-      title: '工商营业执照注册号',
-      field: 'licenseNum'
     }, {
       title: '注册地区编码',
       field: 'areaCode',
@@ -35,6 +27,19 @@ class CompanyInfoAddEdit extends DetailUtil {
       title: '企业营业地址',
       field: 'address',
       required: true
+    }, {
+      title: '注册日期',
+      field: 'registerDate',
+      type: 'date',
+      required: true
+    }, {
+      title: '企业登记注册类型',
+      field: 'corpType',
+      type: 'select',
+      key: 'corp_type'
+    }, {
+      title: '工商营业执照注册号',
+      field: 'licenseNum'
     }, {
       title: '邮政编码',
       field: 'zipCode'
@@ -68,11 +73,6 @@ class CompanyInfoAddEdit extends DetailUtil {
       field: 'capitalCurrencyType',
       type: 'select',
       key: 'capital_currency_type'
-    }, {
-      title: '注册日期',
-      field: 'registerDate',
-      type: 'date',
-      required: true
     }, {
       title: '成立日期',
       field: 'establishDate',

@@ -98,10 +98,15 @@ const ROUTES = [
     path: '/project/projectparticipant',
     component: asyncComponent(() => import('container/biz/project/participating/participating'))
   },
-  // 业务管理 -- 项目管理-- 项目参建单位--详情
+  // 业务管理 -- 项目管理-- 项目参建单位--新增修改
   {
     path: '/project/projectparticipant/addedit',
     component: asyncComponent(() => import('container/biz/project/participating/participating-addedit'))
+  },
+  // 业务管理 -- 项目管理-- 项目参建单位--详情
+  {
+    path: '/project/projectparticipant/detail',
+    component: asyncComponent(() => import('container/biz/project/participating/participating-detail'))
   },
   // 业务管理 -- 项目管理-- 项目参建单位--导入
   {

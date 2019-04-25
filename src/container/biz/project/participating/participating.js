@@ -28,13 +28,6 @@ class Participating extends React.Component {
       title: '企业名称',
       field: 'corpName'
     }, {
-      title: '企业类型',
-      field: 'corpType',
-      type: 'select',
-      key: 'corp_type',
-      search: true,
-      hidden: true
-    }, {
       title: '企业名称',
       field: 'corpCode',
       pageCode: '631255',
@@ -122,6 +115,15 @@ class Participating extends React.Component {
             showWarnMsg('已上传不可修改');
           } else {
             this.props.history.push(`/project/projectparticipant/addedit?code=${keys[0]}`);
+          }
+        },
+        detail: (keys) => {
+          if (!keys.length) {
+            showWarnMsg('请选择记录');
+          } else if (keys.length > 1) {
+            showWarnMsg('请选择一条记录');
+          } else {
+            this.props.history.push(`/project/projectparticipant/detail?code=${keys[0]}`);
           }
         },
         // 查看银行卡
