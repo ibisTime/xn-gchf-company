@@ -9,6 +9,8 @@ class ParticipatingAddEdit extends DetailUtil {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
+    this.corpCode = '';
+    this.corpType = '';
   }
   render() {
     const fields = [{
@@ -16,20 +18,34 @@ class ParticipatingAddEdit extends DetailUtil {
       field: 'corpCode',
       pageCode: 631255,
       params: {
-        uploadStatus: '2',
+        uploadStatus: '3',
         userId: getUserId()
       },
       keyName: 'corpCode',
       valueName: 'corpName',
       searchName: 'corpName',
       type: 'select',
-      required: true
+      required: true,
+      readonly: !!this.code,
+      formatter: (v) => {
+        if(!this.corpCode) {
+          this.corpCode = v;
+        }
+        return v;
+      }
     }, {
       title: '企业类型',
       field: 'corpType',
       type: 'select',
       key: 'project_corp_type',
-      required: true
+      required: true,
+      readonly: !!this.code,
+      formatter: (v) => {
+        if(!this.corpType) {
+          this.corpType = v;
+        }
+        return v;
+      }
     }, {
       field: 'projectCode',
       value: getOrganizationCode(),
@@ -127,6 +143,15 @@ class ParticipatingAddEdit extends DetailUtil {
       detailCode: 631646,
       beforeDetail: (params) => {
         params.userId = getUserId();
+      },
+      beforeSubmit: (params) => {
+        if(!params.corpCode) {
+          params.corpCode = this.corpCode;
+        }
+        if(!params.corpType) {
+          params.corpType = this.corpType;
+        }
+        return params;
       },
       editCode: 631632,
       addCode: 631630

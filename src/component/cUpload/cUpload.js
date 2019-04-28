@@ -134,8 +134,12 @@ export default class CUpload extends React.Component {
   // 获取文件上传后的key
   normFile = (e) => {
     if (e) {
+      let { imgSize } = this.props;
       return e.fileList.map(v => {
         if (v.status === 'done') {
+          if(v.size > imgSize) {
+            showErrMsg(`该图片大于${imgSize / 1024}kb，请重新上传`);
+          }
           return v.key || v.response.key;
         } else if (v.status === 'error') {
           showErrMsg('文件上传失败');

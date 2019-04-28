@@ -13,6 +13,9 @@ import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, getUserId, showSucMsg, showErrMsg } from 'common/js/util';
 import { showUploadConfirm } from '../../util';
 import fetch from 'common/js/fetch';
+import { Modal } from 'antd';
+
+const confirm = Modal.confirm;
 
 @listWrapper(
     state => ({
@@ -23,6 +26,27 @@ import fetch from 'common/js/fetch';
       cancelFetching, setPagination, setSearchParam, setSearchData }
 )
 class ProjectClass extends React.Component {
+  state = {
+    uploadStatusData: []
+  };
+  componentWillMount() {
+    fetch(631006, {
+      parentKey: 'upload_status'
+    }).then(data => {
+      let uploadStatusData = [];
+      data.forEach((item) => {
+        if(item.dkey !== '3') {
+          uploadStatusData.push({
+            dkey: item.dkey,
+            dvalue: item.dvalue
+          });
+        }
+      });
+      this.setState({
+        uploadStatusData
+      });
+    });
+  }
   render() {
     const fields = [{
       title: '班组名称',
@@ -33,19 +57,7 @@ class ProjectClass extends React.Component {
       field: 'projectName'
     }, {
       title: '所在企业',
-      field: 'corpName'
-    }, {
-      title: '所在企业',
-      field: 'corpCode',
-      pageCode: '631255',
-      params: {
-        uploadStatus: '2',
-        userId: getUserId()
-      },
-      keyName: 'corpCode',
-      valueName: 'corpName',
-      type: 'select',
-      hidden: true,
+      field: 'corpName',
       search: true
     }, {
       title: '责任人姓名',
@@ -70,7 +82,9 @@ class ProjectClass extends React.Component {
       title: '状态',
       field: 'uploadStatus',
       type: 'select',
-      key: 'upload_status',
+      data: this.state.uploadStatusData,
+      keyName: 'dkey',
+      valueName: 'dvalue',
       search: true
     }];
     return this.props.buildList({
@@ -117,8 +131,10 @@ class ProjectClass extends React.Component {
             showWarnMsg('请选择记录');
           } else if (keys.length > 1) {
             showWarnMsg('请选择一条记录');
-          } else if (items[0].uploadStatus === '2') {
+          } else if (items[0].uploadStatus === '3') {
             showWarnMsg('已上传不可修改');
+          } else if (items[0].uploadStatus === '4' || items[0].uploadStatus === '5') {
+            showWarnMsg('该状态下不可修改');
           } else {
             this.props.history.push(`/project/class/addedit?code=${keys[0]}`);
           }
@@ -128,13 +144,21 @@ class ProjectClass extends React.Component {
           if (!keys.length) {
             showWarnMsg('请选择记录');
           } else {
-            fetch('631651', { codeList: keys, userId: getUserId() }).then(() => {
-              showSucMsg('操作成功');
-              setTimeout(() => {
-                this.props.getPageData();
-              }, 1.5);
-            }, () => {
-              showErrMsg('操作失败');
+            confirm({
+              title: '删除',
+              content: '是否删除？',
+              onOk() {
+                fetch('631651', { codeList: keys, userId: getUserId() }).then(() => {
+                  showSucMsg('操作成功');
+                  setTimeout(() => {
+                    this.props.getPageData();
+                  }, 1.5);
+                });
+              },
+              onCancel() {
+              },
+              okText: '确定',
+              cancelText: '取消'
             });
           }
         }

@@ -196,16 +196,16 @@ class ExportImport extends DetailUtil {
         const zzTime = /((?!0000)[0-9]{4}-((0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-8])|(0[13-9]|1[0-2])-(29|30)|(0[13578]|1[02])-31)|([0-9]{2}(0[48]|[2468][048]|[13579][26])|(0[48]|[2468][048]|[13579][26])00)-02-29)/;
         let isok = true;
         params.workerList.forEach(item => {
-          if(!zzTime.test(item.joinedTime)) {
+          if(item.joinedTime && !zzTime.test(item.joinedTime)) {
             isok = false;
           }
-          if(!zzTime.test(item.workDate)) {
+          if(item.workDate && !zzTime.test(item.workDate)) {
             isok = false;
           }
-          if(!zzTime.test(item.startDate)) {
+          if(item.startDate && !zzTime.test(item.startDate)) {
             isok = false;
           }
-          if(!zzTime.test(item.expiryDate)) {
+          if(item.expiryDate && !zzTime.test(item.expiryDate)) {
             isok = false;
           }
         });

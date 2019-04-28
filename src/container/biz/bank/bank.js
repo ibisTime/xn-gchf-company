@@ -128,8 +128,14 @@ class Bank extends React.Component {
       field: 'businessName',
       search: true
     }, {
+      field: 'bankCode',
+      title: '银行名称',
+      key: 'bank_code',
+      type: 'select',
+      search: true
+    }, {
       title: '银行支行名称',
-      field: 'bankName'
+      field: 'subranch'
     }, {
       title: '银行卡号',
       field: 'bankNumber'

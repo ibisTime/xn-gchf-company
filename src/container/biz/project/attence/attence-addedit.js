@@ -74,7 +74,8 @@ class ProjectAttenceAddEdit extends DetailUtil {
     }, {
       title: '刷卡时间',
       field: 'date',
-      type: 'datetime'
+      type: 'datetime',
+      required: true
     }, {
       field: 'teamSysNo',
       hidden: true

@@ -10,6 +10,7 @@ import {
 import { getQueryString, getUserId } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
 import { Modal, Button, message } from 'antd';
+import DetailUtil from 'common/js/build-detail-dev';
 
 let eleObj = {
   spEle01: null,
@@ -20,11 +21,10 @@ let eleObj = {
   state => state.jiandangStep2,
   { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
 )
-class JiandangStep2 extends React.Component {
+class JiandangStep2 extends DetailUtil {
   constructor(props) {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
-    this.ctx = null;
     this.ctxShow = null;
     this.time = null;
     this.isIndex = 0;
@@ -43,10 +43,12 @@ class JiandangStep2 extends React.Component {
     if(index || index === 0) {
       const pictureCard = document.querySelectorAll('.ant-upload-select-picture-card')[index];
       const cardSpan = document.querySelectorAll('.ant-upload-select-picture-card>span')[index];
-      pictureCard.style.display = 'inline-block';
-      pictureCard.style.lineHeight = '104px';
-      cardSpan.style.display = 'inline-block';
-      cardSpan.style.verticalAlign = 'baseline';
+      setTimeout(() => {
+        pictureCard.style.display = 'inline-block';
+        pictureCard.style.lineHeight = '104px';
+        cardSpan.style.display = 'inline-block';
+        cardSpan.style.verticalAlign = 'baseline';
+      }, 300);
     }else {
       const pictureCardAll = document.querySelectorAll('.ant-upload-select-picture-card');
       const cardAllSpan = document.querySelectorAll('.ant-upload-select-picture-card>span');
@@ -100,9 +102,7 @@ class JiandangStep2 extends React.Component {
           updateUrl01: '',
           isDelete01: true
         }, () => {
-          setTimeout(() => {
-            this.spanElement(0);
-          }, 100);
+          this.spanElement(0);
         });
       }
       if(ev.target.tagName.toLowerCase() === 'input') {
@@ -121,9 +121,7 @@ class JiandangStep2 extends React.Component {
           updateUrl02: '',
           isDelete02: true
         }, () => {
-          setTimeout(() => {
-            this.spanElement(1);
-          }, 100);
+          this.spanElement(1);
         });
       }
       if(ev.target.tagName.toLowerCase() === 'input') {
@@ -142,9 +140,7 @@ class JiandangStep2 extends React.Component {
           updateUrl03: '',
           isDelete03: true
         }, () => {
-          setTimeout(() => {
-            this.spanElement(2);
-          }, 100);
+          this.spanElement(2);
         });
       }
       if(ev.target.tagName.toLowerCase() === 'input') {
@@ -239,13 +235,11 @@ class JiandangStep2 extends React.Component {
   takePhoto = () => {
     // 获得Canvas对象
     let video = document.getElementById('video');
-    let canvas = document.getElementById('canvas');
     let canvasShow = document.getElementById('canvasShow');
-    this.ctx = canvas.getContext('2d');
     this.ctxShow = canvasShow.getContext('2d');
-    this.ctx.drawImage(video, 0, 0, 100, 100);
-    this.ctxShow.drawImage(video, 0, 0, 500, 500);
-    const dataUrl = canvas.toDataURL();
+    this.ctxShow.drawImage(video, 0, 0, 300, 300);
+    const dataUrl = canvasShow.toDataURL();
+    console.log(dataUrl);
     switch(this.state.setIndex) {
       case 0:
         this.setState({
@@ -279,18 +273,16 @@ class JiandangStep2 extends React.Component {
     this[`appendEle0${this.state.setIndex + 1}`].innerText = '';
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundImage = `url(${this.state[`updateUrl0${this.state.setIndex + 1}`]})`;
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundSize = '100% 100%';
-    this.ctx.clearRect(0, 0, 100, 100);
     this.ctxShow.clearRect(0, 0, 500, 500);
   };
   handleCancel = () => {
     this.setState({ visible: false });
-    this.ctx.clearRect(0, 0, 100, 100);
     this.ctxShow.clearRect(0, 0, 500, 500);
   };
   ownerModel = () => {
     return (
       <Modal
-        width={1200}
+        width={1000}
         visible={this.state.visible}
         title="Title"
         onOk={this.handleOk}
@@ -308,10 +300,7 @@ class JiandangStep2 extends React.Component {
               <video id="video" width="500px" height="500px" muted="muted">您的浏览器不支持拍照上传功能</video>
             </div>
             <div>
-              <canvas id="canvasShow" width="500px" height="500px" style={{'marginLeft': '30px'}}></canvas>
-            </div>
-            <div>
-              <canvas id="canvas" width="100px" height="100px" style={{'marginLeft': '20px'}}></canvas>
+              <canvas id="canvasShow" width="300px" height="300px" style={{'marginLeft': '100px'}}></canvas>
             </div>
           </div>
           <div>
@@ -324,33 +313,35 @@ class JiandangStep2 extends React.Component {
     );
   };
   componentDidMount() {
-    const label01 = document.querySelector(`label[for="positiveIdCardImageUrl"]`);
-    const label02 = document.querySelector(`label[for="negativeIdCardImageUrl"]`);
-    const label03 = document.querySelector(`label[for="handIdCardImageUrl"]`);
-    const sp01 = document.createElement('i');
-    const sp02 = document.createElement('i');
-    const sp03 = document.createElement('i');
-    sp01.innerText = '*';
-    sp02.innerText = '*';
-    sp03.innerText = '*';
-    sp01.style.color = 'red';
-    sp02.style.color = 'red';
-    sp03.style.color = 'red';
-    sp01.style.position = 'absolute';
-    sp02.style.position = 'absolute';
-    sp03.style.position = 'absolute';
-    sp01.style.left = '-10px';
-    sp01.style.top = '-8px';
-    sp02.style.left = '-10px';
-    sp02.style.top = '-8px';
-    sp03.style.left = '-10px';
-    sp03.style.top = '-8px';
-    label01.style.position = 'relative';
-    label02.style.position = 'relative';
-    label03.style.position = 'relative';
-    label01.appendChild(sp01);
-    label02.appendChild(sp02);
-    label03.appendChild(sp03);
+    setTimeout(() => {
+      const label01 = document.querySelector(`label[for="positiveIdCardImageUrl"]`);
+      const label02 = document.querySelector(`label[for="negativeIdCardImageUrl"]`);
+      const label03 = document.querySelector(`label[for="handIdCardImageUrl"]`);
+      const sp01 = document.createElement('i');
+      const sp02 = document.createElement('i');
+      const sp03 = document.createElement('i');
+      sp01.innerText = '*';
+      sp02.innerText = '*';
+      sp03.innerText = '*';
+      sp01.style.color = 'red';
+      sp02.style.color = 'red';
+      sp03.style.color = 'red';
+      sp01.style.position = 'absolute';
+      sp02.style.position = 'absolute';
+      sp03.style.position = 'absolute';
+      sp01.style.left = '-10px';
+      sp01.style.top = '-8px';
+      sp02.style.left = '-10px';
+      sp02.style.top = '-8px';
+      sp03.style.left = '-10px';
+      sp03.style.top = '-8px';
+      label01.style.position = 'relative';
+      label02.style.position = 'relative';
+      label03.style.position = 'relative';
+      label01.appendChild(sp01);
+      label02.appendChild(sp02);
+      label03.appendChild(sp03);
+    }, 300);
     this.getElement();
   }
   render() {
@@ -375,17 +366,20 @@ class JiandangStep2 extends React.Component {
           }
         }
         return(v);
-      }
+      },
+      imgSize: 512000
     }, {
       field: 'negativeIdCardImageUrl',
       title: '身份证反面照',
       type: 'img',
-      single: true
+      single: true,
+      imgSize: 512000
     }, {
       title: '手持身份证照片',
       field: 'handIdCardImageUrl',
       type: 'img',
-      single: true
+      single: true,
+      imgSize: 512000
     }, {
       field: 'userId',
       value: getUserId(),
@@ -395,7 +389,7 @@ class JiandangStep2 extends React.Component {
       value: this.code,
       hidden: true
     }];
-    return this.props.buildDetail({
+    return this.buildDetail({
       fields,
       code: this.code,
       detailCode: 631806,

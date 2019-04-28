@@ -13,6 +13,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       ...this.state,
       projectCode: getOrganizationCode()
     };
+    this.teamSysNo = '';
   }
   render() {
     const _this = this;
@@ -45,7 +46,14 @@ class ProjectMemberAddEdit extends DetailUtil {
           });
         }
       },
-      required: true
+      formatter: (v) => {
+        if(!this.teamSysNo) {
+          this.teamSysNo = v;
+        }
+        return v;
+      },
+      required: true,
+      readonly: !!this.code
     }, {
       field: 'corpCode',
       hidden: true,
@@ -87,10 +95,12 @@ class ProjectMemberAddEdit extends DetailUtil {
     }, {
       title: '制卡采集照片',
       field: 'issueCardPicUrl',
-      type: 'img'
+      type: 'img',
+      imgSize: 51200
     }, {
       title: '考勤卡号',
-      field: 'cardNumber'
+      field: 'cardNumber',
+      maxlength: 20
     }, {
       title: '发放工资银行卡号',
       field: 'payRollBankCardNumber',
@@ -160,6 +170,9 @@ class ProjectMemberAddEdit extends DetailUtil {
         params.userId = getUserId();
       },
       beforeSubmit: (params) => {
+        if(!params.teamSysNo) {
+          params.teamSysNo = this.teamSysNo;
+        }
         params.issueCardPicUrl = formatImg(params.issueCardPicUrl);
         return true;
       }

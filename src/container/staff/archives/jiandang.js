@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import originJsonp from 'jsonp';
 import './jiandang.css';
-import { Form, Input, Button, Select, DatePicker, Spin, Upload, Divider, Row, Col } from 'antd';
+import { Form, Input, Button, Select, DatePicker, Spin, Upload, Divider, Row, Col, message } from 'antd';
 import { formItemLayout, tailFormItemLayout, jiandangFormItemLayout, DATE_FORMAT,
   UPLOAD_URL } from 'common/js/config';
 import { jiandang, reJiandang, getUserId, getUserDetail, getStaffDetail } from 'api/user';
@@ -60,7 +60,8 @@ class Jiandang extends React.Component {
       politicsTypeData: [],
       searchIdcard: '',
       fetching: true,
-      picLoading: false
+      picLoading: false,
+      isShowJoinedTime: false
     };
     this.openVideo = this.openVideo.bind(this);
     this.getCard = this.getCard.bind(this);
@@ -112,6 +113,11 @@ class Jiandang extends React.Component {
       idPic: data.headImageUrl,
       fetching: false
     });
+    if(data.joinedTime) {
+      this.setState({
+        isShowJoinedTime: true
+      });
+    }
     this.props.form.setFieldsValue({
       realName: data.name,
       sex: data.gender + '',
@@ -323,7 +329,11 @@ class Jiandang extends React.Component {
       return;
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
+      if(info.file.size > (50 * 1024)) {
+        message.warning('请上传小于50kb的头像');
+        this.setState({ picLoading: false });
+        return;
+      }
       getBase64(info.file.originFileObj, idPic => this.setState({
         idPic,
         picLoading: false
@@ -539,13 +549,23 @@ class Jiandang extends React.Component {
                         {getFieldDecorator('isJoined', {
                           initialValue: this.state.isJoined
                         })(
-                            <Select placeholder="请选择">
+                            <Select placeholder="请选择" onChange={(v) => {
+                              if(v === '1') {
+                                this.setState({
+                                  isShowJoinedTime: true
+                                });
+                              }else {
+                                this.setState({
+                                  isShowJoinedTime: false
+                                });
+                              }
+                            }}>
                               <Option key='1' value='1'>是</Option>
                               <Option key='0' value='0'>否</Option>
                             </Select>
                         )}
                       </FormItem>
-                      <FormItem label="加入公会时间" {...jiandangFormItemLayout}>
+                      <FormItem label="加入公会时间" {...jiandangFormItemLayout} style={{'display': this.state.isShowJoinedTime ? 'block' : 'none'}}>
                         {getFieldDecorator('joinedTime', {})(
                             <DatePicker
                                 allowClear={false}

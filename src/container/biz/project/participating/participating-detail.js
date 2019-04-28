@@ -66,8 +66,11 @@ class ParticipatingDetail extends DetailUtil {
         options: {
           noSelect: true,
           fields: [{
-            title: '银行支行名称',
+            title: '银行名称',
             field: 'bankName'
+          }, {
+            title: '银行支行名称',
+            field: 'subranch'
           }, {
             title: '银行卡号',
             field: 'bankNumber'
