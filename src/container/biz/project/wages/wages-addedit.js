@@ -9,33 +9,14 @@ class ProjectWagesAddEdit extends DetailUtil {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
+    this.state = {
+      ...this.state,
+      isBackPay: false,
+      index: 0
+    };
   }
   render() {
     const fields = [{
-      title: '出勤天数',
-      field: 'days'
-    }, {
-      title: '总工时',
-      field: 'workHours'
-    }, {
-      title: '应发金额(元)',
-      field: 'totalPayAmount',
-      required: true
-    }, {
-      title: '实发金额(元)',
-      field: 'actualAmount',
-      required: true
-    }, {
-      title: '是否为补发',
-      field: 'isBackPay',
-      type: 'select',
-      key: 'is_not'
-    }, {
-      title: '发放日期',
-      field: 'balanceDate',
-      type: 'date',
-      required: true
-    }, {
       title: '工人工资卡号',
       field: 'payRollBankCardNumber',
       required: true
@@ -63,6 +44,46 @@ class ProjectWagesAddEdit extends DetailUtil {
       title: '工资代发开户行名称',
       field: 'payBankName',
       required: true
+    }, {
+      title: '应发金额(元)',
+      field: 'totalPayAmount',
+      required: true
+    }, {
+      title: '实发金额(元)',
+      field: 'actualAmount',
+      required: true
+    }, {
+      title: '发放日期',
+      field: 'balanceDate',
+      type: 'date',
+      required: true
+    }, {
+      title: '是否为补发',
+      field: 'isBackPay',
+      type: 'select',
+      key: 'is_not',
+      required: true,
+      onChange: (v) => {
+        this.setState({ isBackPay: v === '1' });
+      },
+      formatter: (v) => {
+        if(v && this.state.index < 2) {
+          this.setState({ isBackPay: +v === 1, index: this.state.index + 1 });
+        }
+        return v;
+      }
+    }, {
+      title: '补发月份',
+      field: 'backPayMonth',
+      type: 'month',
+      required: this.state.isBackPay,
+      hidden: !this.state.isBackPay
+    }, {
+      title: '出勤天数',
+      field: 'days'
+    }, {
+      title: '总工时',
+      field: 'workHours'
     }, {
       title: '第三方工资单编号',
       field: 'thirdPayRollCode'
@@ -108,6 +129,12 @@ class ProjectWagesAddEdit extends DetailUtil {
       editCode: 631810,
       beforeDetail: (params) => {
         params.userId = getUserId();
+      },
+      beforeSubmit: (params) => {
+        if(+params.isBackPay === 0) {
+          params.backPayMonth = '';
+        }
+        return params;
       }
     });
   }

@@ -32,7 +32,13 @@ class ParticipatingAddEdit extends DetailUtil {
           this.corpCode = v;
         }
         return v;
-      }
+      },
+      hidden: this.code
+    }, {
+      title: '企业名称',
+      field: 'corpName',
+      readonly: true,
+      hidden: !this.code
     }, {
       title: '企业类型',
       field: 'corpType',

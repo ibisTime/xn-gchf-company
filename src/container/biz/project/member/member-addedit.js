@@ -2,18 +2,33 @@ import React from 'react';
 import { Form } from 'antd';
 import { getQueryString, formatImg, getUserId, getOrganizationCode } from 'common/js/util';
 import DetailUtil from 'common/js/build-detail-dev';
+import fetch from 'common/js/fetch';
 
 @Form.create()
 class ProjectMemberAddEdit extends DetailUtil {
   constructor(props) {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
+    this.parCode = getQueryString('parCode', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
     this.state = {
       ...this.state,
-      projectCode: getOrganizationCode()
+      projectCode: getOrganizationCode(),
+      workerName: ''
     };
     this.teamSysNo = '';
+  }
+  componentDidMount() {
+    if(this.code) {
+      fetch(631606, {
+        code: this.code,
+        userId: getUserId()
+      }).then(data => {
+        this.setState({
+          workerName: data && `${data.corpName ? data.corpName + '-' : ''}${data.teamName ? data.teamName + '-' : ''}${data.workerName ? data.workerName : '-'}`
+        });
+      });
+    }
   }
   render() {
     const _this = this;
@@ -22,6 +37,16 @@ class ProjectMemberAddEdit extends DetailUtil {
       value: getOrganizationCode(),
       hidden: true,
       required: true
+    }, {
+      title: '工人编号',
+      field: 'workerCode1',
+      value: this.state.workerName,
+      readonly: true,
+      hidden: this.parCode
+    }, {
+      title: '工人编号',
+      field: 'workerCode',
+      hidden: true
     }, {
       title: '所在班组',
       field: 'teamSysNo',
@@ -59,18 +84,6 @@ class ProjectMemberAddEdit extends DetailUtil {
       hidden: true,
       required: true
     }, {
-      title: '工人编号',
-      field: 'workerCode',
-      type: 'select',
-      pageCode: 631805,
-      keyName: 'code',
-      searchName: 'name',
-      valueName: '{{name.DATA}}-{{idCardNumber.DATA}}',
-      params: {
-        userId: getUserId()
-      },
-      required: true
-    }, {
       title: '是否班长',
       field: 'isTeamLeader',
       type: 'select',
@@ -93,7 +106,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       field: 'issueCardDate',
       type: 'datetime'
     }, {
-      title: '制卡采集照片',
+      title: '制卡采集照片(小于50kB)',
       field: 'issueCardPicUrl',
       type: 'img',
       imgSize: 51200
@@ -101,6 +114,58 @@ class ProjectMemberAddEdit extends DetailUtil {
       title: '考勤卡号',
       field: 'cardNumber',
       maxlength: 20
+    }, {
+      field: 'positiveIdCardImageUrl',
+      title: '身份证正面照(小于500KB)',
+      type: 'img',
+      single: true,
+      formatter: (v, d) => {
+        if(d.workerInfo) {
+          return d.workerInfo.positiveIdCardImageUrl;
+        }else {
+          return '-';
+        }
+      },
+      hidden: !this.view
+    }, {
+      field: 'negativeIdCardImageUrl',
+      title: '身份证反面照(小于500KB)',
+      type: 'img',
+      single: true,
+      formatter: (v, d) => {
+        if(d.workerInfo) {
+          return d.workerInfo.negativeIdCardImageUrl;
+        }else {
+          return '-';
+        }
+      },
+      hidden: !this.view
+    }, {
+      title: '手持身份证照片(小于500KB)',
+      field: 'handIdCardImageUrl',
+      type: 'img',
+      single: true,
+      formatter: (v, d) => {
+        if(d.workerInfo) {
+          return d.workerInfo.handIdCardImageUrl;
+        }else {
+          return '-';
+        }
+      },
+      hidden: !this.view
+    }, {
+      title: '考勤人脸照(小于500KB)',
+      field: 'attendancePicture',
+      type: 'img',
+      single: true,
+      formatter: (v, d) => {
+        if(d.workerInfo) {
+          return d.workerInfo.attendancePicture;
+        }else {
+          return '-';
+        }
+      },
+      hidden: !this.view
     }, {
       title: '发放工资银行卡号',
       field: 'payRollBankCardNumber',
@@ -112,7 +177,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       title: '工资卡银行联号',
       field: 'bankLinkNumber'
     }, {
-      title: '工资卡银行代码',
+      title: '工资卡银行',
       field: 'payRollTopBankCode',
       key: 'bank_code',
       type: 'select'
@@ -173,8 +238,14 @@ class ProjectMemberAddEdit extends DetailUtil {
         if(!params.teamSysNo) {
           params.teamSysNo = this.teamSysNo;
         }
+        if(!params.workerCode) {
+          params.workerCode = this.parCode;
+        }
         params.issueCardPicUrl = formatImg(params.issueCardPicUrl);
         return true;
+      },
+      onOk: () => {
+        this.props.history.push('/project/member');
       }
     });
   }

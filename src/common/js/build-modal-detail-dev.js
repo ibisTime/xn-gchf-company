@@ -59,7 +59,7 @@ class ModalDetailDev extends DetailCompDev {
         visible={visible}
         title={title}
         onCancel={this.onCancel}
-        style={{minWidth: 820}}
+        style={{minWidth: 900}}
         footer={null}>
         {this.buildDetail(options)}
       </Modal>

@@ -148,6 +148,11 @@ const ROUTES = [
     path: '/project/member/addedit',
     component: asyncComponent(() => import('container/biz/project/member/member-addedit'))
   },
+  // 业务管理 -- 项目管理-- 项目人员-- 采集人脸
+  {
+    path: '/project/member/acquisitionFaces',
+    component: asyncComponent(() => import('container/biz/project/member/acquisitionFaces'))
+  },
   // 业务管理 -- 项目管理-- 项目人员-- 导入
   {
     path: '/project/member/import',

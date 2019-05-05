@@ -220,7 +220,7 @@ export default class CUpload extends React.Component {
                 this.imgUrl = PIC_PREFIX + url + '?attname=' + url + '.jpg';
               }}>{
                 previewId && getFieldValue(previewId).split('||').map(v => {
-                  let url = PIC_PREFIX + v + PIC_BASEURL_L;
+                  let url = v.includes('http') ? v + PIC_BASEURL_L : PIC_PREFIX + v + PIC_BASEURL_L;
                   return (<div className='img-wrap' key={v}><img alt="图片" style={{width: '100%'}} src={url}/></div>);
                 })
               }</Carousel>
@@ -228,7 +228,14 @@ export default class CUpload extends React.Component {
             <div className="down-wrap">
               <Button icon="left" onClick={() => this.carousel.prev()}></Button>
               <Button style={{marginLeft: 20}} icon="right" onClick={() => this.carousel.next()}></Button>
-              <Button style={{marginLeft: 20}} onClick={() => { location.href = this.imgUrl; }} icon="download">下载</Button>
+              <Button style={{marginLeft: 20}} onClick={() => {
+                let url = '';
+                previewId && getFieldValue(previewId).split('||').map(v => {
+                  url = v.includes('http') ? v + '?attname=' + v + '.jpg' : PIC_PREFIX + v + '?attname=' + v + '.jpg';
+                });
+                console.log(url);
+                location.href = url;
+              }} icon="download">下载</Button>
             </div>
           </Modal>
         </FormItem>

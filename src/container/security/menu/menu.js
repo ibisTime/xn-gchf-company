@@ -37,6 +37,9 @@ class Menu extends React.Component {
       field: 'name',
       search: true
     }, {
+      title: '菜单编号',
+      field: 'code'
+    }, {
       title: '菜单url',
       field: 'url'
     }, {

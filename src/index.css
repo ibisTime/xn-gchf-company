@@ -63,7 +63,7 @@ html {
 }
 
 .detail-form-wrapper > .ant-row > .ant-form-item-label.ant-col-xs-24.ant-col-sm-8 {
-  width: 200px;
+  width: 230px;
   margin-right: 10px;
 }
 
@@ -297,4 +297,14 @@ html {
 }
 .ant-menu-dark .ant-menu-item, .ant-menu-dark .ant-menu-item-group-title, .ant-menu-dark .ant-menu-item > a {
     color: #fff;
+}
+
+.photo_ele{
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  display: inline-block;
+  border: 1px solid #dedede;
+  cursor: pointer;
 }

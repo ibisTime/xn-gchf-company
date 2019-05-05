@@ -61,7 +61,8 @@ class Jiandang extends React.Component {
       searchIdcard: '',
       fetching: true,
       picLoading: false,
-      isShowJoinedTime: false
+      isShowJoinedTime: false,
+      isStaff: false
     };
     this.openVideo = this.openVideo.bind(this);
     this.getCard = this.getCard.bind(this);
@@ -118,6 +119,7 @@ class Jiandang extends React.Component {
         isShowJoinedTime: true
       });
     }
+    this.code = data.code;
     this.props.form.setFieldsValue({
       realName: data.name,
       sex: data.gender + '',
@@ -272,6 +274,9 @@ class Jiandang extends React.Component {
   }
   submitSuc(code) {
     showSucMsg('建档成功');
+    if(this.state.isStaff) {
+      sessionStorage.setItem('isStaff', 'true');
+    }
     setTimeout(() => {
       this.props.history.push(`/staff/jiandang/step2?code=${code}`);
     }, 300);
@@ -347,6 +352,9 @@ class Jiandang extends React.Component {
     }).then(data => {
       if (data.idCardNumber) {
         this.setDataByUserInfo(data);
+        this.setState({
+          isStaff: true
+        });
       } else {
         this.setState({ fetching: false });
         showWarnMsg('该证件未在人员库中，请及时建档');
@@ -368,6 +376,9 @@ class Jiandang extends React.Component {
     return (
       <Spin spinning={fetching}>
         <div className="SectionContainer jiandang">
+          <div style={{'marginBottom': '30px'}}><Button onClick={() => {
+            window.history.go(-1);
+          }}>返回</Button></div>
           <Divider orientation="left">人员库查重</Divider>
           <FormItem label="身份证号码" {...jiandangFormItemLayout}>
             <Row gutter={8}>

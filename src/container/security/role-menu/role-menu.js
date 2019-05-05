@@ -40,6 +40,17 @@ class RoleMenu extends React.Component {
       });
     }).catch(() => this.setState({ fetching: false }));
   }
+  getTreeNode = (arr, children) => {
+    arr.forEach(a => {
+      if (this.result[a.key]) {
+        a.children = [];
+        children.push(a);
+        this.getTreeNode(this.result[a.key], a.children);
+      } else {
+        children.push(a);
+      }
+    });
+  }
   getTree(data) {
     let result = {};
     let parentKeyMap = {};
@@ -59,17 +70,6 @@ class RoleMenu extends React.Component {
     let tree = [];
     this.getTreeNode(result['ROOT'], tree);
     this.setState({ treeData: tree });
-  }
-  getTreeNode(arr, children) {
-    arr.forEach(a => {
-      if (this.result[a.key]) {
-        a.children = [];
-        children.push(a);
-        this.getTreeNode(this.result[a.key], a.children);
-      } else {
-        children.push(a);
-      }
-    });
   }
   onCheck = (checkedKeys, event) => {
     const { treeData } = this.state;

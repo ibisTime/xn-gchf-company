@@ -15,21 +15,20 @@ const FormItem = Form.Item;
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   storePwd: true
-    // };
     this.typeName = '项目端';
-    // this.onChange = this.onChange.bind(this);
-    // if (cookies.get('loginName') && cookies.get('loginName') !== null && cookies.get('loginName') !== undefined) {
-    //   this.initName = cookies.get('loginName');
-    // }
-    // if (cookies.get('loginPwd') && cookies.get('loginPwd') !== null && cookies.get('loginPwd') !== undefined) {
-    //   this.initPwd = cookies.get('loginPwd');
-    // }
+    if (cookies.get('loginName') && cookies.get('loginName') !== null && cookies.get('loginName') !== undefined) {
+      this.initName = cookies.get('loginName');
+    }
+    if (cookies.get('loginPwd') && cookies.get('loginPwd') !== null && cookies.get('loginPwd') !== undefined) {
+      this.initPwd = cookies.get('loginPwd');
+    }
+    this.state = {
+      storePwd: !!this.initPwd
+    };
   }
-  // onChange(e) {
-  //   // this.setState({ 'storePwd': e.target.checked });
-  // }
+  onChange = (e) => {
+    this.setState({ 'storePwd': e.target.checked });
+  };
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -41,8 +40,7 @@ class Login extends React.Component {
         // values.type = 'O'; // 业主单位
         // values.type = 'S'; // 监管单位
         values.type = this.type;
-        // this.props.login(values, this.state.storePwd);
-        this.props.login(values);
+        this.props.login(values, this.state.storePwd);
       }
     });
   }
@@ -86,7 +84,7 @@ class Login extends React.Component {
           <FormItem className="rem-pwd">
             {getFieldDecorator('remember', {
               valuePropName: 'checked',
-              initialValue: true
+              initialValue: this.state.storePwd
             })(
               <Checkbox className="remember-pwd" onChange={this.onChange}><span>记住密码</span></Checkbox>
             )}

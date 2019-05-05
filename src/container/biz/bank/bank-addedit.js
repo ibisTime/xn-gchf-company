@@ -90,7 +90,7 @@ class BankAddEdit extends DetailUtil {
             require: true,
             formatter(v, d) {
               if(v) {
-                return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
+                return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.businessName ? d.businessName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
               }else {
                 return '';
               }
@@ -116,7 +116,7 @@ class BankAddEdit extends DetailUtil {
             require: true,
             formatter(v, d) {
               if(v) {
-                return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.workerName ? d.workerName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
+                return `${d.projectName ? d.projectName : ''}-${d.teamName ? d.teamName : ''}-${d.businessName ? d.businessName : ''}-${d.idcardNumber ? d.idcardNumber : ''}`;
               }else {
                 return '';
               }

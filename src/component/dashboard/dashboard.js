@@ -114,7 +114,23 @@ class Dashboard extends React.Component {
         'header': true,
         'home-header': this.state.home
       }}>
-        <Link to='/' className="logo"><img src={logo}/></Link>
+        <Link
+          to='/'
+          className="logo"
+          onClick={() => {
+            let menuCode = Object.values(this.props.menus);
+            let pCode = menuCode[0]['code'];
+            let cCode = '';
+            for(let i = 0, len = menuCode.length; i < len; i++) {
+              if(menuCode[i].url !== '#') {
+                cCode = menuCode[i].code;
+                break;
+              }
+            }
+            this.props.setTopCode(pCode);
+            this.props.setSubMenuCode(cCode);
+          }}
+        ><img src={logo}/></Link>
         <Menu
           theme="dark"
           mode="horizontal"

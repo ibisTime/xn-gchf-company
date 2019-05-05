@@ -6,7 +6,8 @@ export const UPLOAD_URL = 'https://up.qbox.me';
 // export const PIC_PREFIX = 'http://otoieuivb.bkt.clouddn.com/';
 // export const PIC_PREFIX = 'http://image.tree.hichengdai.com/';
 export const PIC_PREFIX = 'https://picture.jm60s.com/';
-export const PIC_BASEURL_L = '?imageMogr2/auto-orient/thumbnail/!1000x1000r';
+export const PIC_BASEURL_D = '?imageMogr2/auto-orient/thumbnail/!1000x1000r';
+export const PIC_BASEURL_L = '?imageMogr2';
 
 // 系统userid
 export const SYS_USER = 'SYS_USER_ZXZX';

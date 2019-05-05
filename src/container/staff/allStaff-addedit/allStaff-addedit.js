@@ -85,19 +85,25 @@ class AllStaffAddEdit extends React.Component {
       required: true
     }, {
       field: 'positiveIdCardImageUrl',
-      title: '正面照URL',
+      title: '身份证正面照',
       type: 'img',
       single: true,
       required: true
     }, {
       field: 'negativeIdCardImageUrl',
-      title: '反面照URL',
+      title: '身份证反面照',
       type: 'img',
       single: true,
       required: true
     }, {
-      title: '手持身份证照片URL',
+      title: '手持身份证照片',
       field: 'handIdCardImageUrl',
+      type: 'img',
+      single: true,
+      required: true
+    }, {
+      title: '考勤人脸照',
+      field: 'attendancePicture',
       type: 'img',
       single: true,
       required: true

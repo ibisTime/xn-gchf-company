@@ -10,7 +10,7 @@ import {
   setSearchData
 } from '@redux/staff/allStaff';
 import { listWrapper } from 'common/js/build-list';
-import { showWarnMsg, getUserId } from 'common/js/util';
+import { showWarnMsg, getUserId, getQueryString } from 'common/js/util';
 
 @listWrapper(
   state => ({
@@ -23,6 +23,9 @@ import { showWarnMsg, getUserId } from 'common/js/util';
   }
 )
 class AllStaff extends React.Component {
+  state = {
+    code: getQueryString('code') || ''
+  };
   render() {
     const fields = [{
       title: '工人姓名',
@@ -48,19 +51,6 @@ class AllStaff extends React.Component {
       title: '所在企业',
       field: 'corpName'
     }, {
-      title: '所在企业',
-      field: 'corpCode',
-      pageCode: '631255',
-      params: {
-        uploadStatus: '2',
-        userId: getUserId()
-      },
-      keyName: 'corpCode',
-      valueName: 'corpName',
-      type: 'select',
-      hidden: true,
-      search: true
-    }, {
       title: '所在班组',
       field: 'teamName'
     }, {
@@ -76,26 +66,6 @@ class AllStaff extends React.Component {
       search: true
     }];
     const btnEvent = {
-      // 绑定银行卡
-      bank: (selectedRowKeys, selectedRows) => {
-        if (!selectedRowKeys.length) {
-          showWarnMsg('请选择记录');
-        } else if (selectedRowKeys.length > 1) {
-          showWarnMsg('请选择一条记录');
-        } else {
-          this.props.history.push(`/staff/allStaff/bank?bcode=${selectedRowKeys[0]}&type=002`);
-        }
-      },
-      // 重新建档
-      rejiandang: (selectedRowKeys, selectedRows) => {
-        if (!selectedRowKeys.length) {
-          showWarnMsg('请选择记录');
-        } else if (selectedRowKeys.length > 1) {
-          showWarnMsg('请选择一条记录');
-        } else {
-          this.props.history.push(`/staff/jiandang?code=${selectedRows[0].workerCode}`);
-        }
-      },
       // 详情
       detail: (selectedRowKeys, selectedRows) => {
         if (!selectedRowKeys.length) {
@@ -111,7 +81,8 @@ class AllStaff extends React.Component {
       fields,
       btnEvent,
       searchParams: {
-        userId: getUserId()
+        userId: getUserId(),
+        code: this.state.code
       },
       pageCode: 631605
     });

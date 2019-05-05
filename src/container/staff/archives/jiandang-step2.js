@@ -9,8 +9,10 @@ import {
 } from '@redux/staff/jiandang-step2';
 import { getQueryString, getUserId } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
+import { UPLOAD_URL } from 'common/js/config';
+import { getQiniuToken } from 'api/general';
+import axios from 'axios';
 import { Modal, Button, message } from 'antd';
-import DetailUtil from 'common/js/build-detail-dev';
 
 let eleObj = {
   spEle01: null,
@@ -21,28 +23,36 @@ let eleObj = {
   state => state.jiandangStep2,
   { initStates, doFetching, cancelFetching, setSelectData, setPageData, restore }
 )
-class JiandangStep2 extends DetailUtil {
+class JiandangStep2 extends React.Component {
   constructor(props) {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.ctxShow = null;
     this.time = null;
     this.isIndex = 0;
+    this.mediaStreamTrack = null;
   }
   state = {
     visible: false,
     updateUrl01: '',
     updateUrl02: '',
     updateUrl03: '',
+    updateUrl04: '',
     isDelete01: false,
     isDelete02: false,
     isDelete03: false,
+    isDelete04: false,
+    upUrl01: '',
+    upUrl02: '',
+    upUrl03: '',
+    upUrl04: '',
     setIndex: 0
   };
   spanElement = (index) => {
+    const doc = document;
     if(index || index === 0) {
-      const pictureCard = document.querySelectorAll('.ant-upload-select-picture-card')[index];
-      const cardSpan = document.querySelectorAll('.ant-upload-select-picture-card>span')[index];
+      const pictureCard = doc.querySelectorAll('.ant-upload-select-picture-card')[index];
+      const cardSpan = doc.querySelectorAll('.ant-upload-select-picture-card>span')[index];
       setTimeout(() => {
         pictureCard.style.display = 'inline-block';
         pictureCard.style.lineHeight = '104px';
@@ -50,8 +60,8 @@ class JiandangStep2 extends DetailUtil {
         cardSpan.style.verticalAlign = 'baseline';
       }, 300);
     }else {
-      const pictureCardAll = document.querySelectorAll('.ant-upload-select-picture-card');
-      const cardAllSpan = document.querySelectorAll('.ant-upload-select-picture-card>span');
+      const pictureCardAll = doc.querySelectorAll('.ant-upload-select-picture-card');
+      const cardAllSpan = doc.querySelectorAll('.ant-upload-select-picture-card>span');
       pictureCardAll.forEach(item => {
         item.style.display = 'inline-block';
         item.style.lineHeight = '104px';
@@ -63,37 +73,40 @@ class JiandangStep2 extends DetailUtil {
     }
   };
   getElement = () => {
-    const ele01 = document.querySelectorAll('.ant-form-item-control')[0];
-    const ele02 = document.querySelectorAll('.ant-form-item-control')[1];
-    const ele03 = document.querySelectorAll('.ant-form-item-control')[2];
-    eleObj.spEle01 = document.createElement('div');
-    eleObj.spEle02 = document.createElement('div');
-    eleObj.spEle03 = document.createElement('div');
+    const doc = document;
+    const ele01 = doc.querySelectorAll('.ant-form-item-control')[0];
+    const ele02 = doc.querySelectorAll('.ant-form-item-control')[1];
+    const ele03 = doc.querySelectorAll('.ant-form-item-control')[2];
+    const ele04 = doc.querySelectorAll('.ant-form-item-control')[3];
+    eleObj.spEle01 = doc.createElement('div');
+    eleObj.spEle02 = doc.createElement('div');
+    eleObj.spEle03 = doc.createElement('div');
+    eleObj.spEle04 = doc.createElement('div');
     ele01.style.marginBottom = '20px';
     ele02.style.marginBottom = '20px';
     ele03.style.marginBottom = '20px';
+    ele04.style.marginBottom = '20px';
     eleObj.spEle01.style.margin = '0px 30px 20px';
     eleObj.spEle01.style.display = 'inline-block';
     eleObj.spEle02.style.margin = '0px 30px 20px';
     eleObj.spEle02.style.display = 'inline-block';
     eleObj.spEle03.style.margin = '0px 30px 20px';
     eleObj.spEle03.style.display = 'inline-block';
+    eleObj.spEle04.style.margin = '0px 30px 20px';
+    eleObj.spEle04.style.display = 'inline-block';
     eleObj.spEle01.innerText = '或';
     eleObj.spEle02.innerText = '或';
     eleObj.spEle03.innerText = '或';
+    eleObj.spEle04.innerText = '或';
     ele01.appendChild(eleObj.spEle01);
     ele02.appendChild(eleObj.spEle02);
     ele03.appendChild(eleObj.spEle03);
-    this.appendEle01 = document.createElement('div');
-    this.appendEle02 = document.createElement('div');
-    this.appendEle03 = document.createElement('div');
-    this.appendEle01.style.width = '100px';
-    this.appendEle01.style.height = '100px';
-    this.appendEle01.style.lineHeight = '100px';
-    this.appendEle01.style.textAlign = 'center';
-    this.appendEle01.style.display = 'inline-block';
-    this.appendEle01.style.border = '1px solid #dedede';
-    this.appendEle01.style.cursor = 'pointer';
+    ele04.appendChild(eleObj.spEle04);
+    this.appendEle01 = doc.createElement('div');
+    this.appendEle02 = doc.createElement('div');
+    this.appendEle03 = doc.createElement('div');
+    this.appendEle04 = doc.createElement('div');
+    this.appendEle01.classList.add('photo_ele');
     this.appendEle01.innerText = '拍照上传';
     ele01.addEventListener('click', (ev) => {
       if(ev.target.getAttribute('data-icon') === 'delete') {
@@ -152,13 +165,32 @@ class JiandangStep2 extends DetailUtil {
         });
       }
     });
+    ele04.addEventListener('click', (ev) => {
+      if(ev.target.getAttribute('data-icon') === 'delete') {
+        eleObj.spEle04.style.display = 'inline-block';
+        this.setState({
+          updateUrl04: '',
+          isDelete04: true
+        }, () => {
+          this.spanElement(3);
+        });
+      }
+      if(ev.target.tagName.toLowerCase() === 'input') {
+        eleObj.spEle04.style.display = 'inline-block';
+        this.appendEle04.style.backgroundImage = '';
+        this.appendEle04.innerText = '拍照上传';
+        this.setState({
+          updateUrl04: ''
+        });
+      }
+    });
     this.appendEle01.addEventListener('click', () => {
       this.showModal();
       this.setState({
         setIndex: 0,
         isDelete01: false
       }, () => {
-        const antion = document.querySelectorAll('.ant-upload-list-picture-card')[0].children[0];
+        const antion = doc.querySelectorAll('.ant-upload-list-picture-card')[0].children[0];
         if(antion) {
           antion.children[1].children[1].click();
         }
@@ -167,13 +199,7 @@ class JiandangStep2 extends DetailUtil {
         }, 500);
       });
     });
-    this.appendEle02.style.width = '100px';
-    this.appendEle02.style.height = '100px';
-    this.appendEle02.style.lineHeight = '100px';
-    this.appendEle02.style.textAlign = 'center';
-    this.appendEle02.style.display = 'inline-block';
-    this.appendEle02.style.border = '1px solid #dedede';
-    this.appendEle02.style.cursor = 'pointer';
+    this.appendEle02.classList.add('photo_ele');
     this.appendEle02.innerText = '拍照上传';
     this.appendEle02.addEventListener('click', () => {
       this.showModal();
@@ -181,7 +207,7 @@ class JiandangStep2 extends DetailUtil {
         setIndex: 1,
         isDelete02: false
       }, () => {
-        const antion = document.querySelectorAll('.ant-upload-list-picture-card')[1].children[0];
+        const antion = doc.querySelectorAll('.ant-upload-list-picture-card')[1].children[0];
         if(antion) {
           antion.children[1].children[1].click();
         }
@@ -190,13 +216,7 @@ class JiandangStep2 extends DetailUtil {
         }, 500);
       });
     });
-    this.appendEle03.style.width = '100px';
-    this.appendEle03.style.height = '100px';
-    this.appendEle03.style.lineHeight = '100px';
-    this.appendEle03.style.textAlign = 'center';
-    this.appendEle03.style.display = 'inline-block';
-    this.appendEle03.style.border = '1px solid #dedede';
-    this.appendEle03.style.cursor = 'pointer';
+    this.appendEle03.classList.add('photo_ele');
     this.appendEle03.innerText = '拍照上传';
     this.appendEle03.addEventListener('click', () => {
       this.showModal();
@@ -204,7 +224,7 @@ class JiandangStep2 extends DetailUtil {
         setIndex: 2,
         isDelete03: false
       }, () => {
-        const antion = document.querySelectorAll('.ant-upload-list-picture-card')[2].children[0];
+        const antion = doc.querySelectorAll('.ant-upload-list-picture-card')[2].children[0];
         if(antion) {
           antion.children[1].children[1].click();
         }
@@ -213,9 +233,27 @@ class JiandangStep2 extends DetailUtil {
         }, 500);
       });
     });
+    this.appendEle04.classList.add('photo_ele');
+    this.appendEle04.innerText = '拍照上传';
+    this.appendEle04.addEventListener('click', () => {
+      this.showModal();
+      this.setState({
+        setIndex: 3,
+        isDelete04: false
+      }, () => {
+        const antion = doc.querySelectorAll('.ant-upload-list-picture-card')[3].children[0];
+        if(antion) {
+          antion.children[1].children[1].click();
+        }
+        setTimeout(() => {
+          this.spanElement(3);
+        }, 500);
+      });
+    });
     ele01.appendChild(this.appendEle01);
     ele02.appendChild(this.appendEle02);
     ele03.appendChild(this.appendEle03);
+    ele04.appendChild(this.appendEle04);
   };
   getMedia = () => {
     let constraints = {
@@ -227,19 +265,59 @@ class JiandangStep2 extends DetailUtil {
     // then()方法是异步执行，当then()前的方法执行完后再执行then()内部的程序
     // 避免数据没有获取到
     let promise = navigator.mediaDevices.getUserMedia(constraints);
-    promise.then(function (MediaStream) {
+    promise.then((MediaStream) => {
+      this.mediaStreamTrack = MediaStream;
       video.srcObject = MediaStream;
       video.play();
     });
   };
+  putb64 = (basePic, index) => {
+    getQiniuToken().then((data) => {
+      let pic = basePic.replace(/^.*?base64,/, '');
+      axios({
+        method: 'post',
+        url: UPLOAD_URL + '/putb64/-1',
+        data: pic,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'Authorization': 'UpToken ' + data.uploadToken
+        }
+      }).then(upData => {
+        const upUrl = upData.data.hash;
+        switch(index) {
+          case 0:
+            this.setState({
+              upUrl01: upUrl
+            });
+            break;
+          case 1:
+            this.setState({
+              upUrl02: upUrl
+            });
+            break;
+          case 2:
+            this.setState({
+              upUrl03: upUrl
+            });
+            break;
+          case 3:
+            this.setState({
+              upUrl04: upUrl
+            });
+            break;
+        }
+      });
+    }).catch(() => this.setState({ fetching: false }));
+  };
   takePhoto = () => {
+    const doc = document;
     // 获得Canvas对象
-    let video = document.getElementById('video');
-    let canvasShow = document.getElementById('canvasShow');
+    let video = doc.getElementById('video');
+    let canvasShow = doc.getElementById('canvasShow');
     this.ctxShow = canvasShow.getContext('2d');
     this.ctxShow.drawImage(video, 0, 0, 300, 300);
     const dataUrl = canvasShow.toDataURL();
-    console.log(dataUrl);
+    this.putb64(dataUrl, this.state.setIndex);
     switch(this.state.setIndex) {
       case 0:
         this.setState({
@@ -254,6 +332,11 @@ class JiandangStep2 extends DetailUtil {
       case 2:
         this.setState({
           updateUrl03: dataUrl
+        });
+        break;
+      case 3:
+        this.setState({
+          updateUrl04: dataUrl
         });
         break;
     }
@@ -274,10 +357,18 @@ class JiandangStep2 extends DetailUtil {
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundImage = `url(${this.state[`updateUrl0${this.state.setIndex + 1}`]})`;
     this[`appendEle0${this.state.setIndex + 1}`].style.backgroundSize = '100% 100%';
     this.ctxShow.clearRect(0, 0, 500, 500);
+    this.mediaStreamTrack.getTracks().forEach(function (track) {
+      track.stop();
+    });
   };
   handleCancel = () => {
     this.setState({ visible: false });
-    this.ctxShow.clearRect(0, 0, 500, 500);
+    if(this.ctxShow) {
+      this.ctxShow.clearRect(0, 0, 500, 500);
+    }
+    this.mediaStreamTrack.getTracks().forEach(function (track) {
+      track.stop();
+    });
   };
   ownerModel = () => {
     return (
@@ -312,42 +403,31 @@ class JiandangStep2 extends DetailUtil {
       </Modal>
     );
   };
+  startEle = (filed) => {
+    const doc = document;
+    const label = doc.querySelector(`label[for="${filed}"]`);
+    const sp = doc.createElement('i');
+    sp.innerText = '*';
+    sp.style.color = 'red';
+    sp.style.position = 'absolute';
+    sp.style.left = '-10px';
+    sp.style.top = '-8px';
+    label.style.position = 'relative';
+    label.appendChild(sp);
+  };
   componentDidMount() {
     setTimeout(() => {
-      const label01 = document.querySelector(`label[for="positiveIdCardImageUrl"]`);
-      const label02 = document.querySelector(`label[for="negativeIdCardImageUrl"]`);
-      const label03 = document.querySelector(`label[for="handIdCardImageUrl"]`);
-      const sp01 = document.createElement('i');
-      const sp02 = document.createElement('i');
-      const sp03 = document.createElement('i');
-      sp01.innerText = '*';
-      sp02.innerText = '*';
-      sp03.innerText = '*';
-      sp01.style.color = 'red';
-      sp02.style.color = 'red';
-      sp03.style.color = 'red';
-      sp01.style.position = 'absolute';
-      sp02.style.position = 'absolute';
-      sp03.style.position = 'absolute';
-      sp01.style.left = '-10px';
-      sp01.style.top = '-8px';
-      sp02.style.left = '-10px';
-      sp02.style.top = '-8px';
-      sp03.style.left = '-10px';
-      sp03.style.top = '-8px';
-      label01.style.position = 'relative';
-      label02.style.position = 'relative';
-      label03.style.position = 'relative';
-      label01.appendChild(sp01);
-      label02.appendChild(sp02);
-      label03.appendChild(sp03);
+      this.startEle('positiveIdCardImageUrl');
+      this.startEle('negativeIdCardImageUrl');
+      this.startEle('handIdCardImageUrl');
+      this.startEle('attendancePicture');
     }, 300);
     this.getElement();
   }
   render() {
     const fields = [{
       field: 'positiveIdCardImageUrl',
-      title: '身份证正面照',
+      title: '身份证正面照(小于500KB)',
       type: 'img',
       single: true,
       formatter: (v) => {
@@ -370,13 +450,19 @@ class JiandangStep2 extends DetailUtil {
       imgSize: 512000
     }, {
       field: 'negativeIdCardImageUrl',
-      title: '身份证反面照',
+      title: '身份证反面照(小于500KB)',
       type: 'img',
       single: true,
       imgSize: 512000
     }, {
-      title: '手持身份证照片',
+      title: '手持身份证照片(小于500KB)',
       field: 'handIdCardImageUrl',
+      type: 'img',
+      single: true,
+      imgSize: 512000
+    }, {
+      title: '考勤人脸照(小于500KB)',
+      field: 'attendancePicture',
       type: 'img',
       single: true,
       imgSize: 512000
@@ -389,7 +475,7 @@ class JiandangStep2 extends DetailUtil {
       value: this.code,
       hidden: true
     }];
-    return this.buildDetail({
+    return this.props.buildDetail({
       fields,
       code: this.code,
       detailCode: 631806,
@@ -407,16 +493,19 @@ class JiandangStep2 extends DetailUtil {
       },
       ownerModel: this.ownerModel,
       beforeSubmit: (params) => {
-        if(this.state.updateUrl01) {
-          params.positiveIdCardImageUrl = this.state.updateUrl01;
+        if(this.state.upUrl01) {
+          params.positiveIdCardImageUrl = this.state.upUrl01;
         }
-        if(this.state.updateUrl02) {
-          params.negativeIdCardImageUrl = this.state.updateUrl02;
+        if(this.state.upUrl02) {
+          params.negativeIdCardImageUrl = this.state.upUrl02;
         }
-        if(this.state.updateUrl03) {
-          params.handIdCardImageUrl = this.state.updateUrl03;
+        if(this.state.upUrl03) {
+          params.handIdCardImageUrl = this.state.upUrl03;
         }
-        if(!params.positiveIdCardImageUrl || !params.negativeIdCardImageUrl || !params.handIdCardImageUrl) {
+        if(this.state.upUrl04) {
+          params.attendancePicture = this.state.upUrl04;
+        }
+        if(!params.positiveIdCardImageUrl || !params.negativeIdCardImageUrl || !params.handIdCardImageUrl || !params.attendancePicture) {
           message.warning('请填写完整');
           return false;
         }else {

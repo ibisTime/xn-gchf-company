@@ -143,6 +143,7 @@ class ProjectMember extends React.Component {
         },
         // 批量删除
         delete: (keys) => {
+          const _this = this;
           if (!keys.length) {
             showWarnMsg('请选择记录');
           } else {
@@ -153,8 +154,8 @@ class ProjectMember extends React.Component {
                 fetch('631691', { codeList: keys, userId: getUserId() }).then(() => {
                   showSucMsg('操作成功');
                   setTimeout(() => {
-                    this.props.getPageData();
-                  }, 1.5);
+                    _this.props.getPageData();
+                  }, 1000);
                 });
               },
               onCancel() {
@@ -162,6 +163,40 @@ class ProjectMember extends React.Component {
               okText: '确定',
               cancelText: '取消'
             });
+          }
+        },
+        inputting: () => {
+          this.props.history.push('/staff/jiandang');
+        },
+        // 重新建档
+        rejiandang: (selectedRowKeys, selectedRows) => {
+          if (!selectedRowKeys.length) {
+            showWarnMsg('请选择记录');
+          } else if (selectedRowKeys.length > 1) {
+            showWarnMsg('请选择一条记录');
+          } else {
+            sessionStorage.setItem('isStaff', 'true');
+            this.props.history.push(`/staff/jiandang?code=${selectedRows[0].workerCode}`);
+          }
+        },
+        // 绑定银行卡
+        bandBank: (selectedRowKeys, selectedRows) => {
+          if (!selectedRowKeys.length) {
+            showWarnMsg('请选择记录');
+          } else if (selectedRowKeys.length > 1) {
+            showWarnMsg('请选择一条记录');
+          } else {
+            this.props.history.push(`/staff/allStaff/bank?bcode=${selectedRowKeys[0]}&type=002`);
+          }
+        },
+        // 采集人脸
+        face: (selectedRowKeys, selectedRows) => {
+          if (!selectedRowKeys.length) {
+            showWarnMsg('请选择记录');
+          } else if (selectedRowKeys.length > 1) {
+            showWarnMsg('请选择一条记录');
+          } else {
+            this.props.history.push(`/project/member/acquisitionFaces?code=${selectedRows[0].workerCode}`);
           }
         }
       }

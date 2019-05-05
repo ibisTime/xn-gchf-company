@@ -95,7 +95,19 @@ export default class CO2M extends React.Component {
     return flag;
   }
   isOptionsChange(prevOpts, nowOpts) {
-    return Object.keys(prevOpts).length !== Object.keys(nowOpts).length;
+    const prevValOpts = Object.values(prevOpts);
+    const newValOpts = Object.values(nowOpts);
+    let isok = false;
+    if(Object.keys(prevOpts).length !== Object.keys(nowOpts).length) {
+      isok = true;
+    }else {
+      prevValOpts.forEach((item, index) => {
+        if(item !== newValOpts[index]) {
+          isok = true;
+        }
+      });
+    }
+    return isok;
   }
   isOptChange() {
     if (isUndefined(this.prevOpts) || isUndefined(this.options)) {
@@ -458,6 +470,8 @@ export default class CO2M extends React.Component {
   }
   // 获取弹出框的属性
   getModalProps() {
+    const { options } = this.props;
+    this.options.fields = options.fields;
     return {
       title: this.options.title || '',
       visible: this.state.modalVisible,

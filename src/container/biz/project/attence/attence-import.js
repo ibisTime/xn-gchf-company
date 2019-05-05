@@ -111,7 +111,7 @@ class AttenceImport extends DetailUtil {
         const zzTime = /(((20[0-3][0-9]-(0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)-(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])/;
         let isok = true;
         params.dateList.forEach(item => {
-          if(item.date && !zzTime.test(item.date)) {
+          if(item.date && item.date.trim() && !zzTime.test(item.date)) {
             isok = false;
           }
         });

@@ -18,10 +18,6 @@ class ProjectBasicAddEdit extends DetailUtil {
       title: '项目名称',
       required: true
     }, {
-      field: 'contractorCorpCode',
-      title: '总承包单位统一社会信用代码',
-      required: true
-    }, {
       field: 'contractorCorpName',
       title: '施工总承包单位名称',
       required: true
@@ -45,10 +41,59 @@ class ProjectBasicAddEdit extends DetailUtil {
       mobile: true,
       required: true
     }, {
+      field: 'chargeEmail',
+      title: '项目实名制负责人邮箱地址',
+      required: true
+    }, {
       field: 'prjStatus',
       title: '项目状态',
       type: 'select',
       key: 'prj_status',
+      required: true
+    }, {
+      field: 'contractorCorpCode',
+      title: '总承包单位统一社会信用代码',
+      required: true
+    }, {
+      field: 'startDate',
+      title: '开工日期',
+      type: 'date',
+      required: true
+    }, {
+      field: 'completeDate',
+      title: '竣工日期',
+      type: 'date',
+      required: true
+    }, {
+      field: 'attendanceStarttime',
+      title: '上班时间',
+      type: 'time',
+      required: true
+    }, {
+      field: 'attendanceEndtime',
+      title: '下班时间',
+      type: 'time',
+      required: true
+    }, {
+      field: 'payRollCreateDatetime',
+      title: '工资条形成时间',
+      type: 'select',
+      data: days,
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      required: true
+    }, {
+      field: 'payRollDatetime',
+      title: '薪资发放时间',
+      type: 'select',
+      data: days,
+      keyName: 'dkey',
+      valueName: 'dvalue',
+      required: true
+    }, {
+      field: 'payRollDelayDays',
+      title: '薪资发放可延迟天数',
+      data: days,
       required: true
     }, {
       field: 'description',
@@ -76,17 +121,6 @@ class ProjectBasicAddEdit extends DetailUtil {
     }, {
       field: 'buildingLength',
       title: '总长度'
-    }, {
-      field: 'startDate',
-      title: '开工日期',
-      type: 'date'
-    }, {
-      field: 'completeDate',
-      title: '竣工日期',
-      type: 'date'
-    }, {
-      field: 'chargeEmail',
-      title: '项目实名制负责人邮箱地址'
     }, {
       field: 'lng',
       title: '经度',
@@ -119,14 +153,30 @@ class ProjectBasicAddEdit extends DetailUtil {
       field: 'address',
       title: '项目地址'
     }, {
-      field: 'province',
-      title: '省'
-    }, {
-      field: 'city',
-      title: '市'
-    }, {
-      field: 'area',
-      title: '区/县'
+    //   field: 'province',
+    //   title: '省'
+    // }, {
+    //   field: 'city',
+    //   title: '市'
+    // }, {
+    //   field: 'area',
+    //   title: '区/县'
+    // }, {
+      title: '省市区',
+      field: 'companyAddress',
+      _keys: ['company', 'address'],
+      type: 'citySelect',
+      formatter(v, d) {
+        if(d.province && d.city && d.area) {
+          return [d.province, d.city, d.area];
+        } else if(d.province && d.city && !d.area) {
+          return [d.province, d.city];
+        } else if(d.province && !d.city && !d.area) {
+          return [d.province];
+        }else {
+          return [];
+        }
+      }
     }, {
       field: 'approvalNum',
       title: '立项文号'
@@ -156,28 +206,6 @@ class ProjectBasicAddEdit extends DetailUtil {
     }, {
       field: 'thirdPartyProjectCode',
       title: '第三方项目编码'
-    }, {
-      field: 'attendanceStarttime',
-      title: '上班时间',
-      type: 'time'
-    }, {
-      field: 'attendanceEndtime',
-      title: '下班时间',
-      type: 'time'
-    }, {
-      field: 'payRollCreateDatetime',
-      title: '工资条形成时间',
-      type: 'select',
-      data: days,
-      keyName: 'dkey',
-      valueName: 'dvalue'
-    }, {
-      field: 'payRollDatetime',
-      title: '薪资发放时间',
-      type: 'select',
-      data: days,
-      keyName: 'dkey',
-      valueName: 'dvalue'
     }, {
       field: 'builderLicenses',
       title: '施工许可证',
@@ -211,6 +239,22 @@ class ProjectBasicAddEdit extends DetailUtil {
         title: '保存',
         handler: (params) => {
           this.doFetching();
+          if(params.companyAddress) {
+            let companyAddress = params.companyAddress;
+            switch(companyAddress.length) {
+              case 0: break;
+              case 1: params.province = companyAddress[0]; break;
+              case 2:
+                params.province = companyAddress[0];
+                params.city = companyAddress[1];
+                break;
+              case 3:
+                params.province = companyAddress[0];
+                params.city = companyAddress[1];
+                params.area = companyAddress[2];
+                break;
+            }
+          }
           if(this.isSend) {
             this.isSend = false;
             fetch(631602, params).then((data) => {
