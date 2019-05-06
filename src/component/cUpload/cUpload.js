@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Carousel, Modal, Button, Icon, Form } from 'antd';
 import { showErrMsg, formatFile, formatImg, noop, getRealValue, isUndefined } from 'common/js/util';
-import { UPLOAD_URL, PIC_PREFIX, PIC_BASEURL_L, formItemLayout } from 'common/js/config';
+import { UPLOAD_URL, PIC_PREFIX, PIC_BASEURL_L, PIC_BASEURL_D, formItemLayout } from 'common/js/config';
 
 const FormItem = Form.Item;
 const fileUploadBtn = <Button><Icon type="upload"/> 上传</Button>;
@@ -85,7 +85,7 @@ export default class CUpload extends React.Component {
   handleCancel = () => this.setState({previewVisible: false})
   // 获取文件上传的属性
   getUploadProps = ({ initValue, token, field, readonly = false,
-    single = false, isImg = true, onChange, accept }) => {
+                      single = false, isImg = true, onChange, accept }) => {
     const commProps = {
       action: UPLOAD_URL,
       multiple: !single,
@@ -159,19 +159,17 @@ export default class CUpload extends React.Component {
           ? null : btn
         : btn;
   }
-
   // 格式化文件的url
   setUploadFileUrl(fileList, isImg, callback) {
     let format = isImg ? formatImg : formatFile;
-    fileList.forEach(f => {
-      if (!f.url && f.status === 'done' && f.response) {
-        f.url = format(f.response.key);
+    for(let i = 0, len = fileList.length; i < len; i++) {
+      if (!fileList[i].url && fileList[i].status === 'done' && fileList[i].response) {
+        fileList[i].url = format(fileList[i].response.key);
         const { setFieldsValue, doFetching, cancelFetching } = this.props;
-        callback && callback(f.response.key, setFieldsValue, doFetching, cancelFetching);
+        callback && callback(fileList[i].response.key, setFieldsValue, doFetching, cancelFetching);
       }
-    });
+    }
   }
-
   // 预览文件
   handleFilePreview = (file) => {
     if (file.status === 'done') {
@@ -181,7 +179,23 @@ export default class CUpload extends React.Component {
       let msg = file.status === 'uploading' ? '文件还未上传完成' : '文件上传失败';
       showErrMsg(msg);
     }
-  }
+  };
+  getBase64Image = (img) => {
+    let canvas = document.createElement('canvas');
+    canvas.width = 500;
+    canvas.height = 500;
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, 500, 500);
+    let dataURL = canvas.toDataURL('image/png');
+    return dataURL;
+  };
+  downloadFile = (fileName, content) => {
+    let aLink = document.createElement('a');
+    let evt = new MouseEvent('click');
+    aLink.download = fileName;
+    aLink.href = content;
+    aLink.dispatchEvent(evt);
+  };
   render() {
     const { field, isLoaded, getFieldDecorator, token, rules, readonly, single,
       isImg, onChange, accept, getFieldValue, label, hidden, initVal, inline } = this.props;
@@ -230,11 +244,23 @@ export default class CUpload extends React.Component {
               <Button style={{marginLeft: 20}} icon="right" onClick={() => this.carousel.next()}></Button>
               <Button style={{marginLeft: 20}} onClick={() => {
                 let url = '';
+                let isHttp = false;
                 previewId && getFieldValue(previewId).split('||').map(v => {
-                  url = v.includes('http') ? v + '?attname=' + v + '.jpg' : PIC_PREFIX + v + '?attname=' + v + '.jpg';
+                  isHttp = v.includes('http');
+                  url = url = v.includes('http') ? v : PIC_PREFIX + v + '?attname=' + v + '.jpg';
                 });
-                console.log(url);
-                location.href = url;
+                if(isHttp) {
+                  let img = new Image(500, 500);
+                  let basePic = '';
+                  img.setAttribute('crossOrigin', 'Anonymous');
+                  img.onload = () => {
+                    basePic = this.getBase64Image(img);
+                    this.downloadFile('downLoad', basePic);
+                  };
+                  img.src = url;
+                }else {
+                  location.href = url;
+                }
               }} icon="download">下载</Button>
             </div>
           </Modal>

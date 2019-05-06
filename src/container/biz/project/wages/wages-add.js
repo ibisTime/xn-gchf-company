@@ -112,6 +112,10 @@ class ProjectWagesAdd extends DetailUtil {
           bankCard: true,
           required: true
         }, {
+          title: '工人工资卡开户行名称',
+          field: 'payRollBankName',
+          required: true
+        }, {
           title: '工资代发银行',
           field: 'payBankCode',
           key: 'bank_code',
@@ -121,6 +125,10 @@ class ProjectWagesAdd extends DetailUtil {
           title: '工资代发银行卡号',
           field: 'payBankCardNumber',
           bankCard: true,
+          required: true
+        }, {
+          title: '工资代发开户行名称',
+          field: 'payBankName',
           required: true
         }, {
           title: '应发金额',

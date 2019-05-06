@@ -90,11 +90,11 @@ class ProjectBasicAddEdit extends DetailUtil {
       keyName: 'dkey',
       valueName: 'dvalue',
       required: true
-    }, {
-      field: 'payRollDelayDays',
-      title: '薪资发放可延迟天数',
-      data: days,
-      required: true
+    // }, {
+    //   field: 'payRollDelayDays',
+    //   title: '薪资发放可延迟天数',
+    //   data: days,
+    //   required: true
     }, {
       field: 'description',
       title: '项目简介',

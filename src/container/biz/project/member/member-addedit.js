@@ -109,6 +109,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       title: '制卡采集照片(小于50kB)',
       field: 'issueCardPicUrl',
       type: 'img',
+      single: true,
       imgSize: 51200
     }, {
       title: '考勤卡号',
