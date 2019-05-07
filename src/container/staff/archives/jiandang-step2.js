@@ -502,8 +502,8 @@ class JiandangStep2 extends React.Component {
         if(this.state.upUrl03) {
           params.handIdCardImageUrl = this.state.upUrl03;
         }
-        if(this.state.upUrl04) {
-          params.attendancePicture = this.state.upUrl04;
+        if(this.state.updateUrl04) {
+          params.attendancePicture = this.state.updateUrl04;
         }
         if(!params.positiveIdCardImageUrl || !params.negativeIdCardImageUrl || !params.handIdCardImageUrl || !params.attendancePicture) {
           message.warning('请填写完整');

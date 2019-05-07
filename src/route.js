@@ -242,6 +242,21 @@ const ROUTES = [
   {
     path: '/company/info/addedit',
     component: asyncComponent(() => import('container/biz/company/info/info-addedit'))
+  },
+  // 智慧工地-闸机管理
+  {
+    path: '/brakeMachine',
+    component: asyncComponent(() => import('container/biz/wisdom/brakeMachine/brakeMachine'))
+  },
+  // 智慧工地-闸机管理-新增修改
+  {
+    path: '/brakeMachine/addedit',
+    component: asyncComponent(() => import('container/biz/wisdom/brakeMachine/brakeMachine-addedit'))
+  },
+  // 智慧工地-闸机人员管理
+  {
+    path: '/brakeMachine_per',
+    component: asyncComponent(() => import('container/biz/wisdom/brakeMachine_per/brakeMachine_per'))
   }
 ];
 

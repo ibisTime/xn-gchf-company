@@ -52,13 +52,8 @@ export default function AcquisitionFaces() {
       updateUrl = data.attendancePicture;
       upUrl = data.attendancePicture;
       let picEle = document.getElementById('pic');
-      if(!updateUrl.includes('http')) {
-        picEle.style.backgroundImage = `url(${PIC_PREFIX}${updateUrl})`;
-        picEle.style.backgroundSize = '100% 100%';
-      }else {
-        picEle.style.backgroundImage = `url(${updateUrl})`;
-        picEle.style.backgroundSize = '100% 100%';
-      }
+      picEle.style.backgroundImage = `url(${updateUrl})`;
+      picEle.style.backgroundSize = '100% 100%';
     });
   }, []);
   const putb64 = useCallback((basePic, index) => {
@@ -117,13 +112,14 @@ export default function AcquisitionFaces() {
   }, []);
   const sendPic = useCallback(() => {
     const hasMsg = message.loading('');
-    if(!upUrl) {
+    if(!updateUrl) {
       message.warning('请先进行拍照上传');
       return;
     }
     fetch(631794, {
       code,
-      attendancePicture: upUrl
+      attendancePicture: updateUrl,
+      userId: getUserId()
     }).then(() => {
       hasMsg();
       message.success('操作成功', 1, () => {

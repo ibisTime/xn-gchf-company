@@ -20,6 +20,8 @@ import { staffAllStaffAddEdit } from './redux/staff/allStaff-addedit';
 import { jiandangStep2 } from './redux/staff/jiandang-step2';
 import { jiandangStep3 } from './redux/staff/jiandang-step3';
 import { bizBank } from './redux/biz/bank';
+import { wisdomBrakeMachine } from './redux/biz/wisdom/brakeMachine';
+import { wisdomBrakeMachinePer } from './redux/biz/wisdom/brakeMachine_per';
 // 项目管理
 import { projectParticipating } from './redux/biz/project/participating';
 import { projectClass } from './redux/biz/project/class';
@@ -61,5 +63,7 @@ export default combineReducers({
   projectAttence,
   projectWages,
   projectBasic,
-  companyInfo
+  companyInfo,
+  wisdomBrakeMachine,
+  wisdomBrakeMachinePer
 });
