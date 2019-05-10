@@ -9,7 +9,8 @@ class ProjectAttenceAddEdit extends DetailUtil {
     super(props);
     this.state = {
       ...this.state,
-      projectCode: getOrganizationCode()
+      projectCode: getOrganizationCode(),
+      teamSysNo: ''
     };
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
@@ -28,11 +29,16 @@ class ProjectAttenceAddEdit extends DetailUtil {
       keyName: 'code',
       valueName: 'teamName',
       searchName: 'teamName',
-      pageCode: 631665,
+      listCode: 631667,
       params: {
         userId: getUserId()
       },
-      required: true
+      required: true,
+      onChange: (v) => {
+        this.setState({
+          teamSysNo: v
+        });
+      }
     }, {
       title: '员工编号',
       field: 'workerCode',
@@ -43,7 +49,8 @@ class ProjectAttenceAddEdit extends DetailUtil {
       valueName: '{{projectName.DATA}}-{{teamName.DATA}}-{{workerName.DATA}}-{{idcardNumber.DATA}}',
       params: {
         projectCode: this.state.projectCode,
-        userId: getUserId()
+        userId: getUserId(),
+        teamSysNo: this.state.teamSysNo
       },
       onChange: (code, data) => {
         let info = data.find(v => (v.code + '') === code);
@@ -76,9 +83,6 @@ class ProjectAttenceAddEdit extends DetailUtil {
       field: 'date',
       type: 'datetime',
       required: true
-    }, {
-      field: 'teamSysNo',
-      hidden: true
     }, {
       field: 'userId',
       value: getUserId(),

@@ -9,7 +9,7 @@ import {
 } from '@redux/staff/jiandang-step2';
 import { getQueryString, getUserId } from 'common/js/util';
 import { DetailWrapper } from 'common/js/build-detail';
-import { UPLOAD_URL } from 'common/js/config';
+import { UPLOAD_URL, PIC_PREFIX, PIC_BASEURL_L } from 'common/js/config';
 import { getQiniuToken } from 'api/general';
 import axios from 'axios';
 import { Modal, Button, message } from 'antd';
@@ -424,6 +424,15 @@ class JiandangStep2 extends React.Component {
     }, 300);
     this.getElement();
   }
+  getBase64Image = (img) => {
+    let canvas = document.createElement('canvas');
+    canvas.width = 500;
+    canvas.height = 500;
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, 500, 500);
+    let dataURL = canvas.toDataURL('image/png');
+    return dataURL;
+  };
   render() {
     const fields = [{
       field: 'positiveIdCardImageUrl',
@@ -465,7 +474,8 @@ class JiandangStep2 extends React.Component {
       field: 'attendancePicture',
       type: 'img',
       single: true,
-      imgSize: 512000
+      imgSize: 512000,
+      isBase64: true
     }, {
       field: 'userId',
       value: getUserId(),
@@ -492,7 +502,7 @@ class JiandangStep2 extends React.Component {
         this.props.history.push(`/staff/jiandang?code=${this.code}`);
       },
       ownerModel: this.ownerModel,
-      beforeSubmit: (params) => {
+      beforeSubmit: async (params) => {
         if(this.state.upUrl01) {
           params.positiveIdCardImageUrl = this.state.upUrl01;
         }

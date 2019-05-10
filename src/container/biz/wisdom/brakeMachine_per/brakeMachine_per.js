@@ -11,8 +11,9 @@ import {
 } from '@redux/biz/wisdom/brakeMachine_per';
 import { listWrapper } from 'common/js/build-list';
 import { showWarnMsg, getUserId, showSucMsg, showErrMsg, getOrganizationCode } from 'common/js/util';
-import { Modal, Transfer, Select, message } from 'antd';
+import { Modal, Transfer, Select, message, TimePicker } from 'antd';
 import fetch from 'common/js/fetch';
+import moment from 'moment';
 
 const {Option} = Select;
 
@@ -31,7 +32,11 @@ class WisdomBrakeMachinePer extends React.Component {
     deviceData: [],
     visible: false,
     deviceKey: '',
-    equipmentCode: ''
+    equipmentCode: '',
+    selectValue: null,
+    startTime: '',
+    endTime: '',
+    defaultCode: ''
   };
   componentDidMount() {
     fetch(631827, {
@@ -51,20 +56,31 @@ class WisdomBrakeMachinePer extends React.Component {
       });
     });
   }
-  getMock = (deviceKey) => {
+  onStartChange= (value, dateString) => {
+    this.setState({
+      startTime: dateString
+    });
+  };
+  onEndChange= (value, dateString) => {
+    this.setState({
+      endTime: dateString
+    });
+  };
+  getMock = (deviceKey, hasMsg) => {
     const targetKeys = [];
     const mockData = [];
     fetch(631607, {
       deviceKey,
       userId: getUserId()
     }).then(data => {
+      hasMsg();
       data.forEach(item => {
         mockData.push({
-          key: item.workerCode,
+          key: item.code,
           title: item.workerName
         });
         if(item.isLink === '1') {
-          targetKeys.push(item.workerCode);
+          targetKeys.push(item.code);
         }
       });
       this.setState({ mockData, targetKeys });
@@ -76,30 +92,28 @@ class WisdomBrakeMachinePer extends React.Component {
   handleChange = (targetKeys) => {
     this.setState({ targetKeys });
   };
-  // handleSearch = (dir, value) => {
-  //   console.log('search:', dir, value);
-  // };
   handleOk = () => {
-    this.setState({
-      visible: false
-    });
-    if(this.state.targetKeys.length === 0) {
-      message.warning('请选择后操作', 1.5);
-      return;
+    const hasMsg = message.loading('', 10);
+    let equipmentCode = this.state.equipmentCode;
+    if(this.state.defaultValue) {
+      equipmentCode = this.state.defaultCode;
     }
-    const hasMsg = message.loading('');
     fetch(631830, {
       userId: getUserId(),
-      equipmentCode: this.state.equipmentCode,
-      workerList: this.state.targetKeys
+      equipmentCode: equipmentCode,
+      workerList: this.state.targetKeys,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime
     }).then(() => {
       hasMsg();
-      message.success('关联成功', 1, () => {
+      message.success('操作成功', 1, () => {
         this.setState({
           visible: false,
           mockData: [],
-          targetKeys: []
+          targetKeys: [],
+          selectValue: null
         });
+        this.props.getPageData();
       });
     }, hasMsg);
   };
@@ -110,11 +124,12 @@ class WisdomBrakeMachinePer extends React.Component {
   };
   deviceOption = (value) => {
     let v = value.split('-');
+    const hasMsg = message.loading('', 10);
     this.setState({
       equipmentCode: v[1],
       deviceKey: v[0]
     });
-    this.getMock(v[0]);
+    this.getMock(v[0], hasMsg);
   };
   ownerModel = () => {
     const { deviceData } = this.state;
@@ -127,24 +142,44 @@ class WisdomBrakeMachinePer extends React.Component {
       okText = '确定'
       cancelText = '取消'
     >
-      <div style={{'marginBottom': '30px'}}>
-        <label>设备：</label>
-        <Select style={{width: '200px'}} placeholder='请选择设备' onChange={(value) => { this.deviceOption(value); }}>
-          {
-            deviceData.map(item => (
-              <Option value={`${item.deviceKey}-${item.code}`} key={item.code}>{item.name}</Option>
-            ))
-          }
-        </Select>
+      <div style={{'marginBottom': '30px', 'display': 'flex'}}>
+        <div>
+          <label>设备：</label>
+          <Select
+            style={{width: '200px'}}
+            placeholder='请选择设备'
+            value={this.state.selectValue}
+            onChange={
+              (value) => {
+                this.setState({
+                  selectValue: value
+                });
+                this.deviceOption(value);
+              }}>
+            {
+              deviceData.map(item => (
+                <Option value={`${item.deviceKey}-${item.code}`} key={item.code}>{item.name}</Option>
+              ))
+            }
+          </Select>
+        </div>
+        <div style={{'marginLeft': '50px'}}>
+          <label>考勤开始时间：</label>
+          <TimePicker onChange={this.onStartChange} value={this.state.startTime ? moment(this.state.startTime, 'HH:mm:ss') : this.state.startTime} placeholder='请选择开始时间' style={{'width': '150px'}}/>
+        </div>
+        <div style={{'marginLeft': '20px'}}>
+          <label>考勤结束时间：</label>
+          <TimePicker onChange={this.onEndChange} value={this.state.endTime ? moment(this.state.endTime, 'HH:mm:ss') : this.state.endTime} placeholder='请选择结束时间' style={{'width': '150px'}}/>
+        </div>
       </div>
       <div>
+        <p><span>未关联人员：</span><span style={{'marginLeft': '410px'}}>已关联人员：</span></p>
         <Transfer
           dataSource={this.state.mockData}
           showSearch
           filterOption={this.filterOption}
           targetKeys={this.state.targetKeys}
           onChange={this.handleChange}
-          onSearch={this.handleSearch}
           render={item => item.title}
           listStyle={{
             width: 450,
@@ -154,17 +189,30 @@ class WisdomBrakeMachinePer extends React.Component {
       </div>
     </Modal>;
   };
+  showModal = (d) => {
+    const startTime = d ? d.passTimes.split(',')[0] : '';
+    const endTime = d ? d.passTimes.split(',')[1] : '';
+    let svalue = d ? `${d.deviceKey}-${d.deviceCode}` : null;
+    this.setState({
+      visible: true,
+      mockData: [],
+      targetKeys: [],
+      defaultCode: d ? d.deviceCode : '',
+      selectValue: d ? d.deviceName : null,
+      startTime,
+      endTime
+    });
+    if(d) {
+      this.deviceOption(svalue);
+    }
+  };
   render() {
     const fields = [{
-      title: '设备编号',
-      field: 'code'
-    }, {
-      title: '设备编号',
-      field: 'deviceCode',
-      hidden: true
+      title: '设备序列号',
+      field: 'deviceKey'
     }, {
       title: '设备名称',
-      field: 'deviceName',
+      field: 'code',
       search: true,
       pageCode: '631825',
       type: 'select',
@@ -174,9 +222,10 @@ class WisdomBrakeMachinePer extends React.Component {
       params: {
         userId: getUserId()
       },
-      render(v) {
-        return v;
-      }
+      hidden: true
+    }, {
+      title: '设备名称',
+      field: 'deviceName'
     }, {
       title: '工人姓名',
       field: 'workerName',
@@ -203,10 +252,8 @@ class WisdomBrakeMachinePer extends React.Component {
       },
       ownerModel: this.ownerModel,
       btnEvent: {
-        associated: () => {
-          this.setState({
-            visible: true
-          });
+        associated: (v, d) => {
+          this.showModal(d[0]);
         }
       }
     });

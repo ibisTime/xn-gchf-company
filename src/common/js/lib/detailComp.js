@@ -965,7 +965,7 @@ export default class DetailComp extends React.Component {
     );
   }
   getFileComp(item, initVal, rules, getFieldDecorator, isImg) {
-    let initValue = this.getFileInitVal(initVal);
+    let initValue = this.getFileInitVal(initVal, isImg, item);
     // console.log(initVal);
     return (
       <FormItem key={item.field} {...formItemLayout} label={this.getLabel(item)}>
@@ -1007,7 +1007,7 @@ export default class DetailComp extends React.Component {
     };
     const imgProps = {
       ...commProps,
-      onChange: ({ fileList }) => this.setUploadFileUrl(fileList, true),
+      onChange: ({ fileList }) => this.setUploadFileUrl(fileList, true, item),
       onPreview: this.handlePreview,
       listType: 'picture-card',
       accept: 'image/*'
@@ -1069,8 +1069,9 @@ export default class DetailComp extends React.Component {
       </FormItem>
     );
   }
-  getFileInitVal(initVal, isImg) {
+  getFileInitVal(initVal, isImg, item) {
     const { token } = this.state;
+    // let { isBase64 } = item;
     !token && this.getToken();
     let initValue = [];
     if (initVal) {
@@ -1166,11 +1167,16 @@ export default class DetailComp extends React.Component {
           ? null : btn
         : btn;
   }
-  setUploadFileUrl(fileList, isImg) {
+  setUploadFileUrl(fileList, isImg, item) {
     let format = isImg ? formatImg : formatFile;
+    let {isBase64} = item;
     fileList.forEach(f => {
       if (!f.url && f.status === 'done' && f.response) {
-        f.url = format(f.response.key);
+          if(isBase64) {
+            f.response.key = f.thumbUrl;
+          }else {
+            f.url = format(f.response.key);
+          }
       }
     });
   }

@@ -22,6 +22,7 @@ import { jiandangStep3 } from './redux/staff/jiandang-step3';
 import { bizBank } from './redux/biz/bank';
 import { wisdomBrakeMachine } from './redux/biz/wisdom/brakeMachine';
 import { wisdomBrakeMachinePer } from './redux/biz/wisdom/brakeMachine_per';
+import { projectOutInto } from '../../xn-gchf-company/src/redux/biz/project/outInto';
 // 项目管理
 import { projectParticipating } from './redux/biz/project/participating';
 import { projectClass } from './redux/biz/project/class';
@@ -65,5 +66,6 @@ export default combineReducers({
   projectBasic,
   companyInfo,
   wisdomBrakeMachine,
-  wisdomBrakeMachinePer
+  wisdomBrakeMachinePer,
+  projectOutInto
 });

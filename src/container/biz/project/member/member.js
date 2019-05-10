@@ -81,7 +81,7 @@ class ProjectMember extends React.Component {
       type: 'select',
       key: 'is_not'
     }, {
-      title: '状态',
+      title: '人员上传国家平台状态',
       field: 'uploadStatus',
       type: 'select',
       data: this.state.uploadStatusData,
@@ -197,6 +197,16 @@ class ProjectMember extends React.Component {
             showWarnMsg('请选择一条记录');
           } else {
             this.props.history.push(`/project/member/acquisitionFaces?code=${selectedRows[0].workerCode}`);
+          }
+        },
+        // 采集人脸
+        archivesDetail: (selectedRowKeys, selectedRows) => {
+          if (!selectedRowKeys.length) {
+            showWarnMsg('请选择记录');
+          } else if (selectedRowKeys.length > 1) {
+            showWarnMsg('请选择一条记录');
+          } else {
+            this.props.history.push(`/staff/allStaff/addedit?code=${selectedRows[0].workerCode}&v=1`);
           }
         }
       }

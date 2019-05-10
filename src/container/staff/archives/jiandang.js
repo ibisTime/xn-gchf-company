@@ -61,8 +61,7 @@ class Jiandang extends React.Component {
       searchIdcard: '',
       fetching: true,
       picLoading: false,
-      isShowJoinedTime: false,
-      isStaff: false
+      isShowJoinedTime: false
     };
     this.openVideo = this.openVideo.bind(this);
     this.getCard = this.getCard.bind(this);
@@ -274,9 +273,6 @@ class Jiandang extends React.Component {
   }
   submitSuc(code) {
     showSucMsg('建档成功');
-    if(this.state.isStaff) {
-      sessionStorage.setItem('isStaff', 'true');
-    }
     setTimeout(() => {
       this.props.history.push(`/staff/jiandang/step2?code=${code}`);
     }, 300);
@@ -352,9 +348,6 @@ class Jiandang extends React.Component {
     }).then(data => {
       if (data.idCardNumber) {
         this.setDataByUserInfo(data);
-        this.setState({
-          isStaff: true
-        });
       } else {
         this.setState({ fetching: false });
         showWarnMsg('该证件未在人员库中，请及时建档');

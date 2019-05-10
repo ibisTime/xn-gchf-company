@@ -9,13 +9,24 @@ class WisdomBrakeMachineAddEdit extends DetailUtil {
     super(props);
     this.code = getQueryString('code', this.props.location.search);
     this.view = !!getQueryString('v', this.props.location.search);
+    this.state = {
+      ...this.state,
+      directionData: []
+    };
   }
   render() {
     const fields = [{
       title: '人脸识别设备序列号',
       field: 'deviceKey',
       maxlength: 64,
-      readonly: this.code
+      readonly: this.code,
+      required: true
+    }, {
+      title: '方向',
+      field: 'direction',
+      type: 'select',
+      required: true,
+      key: 'direction'
     }, {
       title: '设备名称',
       field: 'name',

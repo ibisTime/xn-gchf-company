@@ -6,7 +6,6 @@ import { getQiniuToken } from 'api/general';
 import axios from 'axios';
 import fetch from 'common/js/fetch';
 
-const code = getQueryString('code');
 const styled = {
   fh5: {
     fontSize: '17px',
@@ -39,22 +38,25 @@ const styled = {
 
 export default function AcquisitionFaces() {
   const [visible, setVisible] = useState(false);
+  const code = getQueryString('code');
   let updateUrl = '';
   let ctxShow = null;
   let upUrl = '';
   let streamTrack = null;
   const [mediaStreamTrack, setMediaStreamTrack] = useState(null);
   const getUserPic = useCallback(() => {
+    let hasMsg = message.loading('', 10);
     fetch(631806, {
       userId: getUserId(),
       code
     }).then(data => {
+      hasMsg();
       updateUrl = data.attendancePicture;
       upUrl = data.attendancePicture;
       let picEle = document.getElementById('pic');
       picEle.style.backgroundImage = `url(${updateUrl})`;
       picEle.style.backgroundSize = '100% 100%';
-    });
+    }, hasMsg);
   }, []);
   const putb64 = useCallback((basePic, index) => {
     getQiniuToken().then((data) => {
@@ -83,7 +85,7 @@ export default function AcquisitionFaces() {
     ctx.drawImage(video, 0, 0, 300, 300);
     const dataUrl = canvasShow.toDataURL();
     updateUrl = dataUrl;
-    putb64(dataUrl);
+    // putb64(dataUrl);
   }, []);
   const getMedia = useCallback(() => {
     const hasMsg = message.loading('');

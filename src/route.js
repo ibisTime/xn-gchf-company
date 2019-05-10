@@ -143,6 +143,16 @@ const ROUTES = [
     path: '/project/member',
     component: asyncComponent(() => import('container/biz/project/member/member'))
   },
+  // 业务管理 -- 项目管理-- 进出记录
+  {
+    path: '/project/outInto',
+    component: asyncComponent(() => import('container/biz/project/outInto/outInto'))
+  },
+  // 业务管理 -- 项目管理-- 进出记录 -详情
+  {
+    path: '/project/outInto/addedit',
+    component: asyncComponent(() => import('container/biz/project/outInto/outInto-addedit'))
+  },
   // 业务管理 -- 项目管理-- 项目人员-- 详情
   {
     path: '/project/member/addedit',
