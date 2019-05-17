@@ -43,6 +43,7 @@ export default function AcquisitionFaces() {
   let ctxShow = null;
   let upUrl = '';
   let streamTrack = null;
+  let isSendPic = true;
   const [mediaStreamTrack, setMediaStreamTrack] = useState(null);
   const getUserPic = useCallback(() => {
     let hasMsg = message.loading('', 10);
@@ -113,21 +114,28 @@ export default function AcquisitionFaces() {
     getMedia();
   }, []);
   const sendPic = useCallback(() => {
-    const hasMsg = message.loading('');
-    if(!updateUrl) {
-      message.warning('请先进行拍照上传');
-      return;
-    }
-    fetch(631794, {
-      code,
-      attendancePicture: updateUrl,
-      userId: getUserId()
-    }).then(() => {
-      hasMsg();
-      message.success('操作成功', 1, () => {
-        window.history.go(-1);
+    if(isSendPic) {
+      isSendPic = false;
+      const hasMsg = message.loading('');
+      if(!updateUrl) {
+        message.warning('请先进行拍照上传');
+        return;
+      }
+      fetch(631794, {
+        code,
+        attendancePicture: updateUrl,
+        userId: getUserId()
+      }).then(() => {
+        hasMsg();
+        isSendPic = true;
+        message.success('操作成功', 1, () => {
+          window.history.go(-1);
+        });
+      }, () => {
+        hasMsg();
+        isSendPic = true;
       });
-    }, hasMsg);
+    }
   }, []);
   const handleOk = useCallback(() => {
     if(!updateUrl) {
