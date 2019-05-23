@@ -53,9 +53,6 @@ class ProjectClass extends React.Component {
       field: 'teamName',
       search: true
     }, {
-      title: '对应项目',
-      field: 'projectName'
-    }, {
       title: '所在企业',
       field: 'corpName',
       search: true

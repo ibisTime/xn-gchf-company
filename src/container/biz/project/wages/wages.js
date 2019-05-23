@@ -79,9 +79,6 @@ class ProjectWages extends React.Component {
       type: 'select',
       key: 'is_not'
     }, {
-      title: '对应项目',
-      field: 'projectName'
-    }, {
       title: '所在企业',
       field: 'corpName',
       search: true

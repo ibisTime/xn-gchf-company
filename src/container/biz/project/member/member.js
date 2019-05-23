@@ -66,12 +66,22 @@ class ProjectMember extends React.Component {
       type: 'select',
       key: 'is_not'
     }, {
-      title: '对应项目',
-      field: 'projectName'
-    }, {
       title: '所在企业',
       field: 'corpName',
       search: true
+    }, {
+        title: '所在班组',
+        field: 'teamSysNo',
+        type: 'select',
+        keyName: 'code',
+        valueName: 'teamName',
+        searchName: 'teamName',
+        pageCode: 631665,
+        params: {
+            userId: getUserId()
+        },
+        search: true,
+        hidden: true
     }, {
       title: '所在班组',
       field: 'teamName'
@@ -80,6 +90,11 @@ class ProjectMember extends React.Component {
       field: 'isTeamLeader',
       type: 'select',
       key: 'is_not'
+    }, {
+        title: '人脸照片上传状态',
+        field: 'workerPicUploadStatus',
+        type: 'select',
+        key: 'workerPicUploadStatus'
     }, {
       title: '人员上传国家平台状态',
       field: 'uploadStatus',
@@ -199,7 +214,7 @@ class ProjectMember extends React.Component {
             this.props.history.push(`/project/member/acquisitionFaces?code=${selectedRows[0].workerCode}`);
           }
         },
-        // 采集人脸
+        // 档案详情
         archivesDetail: (selectedRowKeys, selectedRows) => {
           if (!selectedRowKeys.length) {
             showWarnMsg('请选择记录');

@@ -56,9 +56,6 @@ class Participating extends React.Component {
       title: '社会信用代码',
       field: 'corpCode'
     }, {
-      title: '对应项目',
-      field: 'projectName'
-    }, {
       title: '进场时间',
       field: 'entryTime',
       type: 'datetime'

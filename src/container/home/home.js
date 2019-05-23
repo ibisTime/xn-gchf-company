@@ -362,21 +362,21 @@ class Home extends React.Component {
   }
   collapseChange = (key) => {
     if (key === '1') {
-      window.location.href = '/salary';
+      // window.location.href = '/salary';
       // let { payPagination, payData } = this.state;
       // if (!payData.length && payPagination.hasMore) {
       //   this.getPagePay(1, 10);
       // }
       // this.setState({ activeKey: [1] });
     } else if (key === '2') {
-      window.location.href = '/newProj/kaoqin';
+      // window.location.href = '/newProj/kaoqin';
       // let { checkPagination, checkData } = this.state;
       // if (!checkData.length && checkPagination.hasMore) {
       //   this.getPageChecks(1, 10);
       // }
       // this.setState({ activeKey: [2] });
     } else if (key === '3') {
-      window.location.href = '/staff/allStafferror';
+      // window.location.href = '/staff/allStafferror';
       // let { abnormalPagination, abnormalData } = this.state;
       // if (!abnormalData.length && abnormalPagination.hasMore) {
       //   this.getPageabnormal(1, 10);

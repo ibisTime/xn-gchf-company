@@ -212,7 +212,7 @@ class WisdomBrakeMachinePer extends React.Component {
       field: 'deviceKey'
     }, {
       title: '设备名称',
-      field: 'code',
+      field: 'deviceCode',
       search: true,
       pageCode: '631825',
       type: 'select',

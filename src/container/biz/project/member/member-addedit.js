@@ -17,6 +17,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       workerName: ''
     };
     this.teamSysNo = '';
+    this.codeType = this.code ? 'listCode' : 'pageCode';
   }
   componentDidMount() {
     if(this.code) {
@@ -54,7 +55,7 @@ class ProjectMemberAddEdit extends DetailUtil {
       keyName: 'code',
       valueName: 'teamName',
       searchName: 'teamName',
-      pageCode: 631665,
+      [this.codeType]: this.code ? '631667' : 631665,
       params: {
         projectCode: this.state.projectCode,
         userId: getUserId()
@@ -77,8 +78,7 @@ class ProjectMemberAddEdit extends DetailUtil {
         }
         return v;
       },
-      required: true,
-      readonly: !!this.code
+      required: true
     }, {
       field: 'corpCode',
       hidden: true,
@@ -90,83 +90,83 @@ class ProjectMemberAddEdit extends DetailUtil {
       key: 'is_not',
       required: true
     }, {
+        title: '工人类型',
+        field: 'workRole',
+        type: 'select',
+        key: 'work_role',
+        required: true
+    }, {
       title: '工种',
       field: 'workType',
       type: 'select',
       key: 'work_type',
       required: true
-    }, {
-      title: '工人类型',
-      field: 'workRole',
-      type: 'select',
-      key: 'work_role',
-      required: true
-    }, {
-      title: '制卡时间',
-      field: 'issueCardDate',
-      type: 'datetime'
-    }, {
-      title: '制卡采集照片(小于50kB)',
-      field: 'issueCardPicUrl',
-      type: 'img',
-      single: true,
-      imgSize: 51200
-    }, {
-      title: '考勤卡号',
-      field: 'cardNumber',
-      maxlength: 20
-    }, {
-      field: 'positiveIdCardImageUrl',
-      title: '身份证正面照(小于500KB)',
-      type: 'img',
-      single: true,
-      formatter: (v, d) => {
-        if(d.workerInfo) {
-          return d.workerInfo.positiveIdCardImageUrl;
-        }else {
-          return '-';
-        }
-      },
-      hidden: !this.view
-    }, {
-      field: 'negativeIdCardImageUrl',
-      title: '身份证反面照(小于500KB)',
-      type: 'img',
-      single: true,
-      formatter: (v, d) => {
-        if(d.workerInfo) {
-          return d.workerInfo.negativeIdCardImageUrl;
-        }else {
-          return '-';
-        }
-      },
-      hidden: !this.view
-    }, {
-      title: '手持身份证照片(小于500KB)',
-      field: 'handIdCardImageUrl',
-      type: 'img',
-      single: true,
-      formatter: (v, d) => {
-        if(d.workerInfo) {
-          return d.workerInfo.handIdCardImageUrl;
-        }else {
-          return '-';
-        }
-      },
-      hidden: !this.view
-    }, {
-      title: '考勤人脸照(小于500KB)',
-      field: 'attendancePicture',
-      type: 'img',
-      single: true,
-      formatter: (v, d) => {
-        if(d.workerInfo) {
-          return d.workerInfo.attendancePicture;
-        }else {
-          return '-';
-        }
-      },
-      hidden: !this.view
+    // }, {
+    //   title: '制卡时间',
+    //   field: 'issueCardDate',
+    //   type: 'datetime'
+    // }, {
+    //   title: '制卡采集照片(小于50kB)',
+    //   field: 'issueCardPicUrl',
+    //   type: 'img',
+    //   single: true,
+    //   imgSize: 51200
+    // }, {
+    //   title: '考勤卡号',
+    //   field: 'cardNumber',
+    //   maxlength: 20
+    // }, {
+    //   field: 'positiveIdCardImageUrl',
+    //   title: '身份证正面照(小于500KB)',
+    //   type: 'img',
+    //   single: true,
+    //   formatter: (v, d) => {
+    //     if(d.workerInfo) {
+    //       return d.workerInfo.positiveIdCardImageUrl;
+    //     }else {
+    //       return '-';
+    //     }
+    //   },
+    //   hidden: !this.view
+    // }, {
+    //   field: 'negativeIdCardImageUrl',
+    //   title: '身份证反面照(小于500KB)',
+    //   type: 'img',
+    //   single: true,
+    //   formatter: (v, d) => {
+    //     if(d.workerInfo) {
+    //       return d.workerInfo.negativeIdCardImageUrl;
+    //     }else {
+    //       return '-';
+    //     }
+    //   },
+    //   hidden: !this.view
+    // }, {
+    //   title: '手持身份证照片(小于500KB)',
+    //   field: 'handIdCardImageUrl',
+    //   type: 'img',
+    //   single: true,
+    //   formatter: (v, d) => {
+    //     if(d.workerInfo) {
+    //       return d.workerInfo.handIdCardImageUrl;
+    //     }else {
+    //       return '-';
+    //     }
+    //   },
+    //   hidden: !this.view
+    // }, {
+    //   title: '考勤人脸照(小于500KB)',
+    //   field: 'attendancePicture',
+    //   type: 'img',
+    //   single: true,
+    //   formatter: (v, d) => {
+    //     if(d.workerInfo) {
+    //       return d.workerInfo.attendancePicture;
+    //     }else {
+    //       return '-';
+    //     }
+    //   },
+    //   hidden: !this.view
     }, {
       title: '发放工资银行卡号',
       field: 'payRollBankCardNumber',

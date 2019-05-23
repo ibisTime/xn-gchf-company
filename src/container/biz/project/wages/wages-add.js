@@ -14,7 +14,9 @@ class ProjectWagesAdd extends DetailUtil {
       corpCode: '',
       isBackPay: false,
       teamSysNo: '',
-      workerCode: '1'
+      workerCode: '1',
+      businessUser: '',
+      businessProject: ''
     };
   }
   render() {
@@ -40,7 +42,8 @@ class ProjectWagesAdd extends DetailUtil {
       keyName: 'corpCode',
       valueName: 'corpName',
       onChange: (corpCode, data) => {
-        _this.setState({ corpCode });
+          let filData = data.filter(item => item.corpCode === corpCode);
+          _this.setState({ corpCode, businessProject: filData[0].code });
       },
       required: true
     }, {
@@ -101,35 +104,39 @@ class ProjectWagesAdd extends DetailUtil {
             return v;
           }
         }, {
-          title: '发放工资银行',
-          field: 'payRollBankCode',
-          key: 'bank_code',
-          type: 'select',
-          required: true
+            title: '工人工资银行',
+            field: 'workerBankCard',
+            type: 'select',
+            required: true,
+            pageCode: '631765',
+            keyName: 'code',
+            searchName: 'bankNumber',
+            valueName: '{{bankName.DATA}}-{{bankNumber.DATA}}',
+            params: {
+                businessType: '002',
+                businessSysNo: this.state.businessUser,
+                userId: getUserId()
+            },
+            render(v) {
+                return v;
+            }
         }, {
-          title: '发放工资银行卡号',
-          field: 'payRollBankCardNumber',
-          bankCard: true,
-          required: true
-        }, {
-          title: '工人工资卡开户行名称',
-          field: 'payRollBankName',
-          required: true
-        }, {
-          title: '工资代发银行',
-          field: 'payBankCode',
-          key: 'bank_code',
-          type: 'select',
-          required: true
-        }, {
-          title: '工资代发银行卡号',
-          field: 'payBankCardNumber',
-          bankCard: true,
-          required: true
-        }, {
-          title: '工资代发开户行名称',
-          field: 'payBankName',
-          required: true
+            title: '所在参建单位银行',
+            field: 'corpBankCard',
+            type: 'select',
+            required: true,
+            pageCode: '631765',
+            keyName: 'code',
+            searchName: 'bankNumber',
+            valueName: '{{bankName.DATA}}-{{bankNumber.DATA}}',
+            params: {
+                businessType: '001',
+                businessSysNo: this.state.businessProject,
+                userId: getUserId()
+            },
+            render(v) {
+                return v;
+            }
         }, {
           title: '应发金额',
           field: 'totalPayAmount',

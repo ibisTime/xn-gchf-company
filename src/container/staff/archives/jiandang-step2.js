@@ -439,6 +439,7 @@ class JiandangStep2 extends React.Component {
       title: '身份证正面照(小于500KB)',
       type: 'img',
       single: true,
+      isBase64: true,
       formatter: (v) => {
         if(this.isIndex === 0) {
           if(v) {
@@ -462,12 +463,14 @@ class JiandangStep2 extends React.Component {
       title: '身份证反面照(小于500KB)',
       type: 'img',
       single: true,
+      isBase64: true,
       imgSize: 512000
     }, {
       title: '手持身份证照片(小于500KB)',
       field: 'handIdCardImageUrl',
       type: 'img',
       single: true,
+      isBase64: true,
       imgSize: 512000
     }, {
       title: '考勤人脸照(小于500KB)',

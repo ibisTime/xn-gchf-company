@@ -96,6 +96,13 @@ class ProjectBasicAddEdit extends DetailUtil {
     //   data: days,
     //   required: true
     }, {
+        field: 'tcrCount',
+        title: '剩余身份证识别次数',
+        formatter(v, d) {
+            return (+d.totalOcrCount) - (+d.usedOcrCount);
+        },
+        readonly: true
+    }, {
       field: 'description',
       title: '项目简介',
       type: 'textarea',
