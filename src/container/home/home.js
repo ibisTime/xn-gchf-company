@@ -24,10 +24,6 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        chosed: false,
-        payData: [],
-        abnormalData: [],
-        payLoading: true,
         staffIn: 0,
         staffOut: 0,
         leavingDays: 0,
@@ -71,6 +67,7 @@ class Home extends React.Component {
       LineMap({
           ref: this.state.ljry
       });
+      // this.camera();
   }
   camera() {
     navigator.getMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMeddia || navigator.msGetUserMedia;
@@ -101,6 +98,7 @@ class Home extends React.Component {
     } else {
       this.video.src = (window.URL || window.webkitURL).createObjectURL(stream);
     }
+    console.log(this.video.srcObject);
     setTimeout(() => {
       this.video.play();
     }, 300);
@@ -109,7 +107,6 @@ class Home extends React.Component {
     this.mediaStreamTrack && this.mediaStreamTrack.stop();
   }
   render() {
-    const { payData, payLoading, abnormalData, staffIn, staffOut, leavingDays, workingDays } = this.state;
     return (
       <div className="home-wrapper">
         <div className="wrapper-left">
@@ -119,6 +116,10 @@ class Home extends React.Component {
                   height: '100%',
                   objectFit: 'fill'
               }} ref={(video) => this.video = video} />
+            <div className="noVideo">
+                <p><span></span></p>
+                <p>暂无视频</p>
+            </div>
           </div>
           <div className="warp-foo">
             <div className="warp-foo_left">

@@ -1,6 +1,3 @@
-.dashboard-layout .right-content {
-  padding: 0;
-}
 .home-wrapper {
   display: flex;
   width: 100%;
@@ -18,6 +15,34 @@
   height: 476px;
   margin-bottom: 20px;
   background: #4D5671;
+  position: relative;
+}
+.noVideo{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background: #4D5671;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.noVideo p{
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #8899C8;
+  text-align: center;
+}
+.noVideo p span{
+  display: inline-block;
+  width: 80px;
+  height: 98px;
+  background-image: url('./zwsp.png');
+  -webkit-background-size: 100% 100%;
+  background-size: 100% 100%;
 }
 .warp-foo{
   display: flex;
