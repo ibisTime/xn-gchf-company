@@ -1,16 +1,46 @@
+.dashboard-layout .right-content {
+  padding: 0;
+}
 .home-wrapper {
-  position: fixed;
-  top: 64px;
-  left: 0;
+  display: flex;
   width: 100%;
-  bottom: 0;
-  background: #24364b;
+  background: #001436;
   padding: 20px 40px;
 }
-.home-table {
-  width: 100%;
-  height: 100%;
-  table-layout: fixed;
+.wrapper-left{
+  width: 68%;
+  margin-right: 23px;
+}
+.wrapper-right{
+  width: 30%;
+}
+#container{
+  height: 476px;
+  margin-bottom: 20px;
+  background: #4D5671;
+}
+.warp-foo{
+  display: flex;
+}
+.warp-foo_left{
+  width: 40%;
+  margin-right: 23px;
+  background: #4D5671;
+  height: 228px;
+}
+.warp-foo_right{
+  width: 60%;
+  background: #4D5671;
+  height: 228px;
+}
+.wrap-right_01{
+  background: #4D5671;
+  height: 228px;
+}
+.wrap-right_03, .wrap-right_02{
+  margin-top: 20px;
+  background: #4D5671;
+  height: 228px;
 }
 .home-map-wrapper {
   width: 100%;
@@ -34,7 +64,7 @@
   left: 40px;
 }
 .home-wrapper .home-collapse {
-  background: rgba(42, 71, 104);
+  background: rgb(42, 71, 104);
   border-radius: 0;
   border: none;
 }
@@ -55,33 +85,49 @@
   border: 2px solid #8faffe;
   border-radius: 4px;
 }
-.other-box.box-wrapper {
-  background: rgba(42, 71, 104);
-}
-.person-box.box-wrapper {
-  background: rgba(49, 86, 126);
-}
 .ljry-box .box-content {
   padding-left: 20px;
+}
+.ljry-content{
+  display: flex;
+}
+.ljry-box_left{
+  width: 20%;
+}
+.ljry-box_right{
+  width: 80%;
+  overflow: hidden;
+}
+.ljry-box_left p{
+  margin-top: 12px;
+  font-size: 14px;
+  color: #fff;
+}
+.ljry-box_left p span{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+.lz{
+  background-color: #6A9BFD;
+}
+.qj{
+  background-color: #34EFEF;
+}
+.rz{
+  background-color: #37E36A;
+}
+.cg{
+  background-color: #FFDA48;
 }
 .box-wrapper .box-title {
   position: relative;
   padding-left: 28px;
   height: 40px;
   line-height: 40px;
-  border-bottom: 2px solid #8faffe;
   font-size: 16px;
   color: #fff;
-  background-image: linear-gradient(top, rgb(56, 99, 147), rgb(38, 66, 117));
-}
-.box-wrapper .box-title .box-tip {
-  position: absolute;
-  left: 14px;
-  top: 11px;
-  height: 18px;
-  width: 4px;
-  border-radius: 2px;
-  background: #8faffe;
+  margin-bottom: -10px;
 }
 .box-wrapper .box-content {
   flex: 1;

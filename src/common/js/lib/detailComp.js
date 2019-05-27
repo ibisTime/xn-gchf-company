@@ -1167,19 +1167,24 @@ export default class DetailComp extends React.Component {
           ? null : btn
         : btn;
   }
-  setUploadFileUrl(fileList, isImg, item) {
-    let format = isImg ? formatImg : formatFile;
-    let {isBase64} = item;
-    fileList.forEach(f => {
-      if (!f.url && f.status === 'done' && f.response) {
-          if(isBase64) {
-            f.response.key = f.thumbUrl;
-          }else {
-            f.url = format(f.response.key);
-          }
-      }
-    });
-  }
+    setUploadFileUrl(fileList, isImg, item) {
+        let format = isImg ? formatImg : formatFile;
+        let {isBase64, onUpImage, onDownImage} = item;
+        if(fileList.length) {
+            onUpImage();
+        }else {
+            onDownImage();
+        }
+        fileList.forEach(f => {
+            if (!f.url && f.status === 'done' && f.response) {
+                if(isBase64) {
+                    f.response.key = f.thumbUrl;
+                }else {
+                    f.url = format(f.response.key);
+                }
+            }
+        });
+    }
   getLabel(item) {
     return (
       <span className={item.required && item.type === 'textarea' && !item.normalArea ? 'ant-form-item-required' : ''}>

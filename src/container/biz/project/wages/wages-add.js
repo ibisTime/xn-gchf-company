@@ -114,7 +114,7 @@ class ProjectWagesAdd extends DetailUtil {
             valueName: '{{bankName.DATA}}-{{bankNumber.DATA}}',
             params: {
                 businessType: '002',
-                businessSysNo: this.state.businessUser,
+                businessSysNo: this.state.workerCode,
                 userId: getUserId()
             },
             render(v) {

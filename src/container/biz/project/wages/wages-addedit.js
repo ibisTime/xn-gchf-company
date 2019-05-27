@@ -17,9 +17,11 @@ class ProjectWagesAddEdit extends DetailUtil {
   }
   render() {
     const fields = [{
-      title: '工人工资卡开户行名称',
-      field: 'payRollBankName',
-      required: true
+        title: '工人工资卡银行',
+        field: 'payRollBankCode',
+        type: 'select',
+        key: 'bank_code',
+        required: true
     }, {
       title: '工人工资卡号',
       field: 'payRollBankCardNumber',
@@ -31,18 +33,14 @@ class ProjectWagesAddEdit extends DetailUtil {
       key: 'bank_code',
       required: true
     }, {
-      title: '工资代发开户行名称',
-      field: 'payBankName',
-      required: true
+        title: '工资代发银行',
+        field: 'payBankCode',
+        type: 'select',
+        key: 'bank_code',
+        required: true
     }, {
       title: '工资代发银行卡号',
       field: 'payBankCardNumber',
-      required: true
-    }, {
-      title: '工资代发银行',
-      field: 'payBankCode',
-      type: 'select',
-      key: 'bank_code',
       required: true
     }, {
       title: '应发金额(元)',
