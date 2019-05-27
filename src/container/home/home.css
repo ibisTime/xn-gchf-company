@@ -1,7 +1,17 @@
+.home-box{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  z-index: 5;
+  left: 0;
+  top: 64px;
+  padding-bottom: 60px;
+  background: #001436;
+}
 .home-wrapper {
   display: flex;
   width: 100%;
-  background: #001436;
   padding: 20px 40px;
 }
 .wrapper-left{
@@ -176,4 +186,35 @@
 }
 .w274 {
   width: 274px;
+}
+.sing-box{
+  margin-top: 20px;
+  display: flex;
+  background-color: #4D5671;
+}
+.sing-warp_box{
+  margin-top: 10px;
+  padding-left: 20px ;
+  border-top: 1px solid #616C8F;
+  color: #FFFFFF;
+}
+.sing-warp_box p{
+  margin: 0;
+}
+.sing-warp_box h5{
+  color: #fff;
+}
+.all-box{
+  background-color: #4D5671;
+}
+.sing-left, .sing-right{
+  width: 50%;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.sing-left h5, .sing-right h5{
+  font-size: 24px;
+}
+.all-box h5{
+  font-size: 28px;
 }
