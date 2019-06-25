@@ -36,7 +36,7 @@ app.use('/api', function (req, res) {
     res.json({ errorInfo: 'error', errorCode: 1 });
   });
   var now = new Date();
-  let time = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
+  let time = url + ": " + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
     ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
   console.log(time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
 });
@@ -61,7 +61,8 @@ app.use('/getIdInfo', function (req, res) {
   var now = new Date();
   let time = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
     ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-  console.log(time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
+  console.log(url + time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
+  console.log("test");
 });
 app.use('/getfeature', function (req, res) {
   var url = 'http://118.31.17.181/getfeature';

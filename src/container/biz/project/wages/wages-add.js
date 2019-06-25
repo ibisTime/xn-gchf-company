@@ -14,7 +14,7 @@ class ProjectWagesAdd extends DetailUtil {
       corpCode: '',
       isBackPay: false,
       teamSysNo: '',
-      workerCode: '1',
+      workerCode: '',
       businessUser: '',
       businessProject: ''
     };
