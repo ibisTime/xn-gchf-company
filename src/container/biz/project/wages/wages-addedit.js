@@ -27,12 +27,6 @@ class ProjectWagesAddEdit extends DetailUtil {
       field: 'payRollBankCardNumber',
       required: true
     }, {
-      title: '工人工资卡银行',
-      field: 'payRollBankCode',
-      type: 'select',
-      key: 'bank_code',
-      required: true
-    }, {
         title: '工资代发银行',
         field: 'payBankCode',
         type: 'select',
@@ -56,6 +50,11 @@ class ProjectWagesAddEdit extends DetailUtil {
       type: 'date',
       required: true
     }, {
+        title: '发放工资年月',
+        field: 'payMonth',
+        type: 'month',
+        hidden: !this.view
+      }, {
       title: '是否为补发',
       field: 'isBackPay',
       type: 'select',
