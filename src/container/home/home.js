@@ -10,16 +10,16 @@ import './home.css';
 // import 'node_modules/video-react/dist/video-react.css';
 
 const Box = ({ title, children, className, center }) => {
-  return (
-    <div className={`box-wrapper ${className}`}>
-      <div className="box-title">
-        {title}
-      </div>
-      <div className={`box-content ${center ? 'center-content' : ''}`}>
-        {children}
-      </div>
-    </div>
-  );
+    return (
+        <div className={`box-wrapper ${className}`}>
+            <div className="box-title">
+                {title}
+            </div>
+            <div className={`box-content ${center ? 'center-content' : ''}`}>
+                {children}
+            </div>
+        </div>
+    );
 };
 
 class Home extends React.Component {

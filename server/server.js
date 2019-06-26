@@ -17,7 +17,7 @@ app.use('/api', function (req, res) {
   // var url = 'http://47.96.161.183:4401/forward-service/api';
   // var url = 'http://47.96.161.183:2501/forward-service/api';
   // var url = 'http://120.26.6.213:2501/forward-service/api';
-  var url = 'http://47.98.248.153:2601/forward-service/api'; // 研发
+  var url = 'http://47.98.248.153:2701/forward-service/api'; // 研发
   // var url = 'http://47.98.248.153:2701/forward-service/api';
   // var url = 'http://120.26.6.213:5601/demo-ocr/api';
   var _body = req.body;
