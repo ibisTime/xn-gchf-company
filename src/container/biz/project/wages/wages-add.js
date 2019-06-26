@@ -14,9 +14,11 @@ class ProjectWagesAdd extends DetailUtil {
       corpCode: '',
       isBackPay: false,
       teamSysNo: '',
-      workerCode: '1',
+      workerCode: '',
       businessUser: '',
-      businessProject: ''
+      businessProject: '',
+        bankName: '',
+        corpBankName: ''
     };
   }
   render() {
@@ -117,9 +119,12 @@ class ProjectWagesAdd extends DetailUtil {
                 businessSysNo: this.state.workerCode,
                 userId: getUserId()
             },
-            render(v) {
-                return v;
-            }
+            onChange: (v, d) => {
+                this.setState({
+                    bankName: d[0].bankName
+                });
+            },
+            render: () => this.state.bankName
         }, {
             title: '所在参建单位银行',
             field: 'corpBankCard',
@@ -134,9 +139,12 @@ class ProjectWagesAdd extends DetailUtil {
                 businessSysNo: this.state.businessProject,
                 userId: getUserId()
             },
-            render(v) {
-                return v;
-            }
+            onChange: (v, d) => {
+                this.setState({
+                    corpBankName: d[0].bankName
+                });
+            },
+            render: () => this.state.corpBankName
         }, {
           title: '应发金额',
           field: 'totalPayAmount',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Collapse, Table, Input, Button } from 'antd';
+import { Icon, Collapse, Table, Input, Button, message } from 'antd';
 import {Round, LineMap} from 'component/charts/RoundMap';
 import fetch, { fetchImg } from 'common/js/fetch';
 import { formatDate, getUserKind, moneyFormat, isUndefined, getUserId } from 'common/js/util';
@@ -32,6 +32,7 @@ class Home extends React.Component {
         nianl: null,
         ljry: null,
         ageObj: {
+            '0': '18岁以下',
           '1': '18-30岁',
           '2': '30-40岁',
           '3': '40-50岁',
@@ -50,6 +51,7 @@ class Home extends React.Component {
     };
   }
   componentDidMount() {
+      let hasMsg = message.loading('', 10);
       Promise.all([
           fetch(631618, { userId: getUserId() }), // 班组统计
           fetch(631609, { userId: getUserId() }), // 工种分组
@@ -57,11 +59,10 @@ class Home extends React.Component {
           fetch(631603, { userId: getUserId() }), // 项目概括
           fetch(631697, { userId: getUserId() }) // 30日累计人员情况
       ]).then(([data1, data2, data3, data4, data5]) => {
-        console.log(data5);
           this.setState({
-              zcrs: data4[0].inserviceCount,
-              jrsb: data4[1].inserviceCount,
-              ljgz: data4[2].inserviceCount
+              zcrs: data4[0].registeredTotal ? data4[0].registeredTotal : '0',
+              jrsb: data4[0].todayWorkers ? data4[0].todayWorkers : '0',
+              ljgz: data4[0].totalActualPayRoll ? data4[0].totalActualPayRoll : '0'
           });
           let arr1 = data1.data.map(item => ({
               value: item.count,
@@ -90,10 +91,10 @@ class Home extends React.Component {
           let {leavingCount = 0, comingCount = 0, attendanceCount = 0} = data5;
           LineMap({
               ref: this.state.ljry,
-              data1: [leavingCount, 0, 0, 0],
-              data2: [0, 0, 0, 0],
-              data3: [0, 0, comingCount, 0],
-              data4: [0, 0, 0, attendanceCount]
+              data1: [leavingCount, 0, 0],
+              // data2: [0, 0, 0, 0],
+              data3: [0, comingCount, 0],
+              data4: [0, 0, attendanceCount]
           });
           this.setState({
               perConfig: {
@@ -103,7 +104,8 @@ class Home extends React.Component {
                   cg: attendanceCount
               }
           });
-      });
+          hasMsg();
+      }, hasMsg);
       // this.camera();
   }
   camera() {
@@ -185,7 +187,6 @@ class Home extends React.Component {
                               <div className="ljry-content">
                                   <div className="ljry-box_left">
                                       <p><span className='lz'></span> 离职人次({this.state.perConfig.lz})</p>
-                                      <p><span className='qj'></span> 请假人次({this.state.perConfig.qj})</p>
                                       <p><span className='rz'></span> 入职人次({this.state.perConfig.rz})</p>
                                       <p><span className='cg'></span> 出工人次({this.state.perConfig.cg})</p>
                                   </div>
