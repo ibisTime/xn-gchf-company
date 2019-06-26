@@ -17,7 +17,7 @@ app.use('/api', function (req, res) {
   // var url = 'http://47.96.161.183:4401/forward-service/api';
   // var url = 'http://47.96.161.183:2501/forward-service/api';
   // var url = 'http://120.26.6.213:2501/forward-service/api';
-  var url = 'http://47.98.248.153:2601/forward-service/api'; // 研发
+  var url = 'http://47.98.248.153:2701/forward-service/api'; // 研发
   // var url = 'http://47.98.248.153:2701/forward-service/api';
   // var url = 'http://120.26.6.213:5601/demo-ocr/api';
   var _body = req.body;
@@ -36,7 +36,7 @@ app.use('/api', function (req, res) {
     res.json({ errorInfo: 'error', errorCode: 1 });
   });
   var now = new Date();
-  let time = url + ": " + now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
+  let time = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
     ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
   console.log(time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
 });
@@ -61,8 +61,7 @@ app.use('/getIdInfo', function (req, res) {
   var now = new Date();
   let time = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate() +
     ' ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
-  console.log(url + time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
-  console.log("test");
+  console.log(time + ': ' + 'code=' + _body.code + '&json=' + _body.json);
 });
 app.use('/getfeature', function (req, res) {
   var url = 'http://118.31.17.181/getfeature';

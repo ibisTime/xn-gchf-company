@@ -4,12 +4,13 @@ export function Round(config) {
     if(config.ref) {
         let myChart = echarts.init(config.ref);
         let option = {
+            color: ['#55DA8F', '#FE5E3A', '#FEBD4B', '#639DFC', '#FC9863', '#63D7FC', '#CF63FC', '#FC63E3', '#636BFC', '#78EFEE'],
             series: [
                 {
                     name: '访问来源',
                     type: 'pie',
-                    radius: ['50%', '70%'],
                     avoidLabelOverlap: false,
+                    radius: ['50%', '70%'],
                     data: config.data ? config.data : []
                 }
             ]
@@ -22,10 +23,13 @@ export function LineMap(config) {
     if(config.ref) {
         let myChart = echarts.init(config.ref);
         let option = {
+            textStyle: {
+                color: '#fff'
+            },
             xAxis: [
                 {
                     type: 'category',
-                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                    data: ['离职人次', '入职人次', '出工人次']
                 }
             ],
             yAxis: [
@@ -35,24 +39,32 @@ export function LineMap(config) {
             ],
             series: [
                 {
-                    name: '蒸发量',
+                    name: '离职人次',
                     type: 'bar',
-                    data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+                    barGap: '-100%',
+                    color: '#6A9BFD',
+                    data: config.data1 ? config.data1 : []
+                },
+                // {
+                //     name: '请假人次',
+                //     type: 'bar',
+                //     barGap: '-100%',
+                //     color: '#34EFEF',
+                //     data: config.data2 ? config.data2 : []
+                // },
+                {
+                    name: '入职人次',
+                    type: 'bar',
+                    barGap: '-100%',
+                    color: '#37E36A',
+                    data: config.data3 ? config.data3 : []
                 },
                 {
-                    name: '降水量',
+                    name: '出工人次',
                     type: 'bar',
-                    data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                },
-                {
-                    name: '下水量',
-                    type: 'bar',
-                    data: [2.2, 5.2, 9.0, 26.4, 22.7, 70.7, 175.6, 182.2, 42.7, 18.8, 6.0, 2.3]
-                },
-                {
-                    name: '跳水量',
-                    type: 'bar',
-                    data: [2.2, 5.2, 9.0, 26.4, 22.7, 70.7, 175.6, 182.2, 42.7, 18.8, 6.0, 2.3]
+                    barGap: '-100%',
+                    color: '#FFDA48',
+                    data: config.data4 ? config.data4 : []
                 }
             ]
         };

@@ -29,7 +29,8 @@ class ProjectMember extends React.Component {
   state = {
     uploadStatusData: []
   };
-  componentWillMount() {
+  componentDidMount() {
+      sessionStorage.removeItem('isStaff');
     fetch(631006, {
       parentKey: 'upload_status'
     }).then(data => {
