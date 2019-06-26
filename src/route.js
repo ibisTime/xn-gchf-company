@@ -128,18 +128,6 @@ const ROUTES = [
     path: '/project/class',
     component: asyncComponent(() => import('container/biz/project/class/class'))
   },
-  {
-    path: '/project/videoMenu',
-    component: asyncComponent(() => import('container/biz/project/videoMenu/video'))
-  },
-  {
-    path: '/project/videoMenu/add',
-    component: asyncComponent(() => import('container/biz/project/videoMenu/video-addedit'))
-  },
-  {
-    path: '/project/videoMenu/change',
-    component: asyncComponent(() => import('container/biz/project/videoMenu/video-change'))
-  },
   // 业务管理 -- 项目管理-- 项目班组-- 详情
   {
     path: '/project/class/addedit',

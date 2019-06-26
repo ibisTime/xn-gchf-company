@@ -17,7 +17,6 @@ class ExportImport extends DetailUtil {
       politicsTypeList: [],
       bankCodeList: [],
       maritalStatusList: [],
-      bitStreamType: [],
       isLoading: false
     };
   }
@@ -29,9 +28,8 @@ class ExportImport extends DetailUtil {
       getDictList({ parentKey: 'culture_level_type' }),
       getDictList({ parentKey: 'bank_code' }),
       getDictList({ parentKey: 'politics_type' }),
-      getDictList({ parentKey: 'marital_status' }),
-      getDictList({ parentKey: 'bit_stream_type' })
-    ]).then(([isNotList, workTypeList, workRoleList, cultureLevelType, bankCodeList, politicsTypeList, maritalStatusList, bitStreamType]) => {
+      getDictList({ parentKey: 'marital_status' })
+    ]).then(([isNotList, workTypeList, workRoleList, cultureLevelType, bankCodeList, politicsTypeList, maritalStatusList]) => {
       this.setState({
         isNotList,
         workTypeList,
@@ -40,7 +38,6 @@ class ExportImport extends DetailUtil {
         politicsTypeList,
         bankCodeList,
         maritalStatusList,
-        bitStreamType,
         isLoading: false
       });
     }).catch(() => {

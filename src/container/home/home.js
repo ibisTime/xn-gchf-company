@@ -48,8 +48,7 @@ class Home extends React.Component {
             qj: 0,
             rz: 0,
             cg: 0
-        },
-        inputVideoUrl: 'http://dlhls.cdn.zhanqi.tv/zqlive/22578_yKdJM.m3u8'
+        }
     };
   }
   componentDidMount() {
@@ -152,6 +151,15 @@ class Home extends React.Component {
           <div className="home-wrapper">
               <div className="wrapper-left">
                   <div id="container">
+                      <video style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'fill'
+                      }} ref={(video) => this.video = video} />
+                      <div className="noVideo">
+                          <p><span></span></p>
+                          <p>暂无视频</p>
+                      </div>
                   </div>
                   <div className="warp-foo">
                       <div className="warp-foo_left">

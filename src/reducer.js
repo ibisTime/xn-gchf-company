@@ -33,7 +33,6 @@ import { projectAttence } from './redux/biz/project/attence';
 import { projectWages } from './redux/biz/project/wages';
 import { projectBasic } from './redux/biz/project/basic';
 import { companyInfo } from './redux/biz/company/info';
-import { projectVideo } from './redux/biz/project/video';
 
 export default combineReducers({
   user,
@@ -68,6 +67,5 @@ export default combineReducers({
   companyInfo,
   wisdomBrakeMachine,
   wisdomBrakeMachinePer,
-  projectOutInto,
-  projectVideo
+  projectOutInto
 });
