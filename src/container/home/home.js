@@ -6,9 +6,6 @@ import { formatDate, getUserKind, moneyFormat, isUndefined, getUserId } from 'co
 import { getProject, getProjectList, getPagePayCode, getPageChecks, getPageabnormal, getTotalSalary } from 'api/project';
 import { getUserDetail } from 'api/user';
 import './home.css';
-// import { Player } from 'video-react';
-// import 'node_modules/video-react/dist/video-react.css';
-
 const Box = ({ title, children, className, center }) => {
     return (
         <div className={`box-wrapper ${className}`}>
@@ -155,13 +152,8 @@ class Home extends React.Component {
                   <div id="container">
                       <video style={{
                           width: '100%',
-                          height: '100%',
-                          objectFit: 'fill'
-                      }} ref={(video) => this.video = video} />
-                      <div className="noVideo">
-                          <p><span></span></p>
-                          <p>暂无视频</p>
-                      </div>
+                          height: '100%'
+                      }} src="http://192.168.1.102:20000/hls/test.m3u8" />
                   </div>
                   <div className="warp-foo">
                       <div className="warp-foo_left">
